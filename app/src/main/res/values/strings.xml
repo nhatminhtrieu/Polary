@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Polary</string>
+    <string name="content_description">Content description</string>
 </resources>

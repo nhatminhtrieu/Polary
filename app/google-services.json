@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "543502116747",
+    "project_id": "polary-8862a",
+    "storage_bucket": "polary-8862a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543502116747:android:634bf3a4e416d0a627318e",
+        "android_client_info": {
+          "package_name": "com.example.polary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFSQRFIiVITAYz4-PNtsDeduKFBNBvwgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
