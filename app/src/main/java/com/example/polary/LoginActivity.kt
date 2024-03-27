@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity() {
         usernameEditText = findViewById(R.id.username)
 
         // Set up any necessary listeners here. For example:
-        usernameEditText.addTextChangedListener { text ->
+        usernameEditText.addTextChangedListener {
             // This block will be called whenever the text changes.
             // 'text' is the new text in the EditText.
         }
