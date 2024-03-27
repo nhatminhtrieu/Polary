@@ -12,6 +12,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+
         usernameEditText = findViewById(R.id.username)
 
         // Set up any necessary listeners here. For example:
