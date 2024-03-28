@@ -2,20 +2,18 @@ package com.example.polary
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
-import androidx.core.widget.addTextChangedListener
-import com.google.android.material.textfield.TextInputEditText
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
-class SignInActivity : AppCompatActivity() {
-    private lateinit var usernameEditText: TextInputEditText
-
+class SignUp : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_sign_up)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -24,7 +22,9 @@ class SignInActivity : AppCompatActivity() {
                 NavUtils.navigateUpTo(this, intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 }

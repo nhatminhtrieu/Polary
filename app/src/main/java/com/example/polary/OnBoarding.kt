@@ -21,7 +21,13 @@ class OnBoarding : AppCompatActivity() {
 
         val signInButton = findViewById<MaterialButton>(R.id.signInMatBtn)
         signInButton.setOnClickListener {
-            val intent = Intent(this, SignInActivity::class.java)
+            val intent = Intent(this, SignIn::class.java)
+            startActivity(intent)
+        }
+
+        val signUpButton = findViewById<MaterialButton>(R.id.signUpMatBtn)
+        signUpButton.setOnClickListener {
+            val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
         }
     }

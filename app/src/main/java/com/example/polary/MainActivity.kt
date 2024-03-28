@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        val intent = Intent(this, SignInActivity::class.java)
+        val intent = Intent(this, SignIn::class.java)
         startActivity(intent)
     }
 }
