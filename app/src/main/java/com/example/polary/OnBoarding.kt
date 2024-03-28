@@ -2,8 +2,8 @@ package com.example.polary
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
@@ -11,7 +11,8 @@ import com.google.android.material.button.MaterialButton
 class OnBoarding : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // Enable dark mode
+
         setContentView(R.layout.activity_on_boarding)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -27,7 +28,7 @@ class OnBoarding : AppCompatActivity() {
 
         val signUpButton = findViewById<MaterialButton>(R.id.signUpMatBtn)
         signUpButton.setOnClickListener {
-            val intent = Intent(this, SignUp::class.java)
+            val intent = Intent(this, SignUpMain::class.java)
             startActivity(intent)
         }
     }
