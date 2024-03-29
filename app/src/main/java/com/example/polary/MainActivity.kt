@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.polary.ui.theme.PolaryTheme
+import com.example.polary.usersList.UserActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting("Android")
-                    Button(onClick = { navigateToLogin() }) {
+                    Button(onClick = { navigateToUserActivity() }) {
                         Text("Go to Login")
                     }
                 }
@@ -34,6 +35,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToUserActivity() {
+        val intent = Intent(this, UserActivity::class.java)
         startActivity(intent)
     }
 }
