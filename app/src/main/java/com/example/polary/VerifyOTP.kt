@@ -65,9 +65,15 @@ class VerifyOTP : AppCompatActivity() {
 
     private fun validateOTP(enteredOTP: String, expectedOTP: String, email: String) {
         if (enteredOTP == expectedOTP) {
-            val intent = Intent(this, SignUpFull::class.java)
-            intent.putExtra("email", email)
-            startActivity(intent)
+            val intent = when (intent.getStringExtra("message")) {
+                "resetPassword" -> Intent(this, EnterNewPassword::class.java)
+                "signUp" -> Intent(this, SignUpFull::class.java)
+                else -> null
+            }
+            intent?.let {
+                it.putExtra("email", email)
+                startActivity(it)
+            }
         } else {
             Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show()
         }

@@ -31,6 +31,7 @@ class SignUpMain : AppCompatActivity() {
 
             val intent = Intent(this, VerifyOTP::class.java)
             intent.putExtra("email", email)
+            intent.putExtra("message", "signUp")
             startActivity(intent)
         }
 

@@ -1,21 +1,31 @@
 package com.example.polary
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.polary.utils.applyClickableSpan
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 
 class SignIn : AppCompatActivity() {
     private lateinit var usernameEditText: TextInputEditText
+    private lateinit var forgotPassword: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
         val signUpText: MaterialTextView = findViewById(R.id.signup_text)
+
+        forgotPassword = findViewById(R.id.forgot_password)
+        forgotPassword.setOnClickListener {
+            val intent = Intent(this, ResetPassword::class.java)
+            startActivity(intent)
+        }
+
         applyClickableSpan(signUpText, "Sign up", this, SignUpMain::class.java)
     }
 
