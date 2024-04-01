@@ -14,4 +14,6 @@
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorText">#000000</color>
     <color name="colorButton">#6200EE</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorError">#FF0000</color>
 </resources>
