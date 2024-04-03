@@ -15,6 +15,7 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 materialVersion = "1.6.4"
 playServicesBase = "18.3.0"
+retrofit = "2.10"
 ui = "1.6.4"
 uiTooling = "1.6.4"
 material3Android = "1.2.1"
@@ -41,11 +42,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version.ref = "playServicesBase" }
+retrofit = { group = "com.squareup.retrofit2", name="retrofit", version = "2.10.0" }
+retrofitConverterGson = { group = "com.squareup.retrofit2", name="converter-gson", version = "2.10.0" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version = "2.10.0" }
-retrofitConverterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version = "2.10.0" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
