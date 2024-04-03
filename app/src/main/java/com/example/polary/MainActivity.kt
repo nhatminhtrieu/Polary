@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.polary.Authentication.SignIn
 import com.example.polary.ui.theme.PolaryTheme
 import com.example.polary.usersList.UserActivity
 
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, SignIn::class.java)
         startActivity(intent)
     }
 

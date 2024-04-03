@@ -1,4 +1,4 @@
-package com.example.polary
+package com.example.polary.Authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.polary.R
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText

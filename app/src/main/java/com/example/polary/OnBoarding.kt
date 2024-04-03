@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.polary.Authentication.SignIn
+import com.example.polary.Authentication.SignUpMain
 import com.google.android.material.button.MaterialButton
 
 class OnBoarding : AppCompatActivity() {

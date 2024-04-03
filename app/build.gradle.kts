@@ -47,6 +47,17 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets {
+        getByName("main") {
+            java.srcDir("src/main/java")
+            res.srcDirs(listOf(
+                "src/main/res/layouts/authentication",
+                "src/main/res/layouts/others",
+                "src/main/res/layouts",
+                "src/main/res",
+            ))
+        }
+    }
 }
 
 dependencies {

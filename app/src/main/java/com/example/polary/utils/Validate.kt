@@ -1,4 +1,4 @@
-package com.example.polary
+package com.example.polary.utils
 
 class Validate {
     companion object {

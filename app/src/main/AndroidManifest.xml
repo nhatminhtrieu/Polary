@@ -10,15 +10,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
+            android:name=".Authentication.SignIn"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            />
         <activity
-            android:name=".MainActivity"
+            android:name=".OnBoarding"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,9 +27,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignIn"
+            android:name=".Authentication.SignUpMain"
             android:exported="false"
-            android:label="Sign in"
+            android:label="Sign up"
+            android:parentActivityName=".OnBoarding" />
+        <activity
+            android:name=".Authentication.SignUpFull"
+            android:exported="false"
+            android:label="Sign up"
+            android:parentActivityName=".OnBoarding" />
+        <activity
+            android:name=".Authentication.EnterNewPassword"
+            android:exported="false"
+            android:label="Enter new password"
+            android:parentActivityName=".OnBoarding" />
+        <activity
+            android:name=".Authentication.ResetPassword"
+            android:exported="false"
+            android:label="Forgot password"
+            android:parentActivityName=".OnBoarding" />
+        <activity
+            android:name=".Authentication.VerifyOTP"
+            android:exported="false"
+            android:label="Verify OTP"
             android:parentActivityName=".OnBoarding" />
     </application>
 
