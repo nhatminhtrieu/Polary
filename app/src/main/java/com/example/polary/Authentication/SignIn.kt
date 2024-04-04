@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
+import com.example.polary.PostView.PostActivity
 import com.example.polary.R
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.material.button.MaterialButton

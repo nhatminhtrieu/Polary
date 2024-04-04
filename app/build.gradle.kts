@@ -52,6 +52,7 @@ android {
         getByName("main") {
             java.srcDir("src/main/java")
             res.srcDirs(listOf(
+                "src/main/res/layouts/post",
                 "src/main/res/layouts/authentication",
                 "src/main/res/layouts/others",
                 "src/main/res/layouts",
