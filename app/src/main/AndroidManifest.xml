@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".Authentication.SignIn"
+            android:name=".authentication.SignIn"
             android:exported="false"
             />
         <activity
@@ -27,27 +27,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Authentication.SignUpMain"
+            android:name=".authentication.SignUpMain"
             android:exported="false"
             android:label="Sign up"
             android:parentActivityName=".OnBoarding" />
         <activity
-            android:name=".Authentication.SignUpFull"
+            android:name=".authentication.SignUpFull"
             android:exported="false"
             android:label="Sign up"
             android:parentActivityName=".OnBoarding" />
         <activity
-            android:name=".Authentication.EnterNewPassword"
+            android:name=".authentication.EnterNewPassword"
             android:exported="false"
             android:label="Enter new password"
             android:parentActivityName=".OnBoarding" />
         <activity
-            android:name=".Authentication.ResetPassword"
+            android:name=".authentication.ResetPassword"
             android:exported="false"
             android:label="Forgot password"
             android:parentActivityName=".OnBoarding" />
         <activity
-            android:name=".Authentication.VerifyOTP"
+            android:name=".authentication.VerifyOTP"
             android:exported="false"
             android:label="Verify OTP"
             android:parentActivityName=".OnBoarding" />

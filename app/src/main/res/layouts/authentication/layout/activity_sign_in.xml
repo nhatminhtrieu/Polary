@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Authentication.SignIn">
+        android:layout_height="wrap_content"
+        tools:context=".authentication.SignIn">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_layout"

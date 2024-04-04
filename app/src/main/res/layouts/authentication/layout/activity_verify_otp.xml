@@ -10,7 +10,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".Authentication.VerifyOTP">
+        tools:context=".authentication.VerifyOTP">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
