@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.polary.Authentication.SignIn
 import com.example.polary.ui.theme.PolaryTheme
-import com.example.polary.usersList.UserActivity
+import com.example.polary.PostView.PostActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToUserActivity() {
-        val intent = Intent(this, UserActivity::class.java)
+        val intent = Intent(this, PostActivity::class.java)
         startActivity(intent)
     }
 }

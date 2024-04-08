@@ -1,4 +1,4 @@
-package com.example.polary.ultils
+package com.example.polary.utils
 
 import com.example.polary.dataClass.ResponseBody
 import com.google.gson.JsonElement

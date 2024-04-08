@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Polary</string>
+    <string name="no_reaction">No reaction yet</string>
+    <string name="other_user">and others</string>
 </resources>

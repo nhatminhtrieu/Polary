@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,6 +52,7 @@ android {
         getByName("main") {
             java.srcDir("src/main/java")
             res.srcDirs(listOf(
+                "src/main/res/layouts/post",
                 "src/main/res/layouts/authentication",
                 "src/main/res/layouts/others",
                 "src/main/res/layouts",
@@ -77,6 +79,8 @@ dependencies {
     implementation(libs.play.services.base)
     implementation (libs.retrofit)
     implementation(libs.retrofitConverterGson)
+    implementation(libs.firebase.storage)
+    implementation(libs.firebaseUIStorage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

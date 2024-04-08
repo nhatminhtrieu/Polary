@@ -1,8 +1,9 @@
 package com.example.polary.Class
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serial
 
-class Post {
+class Post{
     @SerializedName("id")
     private lateinit var id: Number
 

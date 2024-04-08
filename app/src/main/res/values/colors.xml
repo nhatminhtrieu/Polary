@@ -16,4 +16,7 @@
     <color name="colorButton">#6200EE</color>
     <color name="transparent">#00000000</color>
     <color name="colorError">#FF0000</color>
+    <color name="polaroidBackground">#E9EAEB</color>
+    <color name="captionColor">#0F1113</color>
+    <color name="textViewInPost">#323539</color>
 </resources>
