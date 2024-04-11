@@ -9,7 +9,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".Authentication.SignUpMain">
+        tools:context=".authentication.SignUpMain">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_layout"
@@ -61,8 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:text="OR"
-                android:textColor="@color/white"
+                android:text="or"
+                android:textColor="@color/md_theme_onSurface"
                 app:layout_constraintBottom_toTopOf="@id/GoogleLogin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Already have an account? Sign in"
-                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
