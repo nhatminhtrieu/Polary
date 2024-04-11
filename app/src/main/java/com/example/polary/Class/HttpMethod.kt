@@ -46,7 +46,6 @@ class HttpMethod {
     }
 
 
-    data class RequestBody(val data: Any)
     fun doPost(url: String, requestBody: Any, callback: ApiCallBack<Any>) {
         Log.d("HttpMethod", "doPost: $requestBody")
         val api = retrofitBuilder.create(IApi::class.java)

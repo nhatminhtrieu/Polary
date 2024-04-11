@@ -2,16 +2,18 @@ package com.example.polary.authentication
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.polary.Class.HttpMethod
 import com.example.polary.R
+import com.example.polary.ultils.ApiCallBack
 import com.example.polary.utils.Validate
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
 
 class EnterNewPassword : AppCompatActivity() {
     private lateinit var password: TextInputEditText
@@ -37,26 +39,51 @@ class EnterNewPassword : AppCompatActivity() {
                     confirmPassword.text.toString()
                 )
             ) {
-                // implement later
-                val intent = Intent(this, SignIn::class.java)
-                startActivity(intent)
+                val requestBody = mapOf(
+                    "email" to intent.getStringExtra("email"),
+                    "password" to password.text.toString()
+                )
+                updatePassword(requestBody)
             } else {
-                // error on text input
-                val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
-                val confirmPasswordLayout = findViewById<TextInputLayout>(R.id.confirm_password_layout)
-                passwordLayout.isErrorEnabled = true
-                passwordLayout.error = "Passwords do not match"
-                confirmPasswordLayout.isErrorEnabled = true
-                confirmPasswordLayout.error = "Passwords do not match"
-
-                // Remove error after 2 seconds
-                Handler(Looper.getMainLooper()).postDelayed({
-                    passwordLayout.isErrorEnabled = false
-                    passwordLayout.error = null
-                    confirmPasswordLayout.isErrorEnabled = false
-                    confirmPasswordLayout.error = null
-                }, 2000) // 2000 milliseconds = 2 seconds
+                showError()
             }
         }
+    }
+
+    private fun updatePassword(requestBody: Any) {
+        lifecycleScope.launch {
+            try {
+                val httpMethod = HttpMethod()
+                httpMethod.doPost("auth/update-password", requestBody, object : ApiCallBack<Any> {
+                    override fun onSuccess(data: Any) {
+                        val intent = Intent(this@EnterNewPassword, SignIn::class.java)
+                        startActivity(intent)
+                    }
+
+                    override fun onError(error: Throwable) {
+                        // Handle error
+                    }
+                })
+            } catch (error: Throwable) {
+                // Handle error
+            }
+        }
+    }
+
+    private fun showError() {
+        val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
+        val confirmPasswordLayout = findViewById<TextInputLayout>(R.id.confirm_password_layout)
+        passwordLayout.isErrorEnabled = true
+        passwordLayout.error = "Passwords do not match"
+        confirmPasswordLayout.isErrorEnabled = true
+        confirmPasswordLayout.error = "Passwords do not match"
+
+        // Remove error after 2 seconds
+        passwordLayout.postDelayed({
+            passwordLayout.isErrorEnabled = false
+            passwordLayout.error = null
+            confirmPasswordLayout.isErrorEnabled = false
+            confirmPasswordLayout.error = null
+        }, 2000) // 2000 milliseconds = 2 seconds
     }
 }

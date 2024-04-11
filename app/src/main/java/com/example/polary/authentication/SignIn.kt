@@ -18,17 +18,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+@Suppress("DEPRECATION")
 class SignIn : AppCompatActivity() {
     private lateinit var usernameEditText: TextInputEditText
     private lateinit var forgotPassword: MaterialButton
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInButton: MaterialButton
-
+    private lateinit var signInMatBtn: MaterialButton
     private val httpMethod = HttpMethod()
+
     private val callback = object : ApiCallBack<Any> {
         override fun onSuccess(data: Any) {
             // Redirect to home page
@@ -44,6 +47,7 @@ class SignIn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
         usernameEditText = findViewById(R.id.username)
+        signInMatBtn = findViewById(R.id.login)
 
 
         val signUpText: MaterialTextView = findViewById(R.id.signup_text)
@@ -51,6 +55,40 @@ class SignIn : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
+
+
+        signInMatBtn.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val password: String = findViewById<TextInputEditText>(R.id.password).text.toString()
+
+            if (username.isBlank() || password.isBlank()) {
+                val usernameLayout = findViewById<TextInputLayout>(R.id.username_layout)
+                val passwordLayout = findViewById<TextInputLayout>(R.id.password_layout)
+
+                if (username.isBlank()) {
+                    usernameLayout.isErrorEnabled = true
+                    usernameLayout.error = "Please enter a username"
+                }
+
+                if (password.isBlank()) {
+                    passwordLayout.isErrorEnabled = true
+                    passwordLayout.error = "Please enter a password"
+                }
+            }
+
+            val user = User(username = username, password = password, email = "", firebaseUID = "")
+            httpMethod.doPost("auth/signin", user, object : ApiCallBack<Any> {
+                override fun onSuccess(data: Any) {
+                    // Handle successful sign in
+                    Log.d("SignIn", "User signed in")
+                }
+
+                override fun onError(error: Throwable) {
+                    // Handle sign in error
+                    Log.e("SignIn", "Error signing in", error)
+                }
+            })
+        }
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
@@ -99,25 +137,26 @@ class SignIn : AppCompatActivity() {
         }
     }
 
-private fun handleSignInResult(account: GoogleSignInAccount?) {
-    account?.let {
-        val credential = GoogleAuthProvider.getCredential(it.idToken, null)
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                task.result?.user?.let { firebaseUser ->
-                    val user = User(
-                        firebaseUID = firebaseUser.uid,
-                        username = usernameEditText.text?.toString() ?: "",
-                        email = firebaseUser.email ?: "",
-                        password = ""
-                    )
-                    httpMethod.doPost("users/", user, callback)
+    private fun handleSignInResult(account: GoogleSignInAccount?) {
+        account?.let {
+            val credential = GoogleAuthProvider.getCredential(it.idToken, null)
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    task.result?.user?.let { firebaseUser ->
+                        val user = User(
+                            firebaseUID = firebaseUser.uid,
+                            username = usernameEditText.text?.toString() ?: "",
+                            email = firebaseUser.email ?: "",
+                            password = ""
+                        )
+                        httpMethod.doPost("users/", user, callback)
+                    }
+                }.addOnFailureListener { exception ->
+                    Log.w("SignIn", "signInWithCredential:failure", exception)
                 }
-            }.addOnFailureListener { exception ->
-                Log.w("SignIn", "signInWithCredential:failure", exception)
-            }
+        }
     }
-}
+
     companion object {
         private const val RC_SIGN_IN = 9001
     }

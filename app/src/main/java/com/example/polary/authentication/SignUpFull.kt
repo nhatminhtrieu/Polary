@@ -68,7 +68,6 @@ class SignUpFull : AppCompatActivity() {
 
                             val callback = object : ApiCallBack<Any> {
                                 override fun onSuccess(data: Any) {
-                                    // Redirect to sign in page
                                     Intent(
                                         this@SignUpFull,
                                         SignIn::class.java
@@ -76,7 +75,6 @@ class SignUpFull : AppCompatActivity() {
                                 }
 
                                 override fun onError(error: Throwable) {
-                                    // Handle error
                                 }
                             }
 

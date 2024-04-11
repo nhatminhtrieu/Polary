@@ -52,7 +52,12 @@ class VerifyOTP : AppCompatActivity() {
                         "signUp" -> startActivity(Intent(this@VerifyOTP, SignUpFull::class.java).apply {
                             putExtra("email", email)
                         })
-                        "resetPassword" -> startActivity(Intent(this@VerifyOTP, ResetPassword::class.java).apply {
+
+                        "resetPassword" -> startActivity(
+                            Intent(
+                                this@VerifyOTP,
+                                EnterNewPassword::class.java
+                            ).apply {
                             putExtra("email", email)
                         })
                     }
