@@ -1,5 +1,6 @@
 package com.example.polary.Class
 
+import android.util.Log
 import com.example.polary.dataClass.ResponseBody
 import com.example.polary.`object`.RetrofitInstance
 import com.example.polary.ultils.ApiCallBack
@@ -35,6 +36,31 @@ class HttpMethod {
                     callback.onSuccess(data)
                 } else {
                     callback.onError(Throwable(response.message()))
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody<JsonElement>>, t: Throwable) {
+                callback.onError(t)
+            }
+        })
+    }
+
+
+    data class RequestBody(val data: Any)
+    fun doPost(url: String, requestBody: Any, callback: ApiCallBack<Any>) {
+        Log.d("HttpMethod", "doPost: $requestBody")
+        val api = retrofitBuilder.create(IApi::class.java)
+        val call = api.postData(url, requestBody)
+
+        call.enqueue(object : Callback<ResponseBody<JsonElement>> {
+            override fun onResponse(
+                call: Call<ResponseBody<JsonElement>>,
+                response: Response<ResponseBody<JsonElement>>
+            ) { if (response.isSuccessful) {
+                    response.body()?.data?.let { callback.onSuccess(it) }
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "No error body"
+                    callback.onError(Throwable("Unsuccessful response. Status code: ${response.code()}, Error body: $errorBody"))
                 }
             }
 

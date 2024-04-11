@@ -6,7 +6,10 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
+import com.example.polary.Class.HttpMethod
 import com.example.polary.R
+import com.example.polary.dataClass.User
+import com.example.polary.ultils.ApiCallBack
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -24,9 +27,24 @@ class SignIn : AppCompatActivity() {
     private lateinit var forgotPassword: MaterialButton
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInButton: MaterialButton
+
+    private val httpMethod = HttpMethod()
+    private val callback = object : ApiCallBack<Any> {
+        override fun onSuccess(data: Any) {
+            // Redirect to home page
+            Log.d("SignIn", "User signed in")
+        }
+
+        override fun onError(error: Throwable) {
+            // Handle error
+            Log.e("SignIn", "Error signing in", error)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+        usernameEditText = findViewById(R.id.username)
+
 
         val signUpText: MaterialTextView = findViewById(R.id.signup_text)
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -81,23 +99,25 @@ class SignIn : AppCompatActivity() {
         }
     }
 
-    private fun handleSignInResult(account: GoogleSignInAccount?) {
-        // Handle sign in success
-        if (account != null) {
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success
-                        val user = FirebaseAuth.getInstance().currentUser
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w("SignIn", "signInWithCredential:failure", task.exception)
-                    }
+private fun handleSignInResult(account: GoogleSignInAccount?) {
+    account?.let {
+        val credential = GoogleAuthProvider.getCredential(it.idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                task.result?.user?.let { firebaseUser ->
+                    val user = User(
+                        firebaseUID = firebaseUser.uid,
+                        username = usernameEditText.text?.toString() ?: "",
+                        email = firebaseUser.email ?: "",
+                        password = ""
+                    )
+                    httpMethod.doPost("users/", user, callback)
                 }
-        }
+            }.addOnFailureListener { exception ->
+                Log.w("SignIn", "signInWithCredential:failure", exception)
+            }
     }
-
+}
     companion object {
         private const val RC_SIGN_IN = 9001
     }

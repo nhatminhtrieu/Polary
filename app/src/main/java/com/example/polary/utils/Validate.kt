@@ -1,17 +1,36 @@
 package com.example.polary.utils
 
+
+import com.example.polary.Class.HttpMethod
+import com.example.polary.ultils.ApiCallBack
+import kotlinx.coroutines.CompletableDeferred
+
+data class OTPRequestBody(val email: String, val otp: String)
+
 class Validate {
     companion object {
         fun validateEmail(email: String): Boolean {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
 
-        fun validateOTP(enteredOTP: String, expectedOTP: String, email: String) {
-            if (enteredOTP == expectedOTP) {
-                // Continue with the sign up process
-            } else {
-                // Show error message
-            }
+        suspend fun validateOTP(email: String, enteredOTP: String): Boolean {
+            val httpMethod = HttpMethod()
+            val requestBody = OTPRequestBody(email, enteredOTP)
+            val result = CompletableDeferred<Boolean>()
+
+            httpMethod.doPost("auth/verify-otp", requestBody, object : ApiCallBack<Any> {
+                override fun onSuccess(data: Any) {
+                    // Assuming the API returns a success status in the data when the OTP is valid
+                    result.complete(true)
+                }
+
+                override fun onError(error: Throwable) {
+                    // Log the error and complete the result with false
+                    result.complete(false)
+                }
+            })
+
+            return result.await()
         }
 
         fun validateUsername(username: String): Boolean {

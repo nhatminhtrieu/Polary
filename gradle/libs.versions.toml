@@ -22,6 +22,7 @@ retrofit = "2.10"
 ui = "1.6.4"
 uiTooling = "1.6.4"
 material3Android = "1.2.1"
+firebaseFirestoreKtx = "24.11.0"
 
 [libraries]
 androidx-activity-compose-v131 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -53,6 +54,7 @@ retrofitConverterGson = { group = "com.squareup.retrofit2", name="converter-gson
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.polary.R
+import com.example.polary.utils.Validate
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
+import kotlinx.coroutines.launch
 
 class VerifyOTP : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,11 +22,12 @@ class VerifyOTP : AppCompatActivity() {
 
         applyClickableSpan(findViewById(R.id.resendOTP), "Resend OTP", this, VerifyOTP::class.java)
 
-        val expectedOTP = "123456" // change later
         val email = intent.getStringExtra("email")
+        val message = intent.getStringExtra("message")
 
         val announceText: MaterialTextView = findViewById(R.id.announcement)
-        announceText.text = announceText.text.toString().replace("your email address", email.toString())
+        announceText.text =
+            announceText.text.toString().replace("your email address", email.toString())
 
         val otpFields = arrayOf<TextInputEditText>(
             findViewById(R.id.otp1),
@@ -42,12 +45,21 @@ class VerifyOTP : AppCompatActivity() {
         val submitButton: MaterialButton = findViewById(R.id.submit)
         submitButton.setOnClickListener {
             val enteredOTP = otpFields.joinToString("") { it.text.toString() }
-            if (email != null) {
-                validateOTP(enteredOTP, expectedOTP, email)
+            lifecycleScope.launch {
+                val isValid = Validate.validateOTP(email!!, enteredOTP)
+                if (isValid) {
+                    when (message) {
+                        "signUp" -> startActivity(Intent(this@VerifyOTP, SignUpFull::class.java).apply {
+                            putExtra("email", email)
+                        })
+                        "resetPassword" -> startActivity(Intent(this@VerifyOTP, ResetPassword::class.java).apply {
+                            putExtra("email", email)
+                        })
+                    }
+                }
             }
         }
     }
-
     private fun createTextWatcher(nextEditText: EditText): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -61,22 +73,6 @@ class VerifyOTP : AppCompatActivity() {
                     nextEditText.requestFocus()
                 }
             }
-        }
-    }
-
-    private fun validateOTP(enteredOTP: String, expectedOTP: String, email: String) {
-        if (enteredOTP == expectedOTP) {
-            val intent = when (intent.getStringExtra("message")) {
-                "resetPassword" -> Intent(this, EnterNewPassword::class.java)
-                "signUp" -> Intent(this, SignUpFull::class.java)
-                else -> null
-            }
-            intent?.let {
-                it.putExtra("email", email)
-                startActivity(it)
-            }
-        } else {
-            Toast.makeText(this, "Invalid OTP", Toast.LENGTH_SHORT).show()
         }
     }
 }
