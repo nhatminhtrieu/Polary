@@ -7,9 +7,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.polary.Class.HttpMethod
+import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
-import com.example.polary.ultils.ApiCallBack
+import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -36,6 +37,8 @@ class SignIn : AppCompatActivity() {
         override fun onSuccess(data: Any) {
             // Redirect to home page
             Log.d("SignIn", "User signed in")
+            val intent = Intent(this@SignIn, TakePhotoActivity::class.java)
+            startActivity(intent)
         }
 
         override fun onError(error: Throwable) {
@@ -81,6 +84,8 @@ class SignIn : AppCompatActivity() {
                 override fun onSuccess(data: Any) {
                     // Handle successful sign in
                     Log.d("SignIn", "User signed in")
+                    val intent = Intent(this@SignIn, TakePhotoActivity::class.java)
+                    startActivity(intent)
                 }
 
                 override fun onError(error: Throwable) {
@@ -150,6 +155,7 @@ class SignIn : AppCompatActivity() {
                             password = ""
                         )
                         httpMethod.doPost("users/", user, callback)
+
                     }
                 }.addOnFailureListener { exception ->
                     Log.w("SignIn", "signInWithCredential:failure", exception)

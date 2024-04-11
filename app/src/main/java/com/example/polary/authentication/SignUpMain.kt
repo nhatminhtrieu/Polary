@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
-import com.example.polary.ultils.ApiCallBack
+import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.Validate
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.gms.auth.api.signin.GoogleSignIn

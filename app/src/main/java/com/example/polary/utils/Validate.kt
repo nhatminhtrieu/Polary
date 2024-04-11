@@ -2,7 +2,7 @@ package com.example.polary.utils
 
 
 import com.example.polary.Class.HttpMethod
-import com.example.polary.ultils.ApiCallBack
+import com.example.polary.utils.ApiCallBack
 import kotlinx.coroutines.CompletableDeferred
 
 data class OTPRequestBody(val email: String, val otp: String)

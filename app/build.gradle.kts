@@ -82,11 +82,7 @@ dependencies {
     implementation(libs.play.services.base)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverterGson)
-    implementation(libs.firebase.storage)
-    implementation(libs.firebaseUIStorage)
-    implementation(libs.androidx.camera.view)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.camera2)
+
     implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -99,6 +95,10 @@ dependencies {
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation(libs.play.services.auth)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.camera2)
+    implementation("com.github.bumptech.glide:glide:4.12.0")
 }
 
 apply(plugin = "com.google.gms.google-services")
