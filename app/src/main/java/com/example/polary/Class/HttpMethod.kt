@@ -3,8 +3,8 @@ package com.example.polary.Class
 import android.util.Log
 import com.example.polary.dataClass.ResponseBody
 import com.example.polary.`object`.RetrofitInstance
-import com.example.polary.ultils.ApiCallBack
-import com.example.polary.ultils.IApi
+import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.IApi
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken

@@ -27,7 +27,7 @@ fun applyClickableSpan(textView: MaterialTextView, clickableText: String, activi
         override fun updateDrawState(ds: TextPaint) {
             super.updateDrawState(ds)
             ds.isUnderlineText = false
-            ds.color = ContextCompat.getColor(activity, R.color.white)
+            ds.color = ContextCompat.getColor(activity, R.color.md_theme_onBackground)
         }
     }
 

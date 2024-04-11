@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.polary" />
+                  <option name="mobileSdkAppId" value="1:543502116747:android:634bf3a4e416d0a627318e" />
+                  <option name="projectId" value="polary-8862a" />
+                  <option name="projectNumber" value="543502116747" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

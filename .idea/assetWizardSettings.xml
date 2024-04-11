@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -18,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/password/baseline_password_24.xml" />
+                                      <entry key="url" value="file:/$PROJECT_DIR$/../../AppData/Local/Android/Sdk/icons/material/materialicons/keyboard_arrow_down/baseline_keyboard_arrow_down_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +33,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_password_24" />
-                            <entry key="sourceFile" value="C:\Users\MINH\AndroidStudioProjects\Polary" />
+                            <entry key="outputName" value="ic_down" />
+                            <entry key="sourceFile" value="D:\Dev\foreground_button.svg" />
                           </map>
                         </option>
                       </PersistentState>
