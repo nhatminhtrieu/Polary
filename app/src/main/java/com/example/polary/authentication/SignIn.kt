@@ -130,7 +130,6 @@ class SignIn : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -155,7 +154,8 @@ class SignIn : AppCompatActivity() {
                             password = ""
                         )
                         httpMethod.doPost("users/", user, callback)
-
+                        val intent = Intent(this, TakePhotoActivity::class.java)
+                        startActivity(intent)
                     }
                 }.addOnFailureListener { exception ->
                     Log.w("SignIn", "signInWithCredential:failure", exception)
