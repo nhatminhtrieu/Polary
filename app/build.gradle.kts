@@ -52,6 +52,8 @@ android {
         getByName("main") {
             java.srcDir("src/main/java")
             res.srcDirs(listOf(
+                "src/main/res/layouts/photo",
+                "src/main/res/layouts/profile",
                 "src/main/res/layouts/post",
                 "src/main/res/layouts/authentication",
                 "src/main/res/layouts/others",
@@ -63,7 +65,7 @@ android {
 }
 
 dependencies {
-
+    val camerax_version = "1.3.2"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -81,6 +83,9 @@ dependencies {
     implementation(libs.retrofitConverterGson)
     implementation(libs.firebase.storage)
     implementation(libs.firebaseUIStorage)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.camera2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

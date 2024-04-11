@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.example.polary.PostView.PostActivity
 import com.example.polary.R
+import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.utils.applyClickableSpan
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -25,6 +26,11 @@ class SignIn : AppCompatActivity() {
         forgotPassword = findViewById(R.id.forgot_password)
         forgotPassword.setOnClickListener {
             val intent = Intent(this, ResetPassword::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<MaterialButton>(R.id.login).setOnClickListener {
+            val intent = Intent(this, TakePhotoActivity::class.java)
             startActivity(intent)
         }
 

@@ -3,7 +3,6 @@
 
     <style name="AppTheme" parent="Theme.Material3.Dark">
         <item name="android:forceDarkAllowed">true</item>
-
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -84,6 +83,9 @@
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Material3.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Material3.LargeComponent</item>
     </style>
-
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <style name="Theme.Polary" parent="Theme.Material3.Dark" />
 </resources>
