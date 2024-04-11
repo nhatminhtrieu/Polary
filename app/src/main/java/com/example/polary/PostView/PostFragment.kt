@@ -13,7 +13,6 @@ import com.example.polary.R
 import com.example.polary.constant.EmojiDrawable
 
 class PostFragment : Fragment() {
-
     companion object {
         private const val ARG_POST = "post"
 
@@ -41,6 +40,8 @@ class PostFragment : Fragment() {
         val author = view.findViewById<TextView>(R.id.post_author)
         author.text = post.author.username
 
+        val avatar = view.findViewById<ImageView>(R.id.user_avatar_view)
+        Glide.with(this).load(post.author.avatar).into(avatar)
 
         val caption = view.findViewById<TextView>(R.id.post_caption)
         caption.text = post.caption
@@ -52,7 +53,7 @@ class PostFragment : Fragment() {
         val latestUser = view.findViewById<TextView>(R.id.latest_user)
        when {
            listReactions.size >= 3 -> {
-               val firstEmojiDrawable= EmojiDrawable.map[listReactions[0].type ?: ""]
+                val firstEmojiDrawable= EmojiDrawable.map[listReactions[0].type ?: ""]
                 val secondEmojiDrawable = EmojiDrawable.map[listReactions[1].type ?: ""]
                 val thirdEmojiDrawable = EmojiDrawable.map[listReactions[2].type ?: ""]
 
@@ -100,7 +101,23 @@ class PostFragment : Fragment() {
            }
 
        }
+        val totalComments = view.findViewById<TextView>(R.id.total_comment)
+        when(val countComments = post.countComments.toInt()) {
+            0 -> totalComments.text = requireContext().getString(R.string.no_comment)
+            1 -> totalComments.text = requireContext().getString(R.string.one_comment)
+            else -> totalComments.text = "View all $countComments comments"
+        }
+
+        totalComments.setOnClickListener{
+            openCommentSheet(post.id)
+        }
 
         return view
     }
+
+    private fun openCommentSheet(postId: Number) {
+        val modalBottomSheet = CommentFragment(postId)
+        modalBottomSheet.show(parentFragmentManager, CommentFragment.TAG)
+    }
+
 }
