@@ -21,7 +21,6 @@ import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.common.util.concurrent.ListenableFuture
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
