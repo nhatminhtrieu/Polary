@@ -56,7 +56,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/post_card"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
@@ -66,13 +66,10 @@
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header">
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintHeight_percent="0.5">
 
-        <include
-            layout="@layout/card_polaroid"
-            android:layout_width="match_parent"
-            android:layout_height="454dp"
-            android:layout_marginTop="@dimen/extra_large_margin" />
+        <include layout="@layout/card_polaroid" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -80,12 +77,12 @@
         android:id="@+id/total_reaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginBottom="@dimen/default_margin"
         android:background="@drawable/rounded_edittext"
+        app:layout_constraintBottom_toTopOf="@+id/reaction_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/reaction_layout">
+        app:layout_constraintTop_toBottomOf="@+id/post_card">
 
         <FrameLayout
             android:id="@+id/latest_reaction"
@@ -130,13 +127,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/add_comment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_reaction"
+        app:layout_constraintHorizontal_bias="0.0">
 
         <LinearLayout
             android:id="@+id/add_reaction"
@@ -201,6 +198,7 @@
         android:padding="12dp"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reaction_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -213,5 +211,6 @@
         android:layout_marginBottom="36dp"
         android:text="Hello"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_comment" />
 </androidx.constraintlayout.widget.ConstraintLayout>
