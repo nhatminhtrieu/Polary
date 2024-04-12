@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Polary</string>
+    <string name="no_reaction">No reaction yet</string>
+    <string name="other_user">and others</string>
+    <string name="no_comment">No comment yet</string>
+    <string name="one_comment">View one comment</string>
+    <string name="comment_sample">Comment Sample</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="friends">Friends</string>
+    <string name="groups">Groups</string>
+    <string name="history">History</string>
+    <string name="PandaURL">192.168.1.104</string>
+    <string name="SimulatorURL">10.0.2.2</string>
 </resources>
