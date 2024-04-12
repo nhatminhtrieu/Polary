@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="300dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
@@ -28,7 +28,9 @@
         android:id="@+id/post_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginTop="@dimen/extra_large_margin"
         android:textAlignment="center"
         android:textColor="@color/captionColor"
         android:textSize="28sp" />
