@@ -133,6 +133,4 @@ class PostFragment : Fragment() {
         val modalBottomSheet = ReactionFragment(postId)
         modalBottomSheet.show(parentFragmentManager, ReactionFragment.TAG)
     }
-
-
 }

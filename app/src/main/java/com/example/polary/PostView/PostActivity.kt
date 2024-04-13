@@ -15,8 +15,6 @@ class PostActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post)
-        viewPager = findViewById(R.id.viewPager)
         getUsersPosts(5)
     }
 
@@ -25,9 +23,14 @@ class PostActivity : AppCompatActivity() {
         httpMethod.doGet<Post>("users/${userId}/viewable-posts", object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 posts = ArrayList(data as List<Post>)
-                postAdapter = PostPagerAdapter(supportFragmentManager, posts)
-                viewPager.adapter = postAdapter
-                Log.i("Hello", posts.toString())
+                if(posts.isEmpty()) {
+                    setContentView(R.layout.post_empty)
+                } else {
+                    setContentView(R.layout.activity_post)
+                    viewPager = findViewById(R.id.viewPager)
+                    postAdapter = PostPagerAdapter(supportFragmentManager, posts)
+                    viewPager.adapter = postAdapter
+                }
             }
 
             override fun onError(error: Throwable) {
