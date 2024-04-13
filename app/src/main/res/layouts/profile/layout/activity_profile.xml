@@ -330,6 +330,7 @@
                 app:tint="@color/md_theme_error" />
 
             <TextView
+                android:id="@+id/signOutBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

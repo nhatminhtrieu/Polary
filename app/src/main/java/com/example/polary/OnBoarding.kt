@@ -1,16 +1,19 @@
 package com.example.polary
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.authentication.SignIn
 import com.example.polary.authentication.SignUpMain
 import com.google.android.material.button.MaterialButton
 
 class OnBoarding : AppCompatActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // Enable dark mode
@@ -33,5 +36,19 @@ class OnBoarding : AppCompatActivity() {
             val intent = Intent(this, SignUpMain::class.java)
             startActivity(intent)
         }
+
+        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+
+        if (isLoggedIn) {
+            val intent = Intent(this, TakePhotoActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            val intent = Intent(this, SignIn::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 }
