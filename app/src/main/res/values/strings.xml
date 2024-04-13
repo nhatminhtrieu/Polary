@@ -14,5 +14,5 @@
     <string name="SimulatorURL">10.0.2.2</string>
     <string name="comment_header">Comments</string>
     <string name="reaction_header">Reactions</string>
-    <string name="none_comment_text">Let a first comment</string>
+    <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid</string>
 </resources>
