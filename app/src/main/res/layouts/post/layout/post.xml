@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/post_view"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/header"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
         android:orientation="horizontal"
-        android:layout_margin="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseCompoundDrawables">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/post_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:cardCornerRadius="250dp"
             app:cardBackgroundColor="@color/md_theme_onSurface"
+            app:cardCornerRadius="250dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -48,26 +55,34 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/post_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginRight="8dp"
         app:cardBackgroundColor="@color/polaroidBackground"
-        app:cardElevation="2dp">
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintHeight_percent="0.5">
 
         <include layout="@layout/card_polaroid" />
 
     </com.google.android.material.card.MaterialCardView>
+
     <RelativeLayout
         android:id="@+id/total_reaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_edittext">
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@drawable/rounded_edittext"
+        app:layout_constraintBottom_toTopOf="@+id/reaction_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/post_card">
 
         <FrameLayout
             android:id="@+id/latest_reaction"
@@ -108,75 +123,93 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/reaction_layout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:gravity="center_horizontal">
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/add_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_reaction"
+        app:layout_constraintHorizontal_bias="0.0">
+
         <LinearLayout
             android:id="@+id/add_reaction"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <ImageButton
                 android:id="@+id/love"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/heart_emoji"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/heart_emoji" />
 
             <ImageButton
                 android:id="@+id/cry"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/cry_emoji"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/cry_emoji" />
 
             <ImageButton
                 android:id="@+id/smile"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/smile_emoji"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/smile_emoji" />
 
             <ImageButton
                 android:id="@+id/clown"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/clown_emoji"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/clown_emoji" />
 
             <ImageButton
                 android:id="@+id/skull"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:src="@drawable/skull_emoji"
-                android:background="?android:attr/selectableItemBackground" />
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/skull_emoji" />
         </LinearLayout>
     </RelativeLayout>
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/add_comment"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:padding="12dp"
+        android:layout_marginBottom="92dp"
         android:background="@drawable/rounded_edittext"
         android:drawableEnd="@drawable/ic_send"
+        android:drawableTint="@color/md_theme_onSurface"
         android:inputType="text"
-        android:textSize="16sp"/>
+        android:padding="12dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reaction_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/total_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="16dp" />
-</LinearLayout>
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="36dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_comment" />
+</androidx.constraintlayout.widget.ConstraintLayout>
