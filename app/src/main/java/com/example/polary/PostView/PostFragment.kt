@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -49,6 +50,7 @@ class PostFragment : Fragment() {
         val image = view.findViewById<ImageView>(R.id.post_image)
         Glide.with(this).load(post.imageUrl).into(image)
 
+        val totalReactions: RelativeLayout = view.findViewById(R.id.total_reaction)
         val listReactions = post.reactions
         val latestUser = view.findViewById<TextView>(R.id.latest_user)
        when {
@@ -109,15 +111,28 @@ class PostFragment : Fragment() {
         }
 
         totalComments.setOnClickListener{
-            openCommentSheet(post.id)
+            openCommentSheet(post.id, post.countComments.toInt())
+        }
+
+
+        totalReactions.setOnClickListener {
+            openReactionSheet(post.id, listReactions.size)
         }
 
         return view
     }
 
-    private fun openCommentSheet(postId: Number) {
+    private fun openCommentSheet(postId: Number, totalComments: Int) {
+        if(totalComments == 0) return
         val modalBottomSheet = CommentFragment(postId)
         modalBottomSheet.show(parentFragmentManager, CommentFragment.TAG)
     }
+
+    private fun openReactionSheet(postId: Number, totalReactions: Int) {
+        if(totalReactions == 0) return
+        val modalBottomSheet = ReactionFragment(postId)
+        modalBottomSheet.show(parentFragmentManager, ReactionFragment.TAG)
+    }
+
 
 }

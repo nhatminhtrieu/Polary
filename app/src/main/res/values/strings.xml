@@ -12,4 +12,7 @@
     <string name="history">History</string>
     <string name="PandaURL">192.168.1.104</string>
     <string name="SimulatorURL">10.0.2.2</string>
+    <string name="comment_header">Comments</string>
+    <string name="reaction_header">Reactions</string>
+    <string name="none_comment_text">Let a first comment</string>
 </resources>
