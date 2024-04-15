@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.polary.Photo.SendPhotoActivity
+import com.example.polary.Photo.TakePhotoActivity
+import com.example.polary.Profile.ProfileActivity
 import com.example.polary.authentication.SignIn
 import com.example.polary.authentication.SignUpMain
 import com.google.android.material.button.MaterialButton
@@ -22,6 +25,8 @@ class OnBoarding : AppCompatActivity() {
             insets
         }
 
+        val intent = Intent(this, TakePhotoActivity::class.java)
+        startActivity(intent)
         val signInButton = findViewById<MaterialButton>(R.id.signInMatBtn)
         signInButton.setOnClickListener {
             val intent = Intent(this, SignIn::class.java)

@@ -8,6 +8,7 @@ import com.example.polary.utils.IApi
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,8 +45,6 @@ class HttpMethod {
             }
         })
     }
-
-
     fun doPost(url: String, requestBody: Any, callback: ApiCallBack<Any>) {
         Log.d("HttpMethod", "doPost: $requestBody")
         val api = retrofitBuilder.create(IApi::class.java)
@@ -68,4 +67,28 @@ class HttpMethod {
             }
         })
     }
+
+    fun doPostMultiPart(url: String, file: MultipartBody.Part, authorId: MultipartBody.Part, caption: MultipartBody.Part, visibleToIds: List<MultipartBody.Part>, callback: ApiCallBack<Any>) {
+        Log.d("HttpMethod", "doPostMultiPart: $authorId")
+        val api = retrofitBuilder.create(IApi::class.java)
+        val call = api.postDataMultipart(url, file, authorId, caption, visibleToIds)
+        call.enqueue(object : Callback<ResponseBody<JsonElement>> {
+            override fun onResponse(
+                call: Call<ResponseBody<JsonElement>>,
+                response: Response<ResponseBody<JsonElement>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.data?.let { callback.onSuccess(it) }
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "No error body"
+                    callback.onError(Throwable("Unsuccessful response. Status code: ${response.code()}, Error body: $errorBody"))
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody<JsonElement>>, t: Throwable) {
+                callback.onError(t)
+            }
+        })
+    }
+
 }

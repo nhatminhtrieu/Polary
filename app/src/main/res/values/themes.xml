@@ -94,4 +94,15 @@
     <style name="BottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
     </style>
+    <style name="FullScreenBottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <style name="NoScrimBottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>
