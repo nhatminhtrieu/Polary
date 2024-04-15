@@ -12,6 +12,12 @@
     <string name="history">History</string>
     <string name="PandaURL">192.168.1.104</string>
     <string name="SimulatorURL">10.0.2.2</string>
+    <string name="all">All</string>
+    <string name="send_to">Send to...</string>
+    <string name="username">Username</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_your_comment">Add your comment</string>
     <string name="comment_header">Comments</string>
     <string name="reaction_header">Reactions</string>
     <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid</string>

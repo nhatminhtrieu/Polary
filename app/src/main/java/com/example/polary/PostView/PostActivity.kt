@@ -14,8 +14,8 @@ class PostActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostPagerAdapter
     private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getUsersPosts(5)
+        super.onCreate(savedInstanceState))
+        getUsersPosts(1)
     }
 
     private fun getUsersPosts(userId: Number) {

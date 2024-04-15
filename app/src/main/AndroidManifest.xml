@@ -91,6 +91,11 @@
             android:name=".Photo.TakePhotoActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".Photo.SendPhotoActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

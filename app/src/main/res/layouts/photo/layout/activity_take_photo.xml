@@ -115,24 +115,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_margin">
+
             <TextView
                 android:id="@+id/text_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/history"
-                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_down"
+                android:background="@drawable/ic_chevron_right"
                 android:backgroundTint="@color/md_theme_onSurface"
-                app:layout_constraintEnd_toEndOf="@+id/text_history"
-                app:layout_constraintStart_toStartOf="@+id/text_history"
-                app:layout_constraintTop_toBottomOf="@+id/text_history" />
+                app:layout_constraintBottom_toBottomOf="@+id/text_history"
+                app:layout_constraintStart_toEndOf="@+id/text_history"
+                app:layout_constraintTop_toTopOf="@+id/text_history" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
