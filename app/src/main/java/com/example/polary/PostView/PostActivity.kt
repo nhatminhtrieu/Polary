@@ -2,40 +2,55 @@ package com.example.polary.PostView
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
 import com.example.polary.Class.HttpMethod
-import com.example.polary.dataClass.Post
 import com.example.polary.R
+import com.example.polary.dataClass.Author
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 
-class PostActivity : AppCompatActivity() {
-    private var posts: ArrayList<Post> = ArrayList()
-    private lateinit var postAdapter: PostPagerAdapter
-    private lateinit var viewPager: ViewPager
+class PostActivity : AppCompatActivity(R.layout.activity_post) {
+    private lateinit var postFragment: Fragment
+    private lateinit var authorSpinner: Spinner
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getUsersPosts()
+        getUsers()
     }
 
-    private fun getUsersPosts() {
-        // Get the user ID from the SharedPreferences
-        val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
-        val sessionManager = SessionManager(sharedPreferences)
-        val user = sessionManager.getUserFromSharedPreferences()!!
-        val userId = user.id
+    private fun getUsers() {
         val httpMethod = HttpMethod()
-        httpMethod.doGet<Post>("users/${userId}/viewable-posts", object: ApiCallBack<Any> {
+        httpMethod.doGet<Author>("users", object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
-                posts = ArrayList(data as List<Post>)
-                if(posts.isEmpty()) {
-                    setContentView(R.layout.post_empty)
-                } else {
-                    setContentView(R.layout.activity_post)
-                    viewPager = findViewById(R.id.viewPager)
-                    postAdapter = PostPagerAdapter(supportFragmentManager, posts)
-                    viewPager.adapter = postAdapter
+                val users = ArrayList(data as List<Author>)
+                users.add(0, Author(0, "All", null))
+                authorSpinner = findViewById(R.id.author_spinner)
+                val adapter = AuthorAdapterSpinner(this@PostActivity, R.layout.author_spinner_item, users)
+                adapter.setDropDownViewResource(R.layout.author_spinner_item)
+                authorSpinner.adapter = adapter
+
+                authorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+                    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        val authorId = users[position].id
+                        val bundle = Bundle()
+                        bundle.putString("userId", "5") // the value of userId is this account's id
+                        bundle.putString("authorId", authorId.toString()) // the value of authorId is the selected author's id
+                        postFragment = PostFragmentView()
+                        postFragment.arguments = bundle
+
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.post_fragment, postFragment)
+                            commit()
+                        }
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // Do nothing
+                    }
                 }
             }
 

@@ -22,6 +22,7 @@ class PostFragment : Fragment() {
             val args = Bundle()
             args.putSerializable(ARG_POST, post)
             fragment.arguments = args
+            fragment.enterTransition = android.transition.Fade()
             return fragment
         }
     }
@@ -38,17 +39,17 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.post, container, false)
-        val author = view.findViewById<TextView>(R.id.post_author)
-        author.text = post.author.username
-
-        val avatar = view.findViewById<ImageView>(R.id.user_avatar_view)
-        Glide.with(this).load(post.author.avatar).into(avatar)
-
         val caption = view.findViewById<TextView>(R.id.post_caption)
         caption.text = post.caption
 
         val image = view.findViewById<ImageView>(R.id.post_image)
         Glide.with(this).load(post.imageUrl).into(image)
+
+        val avatar: ImageView = view.findViewById(R.id.author_avatar_view)
+        Glide.with(this).load(post.author.avatar).into(avatar)
+
+        val username: TextView = view.findViewById(R.id.author_username)
+        username.text = post.author.username
 
         val totalReactions: RelativeLayout = view.findViewById(R.id.total_reaction)
         val listReactions = post.reactions

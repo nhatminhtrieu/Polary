@@ -11,10 +11,13 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface IApi {
     @GET("{endpoint}")
     fun getData(@Path("endpoint", encoded = true) endpoint: String): Call<ResponseBody<JsonElement>>
+    @GET("{endpoint}")
+    fun getDataWithQuery(@Path("endpoint", encoded = true) endpoint: String, @QueryMap params: Map<String, String>): Call<ResponseBody<JsonElement>>
     @POST("{endpoint}")
     fun postData(@Path("endpoint", encoded = true) endpoint: String, @Body body: Any): Call<ResponseBody<JsonElement>>
 
