@@ -1,10 +1,21 @@
 package com.example.polary.Photo
 
+import AddCaptionFragment
+import SwipeGestureDetector
+import android.app.ProgressDialog
 import android.content.ContentValues
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.GestureDetector
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -24,15 +35,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
-data class CreatePostRequest (
-    val authorId: Int,
-    val caption: String,
-    val visibleToIds: List<Int>
-)
-class SendPhotoActivity: AppCompatActivity() {
+class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener {
     private lateinit var imageName: String
     private lateinit var imageFile: File
+    private lateinit var imageUri: String
     private lateinit var visibilityAdapter: VisibilityAdapter
+    private lateinit var postCaption : TextView
     private val visibleToIds = mutableListOf<Int>()
     private val userId = 1
     private var isAll = true
@@ -44,14 +52,57 @@ class SendPhotoActivity: AppCompatActivity() {
 
         // Get the image name from the intent extras
         imageName = intent.getStringExtra("imageName").toString()
-        loadImage(imageName)
+        imageUri = intent.getStringExtra("imageUri").toString()
+        if (imageUri != "null") {
+            loadImageFromDevice(imageUri)
+        } else {
+            loadImageFromCache(imageName)
+        }
+        postCaption = findViewById(R.id.post_caption)
+        postCaption.text = ""
 
         findViewById<MaterialButton>(R.id.btn_cancel).setOnClickListener {
             finish()
         }
         findViewById<MaterialButton>(R.id.btn_send).setOnClickListener {
-            createPost(imageFile, userId, "Test", visibleToIds)
+            createPost(imageFile, userId, postCaption.text.toString(), visibleToIds)
         }
+        findViewById<MaterialButton>(R.id.btn_save_image).setOnClickListener {
+            if (imageUri != "null") {
+                Toast.makeText(this, "Image is already in your device", Toast.LENGTH_SHORT).show()
+            } else {
+                saveImage(imageName, imageFile)
+            }
+        }
+
+        val btnAddCaption = findViewById<MaterialButton>(R.id.btn_add_caption)
+        btnAddCaption.bringToFront()
+        val color = Color.parseColor("#80000000") // Black with 50% transparency
+        btnAddCaption.backgroundTintList = ColorStateList.valueOf(color)
+        btnAddCaption.setOnClickListener {
+            openFragment()
+        }
+
+        postCaption.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.isNullOrEmpty()) {
+                    btnAddCaption.visibility = View.GONE
+                } else {
+                    btnAddCaption.visibility = View.VISIBLE
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No action needed here
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // No action needed here
+            }
+        })
+
+        postCaption.setOnClickListener {
+            openFragment()
+        }
+
         val httpMethod = HttpMethod()
         httpMethod.doGet<Friend>("users/$userId/friends", object : ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
@@ -67,14 +118,28 @@ class SendPhotoActivity: AppCompatActivity() {
         })
     }
 
+    private fun openFragment() {
+        val addCaptionFragment = AddCaptionFragment(postCaption.text.toString())
+        addCaptionFragment.show(supportFragmentManager, "AddCaptionFragment")
+    }
+    override fun sendInput(input: String) {
+        // Use the input value here
+        postCaption.text = input
+    }
     private fun createPost(imageName: File?, userId: Int, caption: String, visibleToIds: List<Int>) {
+        // Show a ProgressDialog
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Creating post...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
         lifecycleScope.launch {
             Log.i("SendPhotoActivity", "Creating post: $imageName")
             val httpMethod = HttpMethod()
-    
+
             // Create a request body with the file and content type
             val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), imageFile.readBytes())
-    
+
             // Create a multipart request body with the file data
             val multipartBody = MultipartBody.Part.createFormData("file", imageFile.name + ".jpeg", requestBody)
             val authorBody = MultipartBody.Part.createFormData("authorId", userId.toString())
@@ -86,12 +151,14 @@ class SendPhotoActivity: AppCompatActivity() {
                 override fun onSuccess(data: Any) {
                     Log.d("SendPhotoActivity", "Successfully posted image: $data")
                     Toast.makeText(this@SendPhotoActivity, "Image posted!", Toast.LENGTH_SHORT).show()
+                    progressDialog.dismiss() // Dismiss the ProgressDialog
                     finish()
                 }
-    
+
                 override fun onError(error: Throwable) {
                     Log.e("SendPhotoActivity", "Failed to post image: $error")
                     Toast.makeText(this@SendPhotoActivity, "Failed to post image!", Toast.LENGTH_SHORT).show()
+                    progressDialog.dismiss() // Dismiss the ProgressDialog
                 }
             })
         }
@@ -124,13 +191,9 @@ class SendPhotoActivity: AppCompatActivity() {
         })
         recyclerView.adapter = visibilityAdapter
         recyclerView.layoutManager = LinearLayoutManager(this@SendPhotoActivity, RecyclerView.HORIZONTAL, false)
-
-        findViewById<MaterialButton>(R.id.btn_save_image).setOnClickListener {
-            saveImage(imageName, imageFile)
-        }
     }
 
-    private fun loadImage(imageName: String?) {
+    private fun loadImageFromCache(imageName: String?) {
         if (imageName === null || !File(cacheDir, imageName).exists()) {
             // Handle error
             Toast.makeText(this, "Error: Image not found", Toast.LENGTH_SHORT).show()
@@ -139,13 +202,29 @@ class SendPhotoActivity: AppCompatActivity() {
         else {
             imageFile = File(cacheDir, imageName)
             // Display the image
-            val imageView = findViewById<ImageView>(R.id.capturedPhoto)
+            val imageView = findViewById<ImageView>(R.id.post_image)
             Glide.with(this)
                 .load(imageFile.absolutePath)
                 .into(imageView)
         }
     }
+
+    private fun loadImageFromDevice(imageUri: String?) {
+        if (imageUri === null) {
+            // Handle error
+            Toast.makeText(this, "Error: Image not found", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        else {
+            // Display the image
+            val imageView = findViewById<ImageView>(R.id.post_image)
+            Glide.with(this)
+                .load(imageUri)
+                .into(imageView)
+        }
+    }
     private fun saveImage(imageName: String?, imageFile: File) {
+        Log.i("SendPhotoActivity", "Saving image: $imageName")
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, imageName)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")

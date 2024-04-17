@@ -21,6 +21,7 @@
     <string name="comment_header">Comments</string>
     <string name="reaction_header">Reactions</string>
     <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid</string>
+    <string name="add_caption">Add caption</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">Polary</string>
 </resources>

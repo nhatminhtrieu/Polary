@@ -1,5 +1,11 @@
 package com.example.polary.Photo
 
+import SwipeGestureDetector
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,6 +13,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -29,13 +37,15 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class TakePhotoActivity : AppCompatActivity() {
-    val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
     // Camera front or back
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     // Preview
     private var preview: Preview? = null
+    private lateinit var gestureDetector: SwipeGestureDetector
     private val activityResultLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions())
@@ -55,6 +65,7 @@ class TakePhotoActivity : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take_photo)
@@ -64,14 +75,15 @@ class TakePhotoActivity : AppCompatActivity() {
         } else {
             requestPermissions()
         }
-
         findViewById<MaterialButton>(R.id.btn_profile).setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
         findViewById<MaterialCardView>(R.id.btn_history_posts).setOnClickListener {
             val intent = Intent(this, PostActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
         findViewById<MaterialButton>(R.id.btn_take_photo).setOnClickListener {
             takePhoto()
@@ -79,10 +91,44 @@ class TakePhotoActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btn_flip_camera).setOnClickListener {
             changeCamera()
         }
+        findViewById<MaterialButton>(R.id.btn_image_gallery).setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, REQUEST_CODE_PERMISSIONS)
+        }
+
+        gestureDetector = object : SwipeGestureDetector(this) {
+            override fun onSwipeRight() {
+                val intent = Intent(this@TakePhotoActivity, ProfileActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+            }
+
+            override fun onSwipeLeft() {
+                val intent = Intent(this@TakePhotoActivity, PostActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        gestureDetector.onTouchEvent(event)
+        return super.onTouchEvent(event)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PERMISSIONS && resultCode == RESULT_OK) {
+            val uri = data?.data
+            val intent = Intent(this, SendPhotoActivity::class.java).apply {
+                putExtra("imageUri", uri.toString())
+            }
+            startActivity(intent)
+        }
+    }
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -99,13 +145,6 @@ class TakePhotoActivity : AppCompatActivity() {
 
         // Create output file in internal storage
         val outputFile = File(cacheDir, name)
-
-        // Create output options object which contains file + metadata
-//        val outputOptions = ImageCapture.OutputFileOptions
-//            .Builder(contentResolver,
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                contentValues)
-//            .build()
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(outputFile)
             .build()
@@ -172,7 +211,28 @@ class TakePhotoActivity : AppCompatActivity() {
         } else {
             CameraSelector.DEFAULT_BACK_CAMERA
         }
-        startCamera()
+        val previewView = findViewById<androidx.camera.view.PreviewView>(R.id.previewView)
+
+        // Create an animator set so we can play the animations together
+        val animatorSet = AnimatorSet()
+
+        // Create the first half of the flip animation
+        val firstHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 1.0f, 0.0f)
+        firstHalfFlip.duration = 250
+        firstHalfFlip.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                // Restart the camera at the half-way point of the animation
+                startCamera()
+            }
+        })
+
+        // Create the second half of the flip animation
+        val secondHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 0.0f, 1.0f)
+        secondHalfFlip.duration = 250
+
+        // Play the animations together
+        animatorSet.playSequentially(firstHalfFlip, secondHalfFlip)
+        animatorSet.start()
     }
     private fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
