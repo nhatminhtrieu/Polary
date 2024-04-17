@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.polary.R
 import com.example.polary.authentication.SignIn
+import com.example.polary.widgets.PolaryWidget
 import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : AppCompatActivity() {
@@ -32,8 +33,15 @@ class ProfileActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().signOut()
 
-        val intent = Intent(this, SignIn::class.java)
-        startActivity(intent)
+        // Update widget
+        val context = applicationContext
+        val intent = Intent(applicationContext, PolaryWidget::class.java).apply {
+            action = PolaryWidget.ACTION_UPDATE_WIDGET
+        }
+        context.sendBroadcast(intent)
+
+        val intentSignIn = Intent(this, SignIn::class.java)
+        startActivity(intentSignIn)
         finish()
     }
 }

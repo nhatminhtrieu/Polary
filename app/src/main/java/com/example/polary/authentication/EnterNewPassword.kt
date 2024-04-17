@@ -37,7 +37,7 @@ class EnterNewPassword : AppCompatActivity() {
             if (Validate.validatePassword(
                     password.text.toString(),
                     confirmPassword.text.toString()
-                )
+                ) == 1
             ) {
                 val requestBody = mapOf(
                     "email" to intent.getStringExtra("email"),

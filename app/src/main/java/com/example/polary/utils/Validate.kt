@@ -40,8 +40,12 @@ class Validate {
             return android.util.Patterns.PHONE.matcher(phoneNumber).matches()
         }
 
-        fun validatePassword(password: String, confirmPasswordText: String): Boolean {
-            return password == confirmPasswordText
+        fun validatePassword(password: String, confirmPasswordText: String): Int {
+            return when {
+                password.length <= 6 -> -1
+                password != confirmPasswordText -> -2
+                else -> 1
+            }
         }
 
         fun validateConfirmPassword(password: String, confirmPassword: String): Boolean {
