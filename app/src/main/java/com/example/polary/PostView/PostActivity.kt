@@ -14,7 +14,7 @@ class PostActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostPagerAdapter
     private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState))
+        super.onCreate(savedInstanceState)
         getUsersPosts(1)
     }
 
@@ -37,5 +37,10 @@ class PostActivity : AppCompatActivity() {
                 Log.e("Error", error.message.toString())
             }
         })
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 }
