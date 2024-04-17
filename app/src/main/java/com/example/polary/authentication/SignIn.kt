@@ -10,7 +10,9 @@ import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.SessionManager
 import com.example.polary.utils.applyClickableSpan
+import com.example.polary.widgets.PolaryWidget
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,29 +24,24 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 
 @Suppress("DEPRECATION")
 class SignIn : AppCompatActivity() {
     private lateinit var usernameEditText: TextInputEditText
     private lateinit var googleSignInClient: GoogleSignInClient
-    private val httpMethod = HttpMethod()
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sessionManager: SessionManager
+    private val httpMethod = HttpMethod()
 
-    private fun saveUserToSharedPreferences(user: User) {
-        with(sharedPreferences.edit()) {
-            putBoolean("isLoggedIn", true)
-            putString("username", user.username)
-            putString("email", user.email)
-            putString("firebaseUID", user.firebaseUID)
-            apply()
-        }
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
         usernameEditText = findViewById(R.id.username)
 
         sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        sessionManager = SessionManager(sharedPreferences)
 
         val signInMatBtn: MaterialButton = findViewById(R.id.login)
         signInMatBtn.setOnClickListener { signInWithUsernameAndPassword() }
@@ -85,10 +82,23 @@ class SignIn : AppCompatActivity() {
             return
         }
 
-        val user = User(username = username, password = password, email = "", firebaseUID = "")
+        val user =
+            User(id = 0, username = username, password = password, email = "", firebaseUID = "")
         httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
-                saveUserToSharedPreferences(user)
+                val gson = Gson()
+                val jsonObject = gson.fromJson(data.toString(), JsonObject::class.java)
+                val userObject = jsonObject.getAsJsonObject("user")
+                user.id = userObject.get("id").asInt
+                sessionManager.saveUserToSharedPreferences(user)
+
+                // Update widget
+                val context = applicationContext
+                val intent = Intent(applicationContext, PolaryWidget::class.java).apply {
+                    action = PolaryWidget.ACTION_UPDATE_WIDGET
+                }
+                context.sendBroadcast(intent)
+
                 startActivity(Intent(this@SignIn, TakePhotoActivity::class.java))
             }
 
@@ -118,16 +128,27 @@ class SignIn : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     task.result?.user?.let { firebaseUser ->
                         val user = User(
+                            id = 0,
                             firebaseUID = firebaseUser.uid,
                             username = usernameEditText.text?.toString() ?: "",
                             email = firebaseUser.email ?: "",
                             password = ""
                         )
 
-                        saveUserToSharedPreferences(user)
-
                         httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
                             override fun onSuccess(data: Any) {
+                                val gson = Gson()
+                                val jsonObject =
+                                    gson.fromJson(data.toString(), JsonObject::class.java)
+                                val userObject = jsonObject.getAsJsonObject("user")
+                                user.id = userObject.get("id").asInt
+                                // Update widget
+                                val context = applicationContext
+                                val intent =
+                                    Intent(applicationContext, PolaryWidget::class.java).apply {
+                                        action = PolaryWidget.ACTION_UPDATE_WIDGET
+                                    }
+                                context.sendBroadcast(intent)
                                 startActivity(Intent(this@SignIn, TakePhotoActivity::class.java))
                             }
 
@@ -135,6 +156,7 @@ class SignIn : AppCompatActivity() {
                                 Log.e("SignIn", "Error signing in", error)
                             }
                         })
+                        sessionManager.saveUserToSharedPreferences(user)
                     }
                 }
         }

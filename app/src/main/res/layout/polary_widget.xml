@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="TODO"
-        android:scaleType="fitXY"
         android:src="@drawable/ic_launcher_background" />
 
     <RelativeLayout
@@ -30,7 +29,8 @@
             android:layout_height="24dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="TODO1"
-            android:src="@drawable/clown_emoji" />
+            android:src="@drawable/heart_emoji"
+            android:background="@drawable/rounded_background"/>
 
         <TextView
             android:id="@+id/post_caption"
