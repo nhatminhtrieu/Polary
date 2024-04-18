@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -34,6 +35,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/polary_widget_info" />
         </receiver>
+        <activity
+            android:name=".friends.FriendsActivity"
+            android:exported="false" />
         <activity
             android:name=".friends.FriendsActivity"
             android:exported="false" />
