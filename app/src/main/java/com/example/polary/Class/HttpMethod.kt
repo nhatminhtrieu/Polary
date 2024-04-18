@@ -127,4 +127,26 @@ class HttpMethod {
         })
     }
 
+    fun doDelete(url: String, params: Map<String, String>, callback: ApiCallBack<Any>) {
+        val api = retrofitBuilder.create(IApi::class.java)
+        val call = api.deleteData(url, params)
+
+        call.enqueue(object : Callback<ResponseBody<JsonElement>> {
+            override fun onResponse(
+                call: Call<ResponseBody<JsonElement>>,
+                response: Response<ResponseBody<JsonElement>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.data?.let { callback.onSuccess(it) }
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "No error body"
+                    callback.onError(Throwable("Unsuccessful response. Status code: ${response.code()}, Error body: $errorBody"))
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody<JsonElement>>, t: Throwable) {
+                callback.onError(t)
+            }
+        })
+    }
 }

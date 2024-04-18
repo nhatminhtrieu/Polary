@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import com.example.polary.PostView.PostActivity
 import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
+import com.example.polary.friends.FriendsActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.common.util.concurrent.ListenableFuture
@@ -94,6 +95,10 @@ class TakePhotoActivity : AppCompatActivity() {
         findViewById<MaterialButton>(R.id.btn_image_gallery).setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, REQUEST_CODE_PERMISSIONS)
+        }
+        findViewById<MaterialButton>(R.id.btn_friends).setOnClickListener {
+            val intent = Intent(this, FriendsActivity::class.java)
+            startActivity(intent)
         }
 
         gestureDetector = object : SwipeGestureDetector(this) {

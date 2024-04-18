@@ -29,11 +29,12 @@ import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import kotlin.properties.Delegates
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
 class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener {
     private lateinit var imageName: String
