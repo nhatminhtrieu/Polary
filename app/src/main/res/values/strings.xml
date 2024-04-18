@@ -24,4 +24,7 @@
     <string name="add_caption">Add caption</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">Polary</string>
+    <string name="more">More</string>
+    <string name="friend_requests">Your friend requests</string>
+    <string name="add_a_new_friend">Add a new friend</string>
 </resources>
