@@ -22,4 +22,7 @@
     <string name="reaction_header">Reactions</string>
     <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid</string>
     <string name="add_caption">Add caption</string>
+    <string name="more">More</string>
+    <string name="friend_requests">Your friend requests</string>
+    <string name="add_a_new_friend">Add a new friend</string>
 </resources>

@@ -45,6 +45,35 @@ class HttpMethod {
             }
         })
     }
+
+    inline fun <reified T : Any> doGetDataWithParams(endpoint: String, params: Map<String, String>, callback: ApiCallBack<Any>) {
+    val api = retrofitBuilder.create(IApi::class.java)
+    val call = api.getDataWithParams(endpoint, params)
+
+    call.enqueue(object : Callback<ResponseBody<JsonElement>> {
+        override fun onResponse(
+            call: Call<ResponseBody<JsonElement>>,
+            response: Response<ResponseBody<JsonElement>>
+        ) {
+            if (response.isSuccessful) {
+                val res = response.body()
+                val gson = Gson()
+                val data: Any = if (res?.data?.isJsonArray == true) {
+                    gson.fromJson<List<T>>(res.data, object : TypeToken<List<T>>() {}.type) ?: emptyList<T>()
+                } else {
+                    gson.fromJson<T>(res?.data, object : TypeToken<T>() {}.type) ?: Any()
+                }
+                callback.onSuccess(data)
+            } else {
+                callback.onError(Throwable(response.message()))
+            }
+        }
+
+        override fun onFailure(call: Call<ResponseBody<JsonElement>>, t: Throwable) {
+            callback.onError(t)
+        }
+    })
+}
     fun doPost(url: String, requestBody: Any, callback: ApiCallBack<Any>) {
         Log.d("HttpMethod", "doPost: $requestBody")
         val api = retrofitBuilder.create(IApi::class.java)
@@ -91,4 +120,26 @@ class HttpMethod {
         })
     }
 
+    fun doDelete(url: String, params: Map<String, String>, callback: ApiCallBack<Any>) {
+        val api = retrofitBuilder.create(IApi::class.java)
+        val call = api.deleteData(url, params)
+
+        call.enqueue(object : Callback<ResponseBody<JsonElement>> {
+            override fun onResponse(
+                call: Call<ResponseBody<JsonElement>>,
+                response: Response<ResponseBody<JsonElement>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.data?.let { callback.onSuccess(it) }
+                } else {
+                    val errorBody = response.errorBody()?.string() ?: "No error body"
+                    callback.onError(Throwable("Unsuccessful response. Status code: ${response.code()}, Error body: $errorBody"))
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody<JsonElement>>, t: Throwable) {
+                callback.onError(t)
+            }
+        })
+    }
 }

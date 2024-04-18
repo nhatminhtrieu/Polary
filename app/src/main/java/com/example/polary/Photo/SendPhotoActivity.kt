@@ -1,10 +1,8 @@
 package com.example.polary.Photo
 
 import AddCaptionFragment
-import SwipeGestureDetector
 import android.app.ProgressDialog
 import android.content.ContentValues
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -12,7 +10,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,6 +28,7 @@ import com.example.polary.utils.ApiCallBack
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
@@ -138,7 +136,7 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
             val httpMethod = HttpMethod()
 
             // Create a request body with the file and content type
-            val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), imageFile.readBytes())
+            val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile.readBytes())
 
             // Create a multipart request body with the file data
             val multipartBody = MultipartBody.Part.createFormData("file", imageFile.name + ".jpeg", requestBody)
