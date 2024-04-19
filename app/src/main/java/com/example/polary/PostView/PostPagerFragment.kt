@@ -1,6 +1,7 @@
 package com.example.polary.PostView
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,8 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.app.SharedElementCallback
 import androidx.viewpager.widget.ViewPager
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
@@ -23,13 +23,14 @@ private const val ARG_PARAM2 = "authorId"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [PostFragmentView.newInstance] factory method to
+ * Use the [PostPagerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PostFragmentView : Fragment() {
+class PostPagerFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var userId: String? = null
     private var authorId: String? = null
+    private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,7 @@ class PostFragmentView : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_post_view, container, false)
     }
@@ -55,18 +56,60 @@ class PostFragmentView : Fragment() {
         httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val posts = ArrayList(data as List<Post>)
+                viewPager = view.findViewById<ViewPager>(R.id.viewPager)
                 if(posts.isEmpty()){
+                    PostActivity.canChangeView = false
+                    viewPager.visibility = View.GONE
                     view.findViewById<ImageView>(R.id.empty_icon).visibility = View.VISIBLE
                     view.findViewById<TextView>(R.id.empty_caption).visibility = View.VISIBLE
                     return
                 }
-                val viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+                PostActivity.canChangeView = true
                 val postAdapter = PostPagerAdapter(childFragmentManager, posts)
                 viewPager.adapter = postAdapter
+                viewPager.setCurrentItem(PostActivity.currentPosition)
+                viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+                    override fun onPageScrolled(
+                        position: Int,
+                        positionOffset: Float,
+                        positionOffsetPixels: Int
+                    ) {
+
+                    }
+
+                    override fun onPageSelected(position: Int) {
+                        PostActivity.currentPosition = position
+                    }
+
+                    override fun onPageScrollStateChanged(state: Int) {
+
+                    }
+                })
+
+                prepareSharedElementTransition()
+                if(savedInstanceState == null){
+                    postponeEnterTransition()
+                }
             }
 
             override fun onError(error: Throwable) {
                 Log.e("Error", error.toString())
+            }
+        })
+    }
+
+    private fun prepareSharedElementTransition() {
+        val transition = TransitionInflater.from(context).inflateTransition(R.transition.image_shared_element_transition)
+        sharedElementEnterTransition = transition
+        setEnterSharedElementCallback(object: SharedElementCallback() {
+            override fun onMapSharedElements(
+                names: MutableList<String>?,
+                sharedElements: MutableMap<String, View>?
+            ) {
+                val currentFragment: Fragment = viewPager.adapter!!
+                    .instantiateItem(viewPager, viewPager.currentItem) as Fragment
+                val view = currentFragment.view ?: return
+                sharedElements?.put(names!![0], view.findViewById(R.id.post_image))
             }
         })
     }
@@ -83,7 +126,7 @@ class PostFragmentView : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            PostFragmentView().apply {
+            PostPagerFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

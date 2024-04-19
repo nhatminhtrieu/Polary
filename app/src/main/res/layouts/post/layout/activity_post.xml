@@ -5,30 +5,39 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".PostView.PostActivity">
 
     <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Spinner
             android:id="@+id/author_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_weight="1"
             android:spinnerMode="dropdown"
-            android:background="@color/md_theme_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/md_theme_background" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/post_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:id="@+id/grid_view_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:background="@color/md_theme_background"
+            app:tint="@color/md_theme_onSurface"
+            app:srcCompat="@drawable/ic_grid" />
     </LinearLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/post_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
