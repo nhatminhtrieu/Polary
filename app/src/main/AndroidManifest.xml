@@ -68,8 +68,7 @@
             android:name=".PostView.PostActivity"
             android:exported="false"
             android:label="Posts"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Profile.ProfileActivity"
             android:exported="false"
@@ -81,7 +80,8 @@
         <activity
             android:name=".Photo.SendPhotoActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
     </application>
 
 </manifest>

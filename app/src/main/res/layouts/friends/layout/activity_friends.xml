@@ -18,154 +18,22 @@
         android:drawablePadding="8dp"
         android:drawableTint="@color/md_theme_onSurfaceVariant"
         android:hint="@string/add_a_new_friend"
+        android:inputType="text"
         android:padding="12dp"
+        android:imeOptions="actionDone"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/friendsFragment"
+        android:name="com.example.polary.friends.FriendsFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_search">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/friends_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:padding="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:src="@drawable/ic_people"
-                    app:tint="@color/md_theme_onSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/friends"
-
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_friends"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/friends_title" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_more_friends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/more"
-                android:theme="@style/ThemeOverlay.Material3.Button.TonalButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView_friends" />
-
-            <LinearLayout
-                android:id="@+id/friend_requests_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="72dp"
-                android:padding="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView_friends">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:src="@drawable/ic_friend_request"
-                    app:tint="@color/md_theme_onSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/friend_requests"
-
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_friend_requests"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/friend_requests_title" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_more_friend_requests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/more"
-                android:theme="@style/ThemeOverlay.Material3.Button.TonalButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView_friend_requests" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="@id/btn_more_friends"
-                app:layout_constraintEnd_toStartOf="@+id/btn_more_friends"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btn_more_friends" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/small_margin"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="@id/btn_more_friends"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_more_friends"
-                app:layout_constraintTop_toTopOf="@id/btn_more_friends" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="@id/btn_more_friend_requests"
-                app:layout_constraintEnd_toStartOf="@+id/btn_more_friend_requests"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btn_more_friend_requests" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/small_margin"
-                android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="@id/btn_more_friend_requests"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_more_friend_requests"
-                app:layout_constraintTop_toTopOf="@id/btn_more_friend_requests" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toBottomOf="@id/input_search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
