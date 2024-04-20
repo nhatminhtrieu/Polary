@@ -52,6 +52,7 @@ class PostGridFragment : Fragment() {
         rvPostGrid = view.findViewById(R.id.post_grid)
         rvPostGrid.setHasFixedSize(true)
         postGridAdapter = PostGridAdapter(ArrayList(), authorId,this)
+        prepareTransition()
         return view
     }
 
@@ -78,7 +79,7 @@ class PostGridFragment : Fragment() {
                 postGridAdapter.setPosts(posts)
                 rvPostGrid.adapter = postGridAdapter
                 rvPostGrid.layoutManager = GridLayoutManager(context, 3)
-                prepareTransition()
+                startPostponedEnterTransition()
                 scrollToPosition()
             }
             override fun onError(error: Throwable) {

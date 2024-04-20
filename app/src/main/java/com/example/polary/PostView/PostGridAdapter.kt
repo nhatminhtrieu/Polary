@@ -1,5 +1,6 @@
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.transition.TransitionSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +85,7 @@ class PostGridAdapter(
         override fun onItemClicked(view: View, adapterPosition: Int) {
             // Handle item click here
             PostActivity.currentPosition = adapterPosition
+            (fragment.exitTransition as TransitionSet).excludeTarget(view, true)
             val transitioningView: ImageView = view.findViewById(R.id.post_grid_image)
             val bundle = Bundle()
             bundle.putString("userId", "5") // the value of userId is this account's id

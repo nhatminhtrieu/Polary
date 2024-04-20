@@ -106,6 +106,9 @@
     <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@android:transition/move</item>
+        <item name="android:windowExitTransition">@android:transition/move</item>
     </style>
 
     <style name="Theme.Polary" parent="Theme.Material3.Dark" />

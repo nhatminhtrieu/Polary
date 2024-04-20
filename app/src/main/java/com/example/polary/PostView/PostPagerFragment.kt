@@ -45,7 +45,11 @@ class PostPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post_view, container, false)
+        postponeEnterTransition()
+        val view = inflater.inflate(R.layout.fragment_post_view, container, false)
+        viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        prepareSharedElementTransition()
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,7 +60,6 @@ class PostPagerFragment : Fragment() {
         httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val posts = ArrayList(data as List<Post>)
-                viewPager = view.findViewById<ViewPager>(R.id.viewPager)
                 if(posts.isEmpty()){
                     PostActivity.canChangeView = false
                     viewPager.visibility = View.GONE
