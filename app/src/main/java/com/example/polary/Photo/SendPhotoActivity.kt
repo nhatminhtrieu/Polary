@@ -1,18 +1,16 @@
 package com.example.polary.Photo
 
 import AddCaptionFragment
-import SwipeGestureDetector
 import android.app.ProgressDialog
 import android.content.ContentValues
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,12 +26,12 @@ import com.example.polary.R
 import com.example.polary.dataClass.Friend
 import com.example.polary.dataClass.Visibility
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
+import kotlin.properties.Delegates
 
 class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener {
     private lateinit var imageName: String
@@ -41,14 +39,22 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
     private lateinit var imageUri: String
     private lateinit var visibilityAdapter: VisibilityAdapter
     private lateinit var postCaption : TextView
+    private var userId by Delegates.notNull<Int>()
     private val visibleToIds = mutableListOf<Int>()
-    private val userId = 1
     private var isAll = true
-
     private var friends: ArrayList<Visibility> = ArrayList()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_photo)
+
+        // Get the user ID from the SharedPreferences
+        val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        val user = sessionManager.getUserFromSharedPreferences()!!
+        userId = user.id
+        Log.i("SendPhotoActivity", "User ID: $userId")
 
         // Get the image name from the intent extras
         imageName = intent.getStringExtra("imageName").toString()
@@ -138,7 +144,8 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
             val httpMethod = HttpMethod()
 
             // Create a request body with the file and content type
-            val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), imageFile.readBytes())
+            val mediaType = okhttp3.MediaType.parse("image/jpeg")
+            val requestBody = okhttp3.RequestBody.create(mediaType, imageFile.readBytes())
 
             // Create a multipart request body with the file data
             val multipartBody = MultipartBody.Part.createFormData("file", imageFile.name + ".jpeg", requestBody)
@@ -209,6 +216,17 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
         }
     }
 
+    fun getPathFromURI(contentUri: Uri): String? {
+        var res: String? = null
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = contentResolver.query(contentUri, proj, null, null, null)
+        if (cursor?.moveToFirst() == true) {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            res = cursor.getString(columnIndex)
+        }
+        cursor?.close()
+        return res
+    }
     private fun loadImageFromDevice(imageUri: String?) {
         if (imageUri === null) {
             // Handle error
@@ -218,6 +236,8 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
         else {
             // Display the image
             val imageView = findViewById<ImageView>(R.id.post_image)
+            val imagePath = getPathFromURI(Uri.parse(imageUri))
+            imageFile = imagePath?.let { File(it) }!!
             Glide.with(this)
                 .load(imageUri)
                 .into(imageView)

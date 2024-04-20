@@ -8,6 +8,7 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.dataClass.Post
 import com.example.polary.R
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.SessionManager
 
 class PostActivity : AppCompatActivity() {
     private var posts: ArrayList<Post> = ArrayList()
@@ -15,10 +16,15 @@ class PostActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getUsersPosts(1)
+        getUsersPosts()
     }
 
-    private fun getUsersPosts(userId: Number) {
+    private fun getUsersPosts() {
+        // Get the user ID from the SharedPreferences
+        val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        val user = sessionManager.getUserFromSharedPreferences()!!
+        val userId = user.id
         val httpMethod = HttpMethod()
         httpMethod.doGet<Post>("users/${userId}/viewable-posts", object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
