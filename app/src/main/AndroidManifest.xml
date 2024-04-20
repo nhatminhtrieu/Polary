@@ -65,8 +65,7 @@
         <activity
             android:name=".PostView.PostActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Profile.ProfileActivity"
             android:exported="false"
