@@ -2,27 +2,20 @@ package com.example.polary.friends
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.polary.Class.CustomDividerItemDecoration
-import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Friend
 import com.example.polary.dataClass.FriendRequest
 import com.example.polary.dataClass.User
-import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
+import com.google.android.material.textfield.TextInputEditText
 
 class FriendsActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var friends: List<Friend>
-    private lateinit var friendsAdapter: FriendsAdapter
-    private lateinit var rvFriend : RecyclerView
-    private lateinit var friendRequests: MutableList<FriendRequest>
-    private lateinit var friendRequestsAdapter: FriendRequestsAdapter
-    private lateinit var rvFriendRequests: RecyclerView
     private lateinit var user: User
     private val TAG = "FriendsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,47 +25,47 @@ class FriendsActivity : AppCompatActivity() {
         user = sessionManager.getUserFromSharedPreferences()!!
 
         setContentView(R.layout.activity_friends)
-        rvFriend = findViewById(R.id.recyclerView_friends)
-        rvFriend.layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration = CustomDividerItemDecoration(rvFriend.context, LinearLayoutManager(this).orientation)
-        rvFriend.addItemDecoration(dividerItemDecoration)
-        rvFriendRequests = findViewById(R.id.recyclerView_friend_requests)
-        rvFriendRequests.layoutManager = LinearLayoutManager(this)
-        val dividerItemDecoration2 = CustomDividerItemDecoration(rvFriendRequests.context, LinearLayoutManager(this).orientation)
-        rvFriendRequests.addItemDecoration(dividerItemDecoration2)
-        getFriends(user.id)
-        getFriendRequests(user.id)
-    }
-
-    private fun getFriends(userId: Number) {
-        // get friends from server
-        val httpMethod = HttpMethod()
-        httpMethod.doGet<Friend>("users/${userId}/friends", object: ApiCallBack<Any> {
-            override fun onSuccess(data: Any) {
-                friends = data as List<Friend>
-                friendsAdapter = FriendsAdapter(friends)
-                rvFriend.adapter = friendsAdapter
-                Log.d(TAG, "Successfully fetched friends data")
+        val inputSearch = findViewById<TextInputEditText>(R.id.input_search)
+        // Remove focus when pressing "Done"
+        inputSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                inputSearch.clearFocus()
             }
-            override fun onError(error: Throwable) {
-                Log.e(TAG, "Failed to fetch friends data: $error")
+            false
+        }
+
+        val friendsFragment = FriendsFragment()
+        val friendRequestsFragment = FriendRequestsFragment()
+
+        inputSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // Code here will be triggered before the text is changed
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val transaction = supportFragmentManager.beginTransaction()
+                // Code here will be triggered when the text is being changed
+                if (s.isNotEmpty()) {
+                    // When the search input has text, add the FriendRequestsFragment
+                    transaction.replace(R.id.friendsFragment, friendRequestsFragment)
+                } else {
+                    // When the search input is empty, add the FriendsFragment
+                    transaction.replace(R.id.friendsFragment, friendsFragment)
+                }
+                transaction.commit()
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                // Code here will be triggered after the text has been changed
             }
         })
-    }
-
-    private fun getFriendRequests(userId: Number) {
-        // get friend requests from server
-        val httpMethod = HttpMethod()
-        httpMethod.doGetWithQuery<FriendRequest>("friend-requests/$userId", mapOf("type" to "receiver"), object: ApiCallBack<Any> {
-            override fun onSuccess(data: Any) {
-                friendRequests = data as MutableList<FriendRequest>
-                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, userId)
-                rvFriendRequests.adapter = friendRequestsAdapter
-                Log.d(TAG, "Successfully fetched friend requests data")
+        inputSearch.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                inputSearch.clearFocus()
+                inputSearch.dispatchWindowFocusChanged(false)
+                return@setOnKeyListener true
             }
-            override fun onError(error: Throwable) {
-                Log.e(TAG, "Failed to fetch friend requests data: $error")
-            }
-        })
+            false
+        }
     }
 }
