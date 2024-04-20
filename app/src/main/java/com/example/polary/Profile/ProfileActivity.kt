@@ -19,6 +19,7 @@ import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 
+
 class ProfileActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var user: User
