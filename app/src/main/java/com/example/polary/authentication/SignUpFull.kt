@@ -38,10 +38,17 @@ class SignUpFull : AppCompatActivity() {
             val passwordText = password.text.toString()
             val confirmPasswordText = confirmPassword.text.toString()
 
-            if (!Validate.validatePassword(passwordText, confirmPasswordText)) {
+            val passwordValidationResult =
+                Validate.validatePassword(passwordText, confirmPasswordText)
+
+            if (passwordValidationResult != 1) {
                 findViewById<TextInputLayout>(R.id.password_layout).apply {
                     isErrorEnabled = true
-                    error = "Passwords do not match"
+                    error = when (passwordValidationResult) {
+                        -2 -> "Passwords do not match"
+                        -1 -> "Password must be at least 6 characters long"
+                        else -> null
+                    }
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         isErrorEnabled = false
@@ -60,6 +67,7 @@ class SignUpFull : AppCompatActivity() {
                         if (task.isSuccessful) {
                             val firebaseUser = auth.currentUser
                             val user = User(
+                                id = 0,
                                 firebaseUID = firebaseUser?.uid ?: "",
                                 username = username.text.toString(),
                                 email = email,

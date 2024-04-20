@@ -54,7 +54,7 @@ class SignUpMain : AppCompatActivity() {
             }
 
             val requestBody = EmailRequestBody(email)
-            HttpMethod().doPost("auth/signup", requestBody, object : ApiCallBack<Any> {
+            HttpMethod().doPost("auth/sign-up", requestBody, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     Log.d("SignUpMain", "Successfully sent OTP to email")
                 }

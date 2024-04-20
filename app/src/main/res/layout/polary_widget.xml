@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Polary.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme.AppWidgetContainer"
+    android:background="@android:color/transparent"
+    app:layout_constraintDimensionRatio="1:1">
+
+    <ImageView
+        android:id="@+id/post_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_launcher_background" />
+
+    <RelativeLayout
+        android:id="@+id/post_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/default_margin">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="TODO1"
+            android:src="@drawable/heart_emoji"
+            android:background="@drawable/rounded_background"/>
+
+        <TextView
+            android:id="@+id/post_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/avatar"
+            android:background="@drawable/rounded_textview"
+            android:text="Todo"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

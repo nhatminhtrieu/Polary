@@ -2,6 +2,7 @@ package com.example.polary.Class
 
 import android.util.Log
 import com.example.polary.dataClass.ResponseBody
+import com.example.polary.dataClass.User
 import com.example.polary.`object`.RetrofitInstance
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.IApi
@@ -49,7 +50,12 @@ class HttpMethod {
     fun doPost(url: String, requestBody: Any, callback: ApiCallBack<Any>) {
         Log.d("HttpMethod", "doPost: $requestBody")
         val api = retrofitBuilder.create(IApi::class.java)
-        val call = api.postData(url, requestBody)
+        val call = if (requestBody is User && requestBody.password?.isEmpty() == true) {
+            val modifiedRequestBody = requestBody.copy(password = null)
+            api.postData(url, modifiedRequestBody)
+        } else {
+            api.postData(url, requestBody)
+        }
 
         call.enqueue(object : Callback<ResponseBody<JsonElement>> {
             override fun onResponse(
