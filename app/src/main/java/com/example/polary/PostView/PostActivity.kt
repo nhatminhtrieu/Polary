@@ -55,22 +55,33 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
                 authorSpinner.adapter = adapter
 
                 authorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    var isInitialSelection = true
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         val authorId = users[position].id
                         val bundle = Bundle()
                         bundle.putString("userId", "5") // the value of userId is this account's id
                         bundle.putString("authorId", authorId.toString()) // the value of authorId is the selected author's id
                         currentPosition = 0
-                        if(mode == GridView) {
-                            if(postFragment is PostGridFragment) {
-                                (postFragment as PostGridFragment).updatePosts(bundle) // use the same instance to update the posts
-                            } else {
-                                postFragment = PostGridFragment()
-                                postFragment.arguments = bundle
-                            }
-                        } else {
+                        if (isInitialSelection) {
+                            isInitialSelection = false
                             postFragment = PostPagerFragment()
                             postFragment.arguments = bundle
+                        } else {
+                            if (mode == GridView) {
+                                if (postFragment is PostGridFragment) {
+                                    (postFragment as PostGridFragment).updatePosts(bundle) // use the same instance to update the posts
+                                } else {
+                                    postFragment = PostGridFragment()
+                                    postFragment.arguments = bundle
+                                }
+                            } else {
+                                if (postFragment is PostPagerFragment) {
+                                    (postFragment as PostPagerFragment).updatePosts(bundle) // use the same instance to update the posts
+                                } else {
+                                    postFragment = PostPagerFragment()
+                                    postFragment.arguments = bundle
+                                }
+                            }
                         }
 
                         supportFragmentManager.beginTransaction().apply {

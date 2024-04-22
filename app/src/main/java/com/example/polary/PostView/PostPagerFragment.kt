@@ -67,6 +67,9 @@ class PostPagerFragment : Fragment() {
                     view.findViewById<TextView>(R.id.empty_caption).visibility = View.VISIBLE
                     return
                 }
+                viewPager.visibility = View.VISIBLE
+                view.findViewById<ImageView>(R.id.empty_icon).visibility = View.GONE
+                view.findViewById<TextView>(R.id.empty_caption).visibility = View.GONE
                 PostActivity.canChangeView = true
                 val postAdapter = PostPagerAdapter(childFragmentManager, posts)
                 viewPager.adapter = postAdapter
@@ -109,12 +112,20 @@ class PostPagerFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
+                if(names.isNullOrEmpty())
+                    return
                 val currentFragment: Fragment = viewPager.adapter!!
                     .instantiateItem(viewPager, viewPager.currentItem) as Fragment
                 val view = currentFragment.view ?: return
-                sharedElements?.put(names!![0], view.findViewById(R.id.post_image))
+                sharedElements?.put(names[0], view.findViewById(R.id.post_image))
             }
         })
+    }
+
+    fun updatePosts(bundle: Bundle) {
+        userId = bundle.getString("userId")
+        authorId = bundle.getString("authorId")
+        onViewCreated(requireView(), null)
     }
 
     companion object {
