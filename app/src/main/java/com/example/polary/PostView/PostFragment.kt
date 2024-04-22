@@ -1,23 +1,34 @@
 package com.example.polary.PostView
 
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.polary.Class.HttpMethod
 import com.example.polary.dataClass.Post
 import com.example.polary.R
 import com.example.polary.constant.EmojiDrawable
+import com.example.polary.utils.ApiCallBack
+
 
 class PostFragment : Fragment() {
     companion object {
@@ -159,6 +170,11 @@ class PostFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        eventClickReaction()
+    }
+
     private fun openCommentSheet(postId: Number, totalComments: Int) {
         if(totalComments == 0) return
         val modalBottomSheet = CommentFragment(postId)
@@ -169,5 +185,112 @@ class PostFragment : Fragment() {
         if(totalReactions == 0) return
         val modalBottomSheet = ReactionFragment(postId)
         modalBottomSheet.show(parentFragmentManager, ReactionFragment.TAG)
+    }
+
+    private fun sendReactions (postId: Number, authorId: Number, type: String, view: View) {
+        val httpMethod = HttpMethod()
+        val endpoint = "posts/${postId}/reactions"
+        val body = mapOf("authorId" to authorId, "type" to type)
+        httpMethod.doPost(endpoint, body, object: ApiCallBack<Any> {
+            override fun onSuccess(data: Any) {
+                Log.d("success", "Success")
+                animateReaction(type)
+            }
+
+            override fun onError(error: Throwable) {
+                Log.e("error", "Error: ${error.message}")
+            }
+        })
+    }
+
+    private fun eventClickReaction() {
+        val heart = view?.findViewById<ImageButton>(R.id.love)
+        val cry = view?.findViewById<ImageButton>(R.id.cry)
+        val smile = view?.findViewById<ImageButton>(R.id.smile)
+        val clown = view?.findViewById<ImageButton>(R.id.clown)
+        val skull = view?.findViewById<ImageButton>(R.id.skull)
+
+        heart?.setOnClickListener {
+            sendReactions(post.id, 5, "heart", it)
+        }
+
+        cry?.setOnClickListener {
+            sendReactions(post.id, 5, "cry", it)
+        }
+
+        smile?.setOnClickListener {
+            sendReactions(post.id, 5, "smile", it)
+        }
+
+        clown?.setOnClickListener {
+            sendReactions(post.id, 5, "clown", it)
+        }
+
+        skull?.setOnClickListener {
+            sendReactions(post.id, 5, "skull", it)
+        }
+    }
+
+
+    private fun reactionToast(type: String) {
+        val text = "sent " + when(type) {
+            "heart" -> "❤️"
+            "cry" -> "😢"
+            "smile" -> "😂"
+            "clown" -> "🤡"
+            "skull" -> "💀"
+            else -> ""
+        } + "!!!"
+
+        val toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
+    }
+
+    private fun animateReaction(type: String) {
+        val drawableId = EmojiDrawable.map[type] ?: return
+
+        val parentLayout = activity?.findViewById<ConstraintLayout>(R.id.main)
+
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
+        val spaces = ArrayList<Int>(
+            listOf(
+                100,
+                -200,
+                300,
+                -400,
+                500,
+                -600
+            )
+        )
+        for (i in 0 until 6) { // Change this to the number of emojis you want
+            val reactionImage = ImageView(context)
+            reactionImage.setImageResource(drawableId)
+
+            val layoutParams = RelativeLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            layoutParams.leftMargin = (screenWidth / 2) - (reactionImage.drawable.intrinsicWidth / 2) // Center the emoji
+            reactionImage.layoutParams = layoutParams
+
+            parentLayout?.addView(reactionImage)
+
+            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+            val anim = TranslateAnimation((screenWidth/2 + spaces[i]).toFloat(), (screenWidth/2 + spaces[i]).toFloat(), screenHeight.toFloat(), 0f)
+            anim.duration = 2000
+            anim.fillAfter = true
+            anim.startOffset = (i * 300).toLong() // Add a delay to the start of each animation
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+                override fun onAnimationEnd(animation: Animation) {
+                    parentLayout?.removeView(reactionImage)
+                }
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
+            reactionImage.startAnimation(anim)
+        }
     }
 }
