@@ -178,25 +178,39 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <com.google.android.material.textfield.TextInputEditText
+    <RelativeLayout
         android:id="@+id/add_comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableEnd="@drawable/ic_send"
-        android:drawableTint="@color/md_theme_onSurface"
-        android:inputType="text"
-        android:padding="12dp"
-        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reaction_layout"
-        app:layout_constraintVertical_bias="0.089" />
+        app:layout_constraintVertical_bias="0.089">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/send_comment"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_send"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/total_comment"

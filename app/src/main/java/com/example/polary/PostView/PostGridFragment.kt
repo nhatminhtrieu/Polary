@@ -137,9 +137,11 @@ class PostGridFragment : Fragment() {
                 names: MutableList<String>?,
                 sharedElements: MutableMap<String, View>?
             ) {
+                if(names.isNullOrEmpty())
+                    return
                 val selectedViewHolder: RecyclerView.ViewHolder = rvPostGrid
                     .findViewHolderForAdapterPosition(PostActivity.currentPosition) ?: return
-                sharedElements?.put(names!![0], selectedViewHolder.itemView.findViewById(R.id.post_grid_image))
+                sharedElements?.put(names[0], selectedViewHolder.itemView.findViewById(R.id.post_grid_image))
             }
         })
     }

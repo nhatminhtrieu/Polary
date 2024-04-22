@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -173,6 +172,7 @@ class PostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eventClickReaction()
+        eventSendComment()
     }
 
     private fun openCommentSheet(postId: Number, totalComments: Int) {
@@ -193,7 +193,6 @@ class PostFragment : Fragment() {
         val body = mapOf("authorId" to authorId, "type" to type)
         httpMethod.doPost(endpoint, body, object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
-                Log.d("success", "Success")
                 animateReaction(type)
             }
 
@@ -229,22 +228,6 @@ class PostFragment : Fragment() {
         skull?.setOnClickListener {
             sendReactions(post.id, 5, "skull", it)
         }
-    }
-
-
-    private fun reactionToast(type: String) {
-        val text = "sent " + when(type) {
-            "heart" -> "❤️"
-            "cry" -> "😢"
-            "smile" -> "😂"
-            "clown" -> "🤡"
-            "skull" -> "💀"
-            else -> ""
-        } + "!!!"
-
-        val toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()
     }
 
     private fun animateReaction(type: String) {
@@ -291,6 +274,26 @@ class PostFragment : Fragment() {
                 override fun onAnimationRepeat(animation: Animation) {}
             })
             reactionImage.startAnimation(anim)
+        }
+    }
+
+    private fun eventSendComment() {
+        val sendButton = view?.findViewById<ImageButton>(R.id.send_comment)
+        val comment = view?.findViewById<TextView>(R.id.text_input_comment)
+        sendButton?.setOnClickListener {
+            val httpMethod = HttpMethod()
+            val endpoint = "posts/${post.id}/comments"
+            val body = mapOf("authorId" to 5, "content" to comment?.text.toString())
+            httpMethod.doPost(endpoint, body, object: ApiCallBack<Any> {
+                override fun onSuccess(data: Any) {
+                    comment?.text = ""
+                    Toast.makeText(context, "Comment sent", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onError(error: Throwable) {
+                    Log.e("error", "Error: ${error.message}")
+                }
+            })
         }
     }
 }
