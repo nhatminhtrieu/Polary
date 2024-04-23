@@ -192,10 +192,10 @@
         app:layout_constraintTop_toBottomOf="@id/reaction_layout"
         app:layout_constraintVertical_bias="0.089">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_comment"
+        <ImageButton
+            android:id="@+id/button_input_comment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="@drawable/rounded_edittext"
             android:inputType="text"
             android:padding="12dp"

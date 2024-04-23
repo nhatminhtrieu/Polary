@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -29,7 +28,7 @@ import com.example.polary.constant.EmojiDrawable
 import com.example.polary.utils.ApiCallBack
 
 
-class PostFragment : Fragment() {
+class PostFragment : Fragment(), OnCommentSentListener {
     companion object {
         private const val ARG_POST = "post"
 
@@ -166,13 +165,17 @@ class PostFragment : Fragment() {
             openReactionSheet(post.id, listReactions.size)
         }
 
+        val buttonInputComment = view.findViewById<ImageButton>(R.id.button_input_comment)
+        buttonInputComment.setOnClickListener {
+            openCommentDialog()
+        }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eventClickReaction()
-        eventSendComment()
     }
 
     private fun openCommentSheet(postId: Number, totalComments: Int) {
@@ -277,23 +280,13 @@ class PostFragment : Fragment() {
         }
     }
 
-    private fun eventSendComment() {
-        val sendButton = view?.findViewById<ImageButton>(R.id.send_comment)
-        val comment = view?.findViewById<TextView>(R.id.text_input_comment)
-        sendButton?.setOnClickListener {
-            val httpMethod = HttpMethod()
-            val endpoint = "posts/${post.id}/comments"
-            val body = mapOf("authorId" to 5, "content" to comment?.text.toString())
-            httpMethod.doPost(endpoint, body, object: ApiCallBack<Any> {
-                override fun onSuccess(data: Any) {
-                    comment?.text = ""
-                    Toast.makeText(context, "Comment sent", Toast.LENGTH_SHORT).show()
-                }
+    private fun openCommentDialog() {
+        val modalBottomSheet = TypeCommentFragment(5, post.id)
+        modalBottomSheet.listener = this
+        modalBottomSheet.show(parentFragmentManager, TypeCommentFragment.TAG)
+    }
 
-                override fun onError(error: Throwable) {
-                    Log.e("error", "Error: ${error.message}")
-                }
-            })
-        }
+    override fun onCommentSent() {
+       animateReaction("comment")
     }
 }
