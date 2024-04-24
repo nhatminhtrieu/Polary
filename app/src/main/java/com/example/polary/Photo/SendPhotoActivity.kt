@@ -36,6 +36,7 @@ import java.io.File
 import kotlin.properties.Delegates
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
 class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener {
     private lateinit var imageName: String
@@ -148,7 +149,7 @@ class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener
             val httpMethod = HttpMethod()
 
             // Create a request body with the file and content type
-            val requestBody = RequestBody.create(MediaType.parse("image/jpeg"), imageFile.readBytes())
+            val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile.readBytes())
 
             // Create a multipart request body with the file data
             val multipartBody = MultipartBody.Part.createFormData("file", imageFile.name + ".jpeg", requestBody)
