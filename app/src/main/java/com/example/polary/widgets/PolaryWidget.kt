@@ -118,7 +118,7 @@ class PolaryWidget : AppWidgetProvider() {
             "https://firebasestorage.googleapis.com/v0/b/polary-8862a.appspot.com/o/1713290324647_IMG_8141.jpeg?alt=media&token=7c27954d-7d22-4493-897b-375721a059b0"
 
         loadImage(context, postImageTarget, latestPost.imageUrl)
-        loadImage(context, avatarTarget, latestPost.author.avatar)
+        loadImage(context, avatarTarget, latestPost.author.avatar!!)
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }

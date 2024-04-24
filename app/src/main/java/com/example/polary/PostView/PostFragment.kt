@@ -1,5 +1,6 @@
 package com.example.polary.PostView
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -52,6 +53,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
         userId = arguments?.getString(ARG_USER_ID) ?: ""
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -95,7 +97,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
             .into(image)
 
         val avatar: ImageView = view.findViewById(R.id.author_avatar_view)
-        Glide.with(this).load(post.author.avatar).into(avatar)
+        Glide.with(this).load(post.author.avatar).error(R.drawable.ic_launcher_foreground).into(avatar)
 
         val username: TextView = view.findViewById(R.id.author_username)
         username.text = if(post.author.id.toString() == userId) {
@@ -107,91 +109,96 @@ class PostFragment : Fragment(), OnCommentSentListener {
         val totalReactions: RelativeLayout = view.findViewById(R.id.total_reaction)
         if(userId != post.author.id.toString()) {
             totalReactions.visibility = View.INVISIBLE
+        } else {
+            val listReactions = post.reactions
+            val latestUser = view.findViewById<TextView>(R.id.latest_user)
+            when {
+                listReactions.size >= 3 -> {
+                    val firstEmojiDrawable = EmojiDrawable.map[listReactions[0].type ?: ""]
+                    val secondEmojiDrawable = EmojiDrawable.map[listReactions[1].type ?: ""]
+                    val thirdEmojiDrawable = EmojiDrawable.map[listReactions[2].type ?: ""]
+
+                    if (firstEmojiDrawable != null)
+                        Glide.with(this).load(firstEmojiDrawable)
+                            .into(view.findViewById<ImageView>(R.id.n1_reaction))
+                    if (secondEmojiDrawable != null)
+                        Glide.with(this).load(secondEmojiDrawable)
+                            .into(view.findViewById<ImageView>(R.id.n2_reaction))
+                    if (thirdEmojiDrawable != null)
+                        Glide.with(this).load(thirdEmojiDrawable)
+                            .into(view.findViewById<ImageView>(R.id.n3_reaction))
+                    latestUser.text =
+                        "${listReactions[0].author.username ?: ""} ${requireContext().getString(R.string.other_user)}"
+                }
+
+                listReactions.isNotEmpty() -> {
+                    val firstEmojiDrawableId = EmojiDrawable.map[listReactions[0].type]
+                    if (firstEmojiDrawableId != null)
+                        Glide.with(this).load(firstEmojiDrawableId)
+                            .into(view.findViewById<ImageView>(R.id.n1_reaction))
+
+                    if (listReactions.size == 2) {
+                        val secondEmojiDrawableId = EmojiDrawable.map[listReactions[1].type]
+                        Glide.with(this).load(secondEmojiDrawableId)
+                            .into(view.findViewById<ImageView>(R.id.n2_reaction))
+                    } else {
+                        val n2Reaction = view.findViewById<ImageView>(R.id.n2_reaction)
+                        n2Reaction.visibility = View.GONE
+                        val layoutN2Reaction =
+                            n2Reaction.layoutParams as ViewGroup.MarginLayoutParams
+                        val layoutParamsText =
+                            latestUser.layoutParams as ViewGroup.MarginLayoutParams
+                        layoutParamsText.marginStart -= layoutN2Reaction.marginStart
+                        layoutN2Reaction.marginStart = 0
+                        latestUser.layoutParams = layoutParamsText
+                        n2Reaction.layoutParams = layoutN2Reaction
+                    }
+
+                    when {
+                        listReactions.size == 1 -> latestUser.text =
+                            listReactions[0].author.username
+
+                        else -> latestUser.text = "${listReactions[0].author.username ?: ""} ${
+                            requireContext().getString(R.string.other_user)
+                        }"
+                    }
+                }
+
+                else -> {
+                    view.findViewById<ImageView>(R.id.n1_reaction).visibility = View.GONE
+                    view.findViewById<ImageView>(R.id.n2_reaction).visibility = View.GONE
+                    view.findViewById<ImageView>(R.id.n3_reaction).visibility = View.GONE
+                    val layoutParams = latestUser.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.marginStart = 0
+                    latestUser.layoutParams = layoutParams
+                    latestUser.text = requireContext().getString(R.string.no_reaction)
+                }
+
+            }
+            totalReactions.setOnClickListener {
+                openReactionSheet(post.id, listReactions.size)
+            }
         }
-        val listReactions = post.reactions
-        val latestUser = view.findViewById<TextView>(R.id.latest_user)
-       when {
-           listReactions.size >= 3 -> {
-                val firstEmojiDrawable= EmojiDrawable.map[listReactions[0].type ?: ""]
-                val secondEmojiDrawable = EmojiDrawable.map[listReactions[1].type ?: ""]
-                val thirdEmojiDrawable = EmojiDrawable.map[listReactions[2].type ?: ""]
-
-
-                if(firstEmojiDrawable != null)
-                     Glide.with(this).load(firstEmojiDrawable).into(view.findViewById<ImageView>(R.id.n1_reaction))
-                if(secondEmojiDrawable != null)
-                        Glide.with(this).load(secondEmojiDrawable).into(view.findViewById<ImageView>(R.id.n2_reaction))
-                if(thirdEmojiDrawable != null)
-                        Glide.with(this).load(thirdEmojiDrawable).into(view.findViewById<ImageView>(R.id.n3_reaction))
-               latestUser.text = "${listReactions[0].author.username ?: ""} ${requireContext().getString(R.string.other_user)}"
-           }
-           listReactions.isNotEmpty() -> {
-               val firstEmojiDrawableId = EmojiDrawable.map[listReactions[0].type]
-               if(firstEmojiDrawableId != null)
-                   Glide.with(this).load(firstEmojiDrawableId).into(view.findViewById<ImageView>(R.id.n1_reaction))
-
-               if (listReactions.size == 2) {
-                   val secondEmojiDrawableId = EmojiDrawable.map[listReactions[1].type]
-                   Glide.with(this).load(secondEmojiDrawableId).into(view.findViewById<ImageView>(R.id.n2_reaction))
-               } else {
-                   val n2Reaction = view.findViewById<ImageView>(R.id.n2_reaction)
-                   n2Reaction.visibility = View.GONE
-                   val layoutN2Reaction = n2Reaction.layoutParams as ViewGroup.MarginLayoutParams
-                   val layoutParamsText = latestUser.layoutParams as ViewGroup.MarginLayoutParams
-                   layoutParamsText.marginStart -= layoutN2Reaction.marginStart
-                   layoutN2Reaction.marginStart = 0
-                   latestUser.layoutParams = layoutParamsText
-                   n2Reaction.layoutParams = layoutN2Reaction
-               }
-
-               when {
-                   listReactions.size == 1 -> latestUser.text = listReactions[0].author.username
-                   else -> latestUser.text = "${listReactions[0].author.username ?: ""} ${requireContext().getString(R.string.other_user)}"
-               }
-           }
-
-           else -> {
-                view.findViewById<ImageView>(R.id.n1_reaction).visibility = View.GONE
-                view.findViewById<ImageView>(R.id.n2_reaction).visibility = View.GONE
-                view.findViewById<ImageView>(R.id.n3_reaction).visibility = View.GONE
-                val layoutParams = latestUser.layoutParams as ViewGroup.MarginLayoutParams
-                layoutParams.marginStart = 0
-                latestUser.layoutParams = layoutParams
-                latestUser.text =  requireContext().getString(R.string.no_reaction)
-           }
-
-       }
         val totalComments = view.findViewById<TextView>(R.id.total_comment)
         if(userId != post.author.id.toString()) {
             totalComments.visibility = View.INVISIBLE
-        }
-        when(val countComments = post.countComments.toInt()) {
-            0 -> totalComments.text = requireContext().getString(R.string.no_comment)
-            1 -> totalComments.text = requireContext().getString(R.string.one_comment)
-            else -> totalComments.text = "View all $countComments comments"
-        }
+        } else {
+            when (val countComments = post.countComments.toInt()) {
+                0 -> totalComments.text = requireContext().getString(R.string.no_comment)
+                1 -> totalComments.text = requireContext().getString(R.string.one_comment)
+                else -> totalComments.text = "View all $countComments comments"
+            }
 
-        totalComments.setOnClickListener{
-            openCommentSheet(post.id, post.countComments.toInt())
+            totalComments.setOnClickListener {
+                openCommentSheet(post.id, post.countComments.toInt())
+            }
         }
-
-        totalReactions.setOnClickListener {
-            openReactionSheet(post.id, listReactions.size)
-        }
-
         val buttonInputComment = view.findViewById<ImageButton>(R.id.button_input_comment)
-        if(userId == post.author.id.toString()) {
+        if (userId == post.author.id.toString()) {
             buttonInputComment.isEnabled = false
+        } else {
+            buttonInputComment.setOnClickListener { openCommentDialog()}
         }
-        buttonInputComment.setOnClickListener {
-            openCommentDialog()
-        }
-
-        val reactionLayout = view.findViewById<RelativeLayout>(R.id.reaction_layout)
-        if(userId == post.author.id.toString()) {
-            reactionLayout.isClickable = false
-        }
-
         return view
     }
 
@@ -240,26 +247,27 @@ class PostFragment : Fragment(), OnCommentSentListener {
             smile?.isEnabled = false
             clown?.isEnabled = false
             skull?.isEnabled = false
+            return
         }
 
         heart?.setOnClickListener {
-            sendReactions(post.id, 5, "heart", it)
+            sendReactions(post.id, userId.toInt(), "heart", it)
         }
 
         cry?.setOnClickListener {
-            sendReactions(post.id, 5, "cry", it)
+            sendReactions(post.id, userId.toInt(), "cry", it)
         }
 
         smile?.setOnClickListener {
-            sendReactions(post.id, 5, "smile", it)
+            sendReactions(post.id, userId.toInt(), "smile", it)
         }
 
         clown?.setOnClickListener {
-            sendReactions(post.id, 5, "clown", it)
+            sendReactions(post.id, userId.toInt(), "clown", it)
         }
 
         skull?.setOnClickListener {
-            sendReactions(post.id, 5, "skull", it)
+            sendReactions(post.id, userId.toInt(), "skull", it)
         }
     }
 

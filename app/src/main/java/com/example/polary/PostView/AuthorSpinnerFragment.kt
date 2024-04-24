@@ -23,10 +23,4 @@ class AuthorSpinnerFragment : Fragment() {
 
         return view
     }
-
-    fun updateSpinnerData(users: List<Author>) {
-        val adapter = AuthorAdapterSpinner(requireContext(), R.layout.author_spinner_item, users)
-        adapter.setDropDownViewResource(R.layout.author_spinner_item)
-        authorSpinner.adapter = adapter
-    }
 }

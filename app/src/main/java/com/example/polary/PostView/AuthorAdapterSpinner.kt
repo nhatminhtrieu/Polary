@@ -10,8 +10,13 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.polary.R
 import com.example.polary.dataClass.Author
+import com.example.polary.dataClass.User
 
-class AuthorAdapterSpinner(context: Context, private val layoutId: Int, users: List<Author>) : ArrayAdapter<Author>(context, layoutId, users) {
+class AuthorAdapterSpinner(
+    context: Context,
+    private val layoutId: Int, users: List<Author>,
+    private val user: User
+) : ArrayAdapter<Author>(context, layoutId, users) {
     // Override methods here to customize the adapter
     inner class ViewHolder(view: View) {
         val username: TextView = view.findViewById(R.id.author_username)
@@ -39,7 +44,7 @@ class AuthorAdapterSpinner(context: Context, private val layoutId: Int, users: L
             viewHolder = view.tag as ViewHolder
         }
         val author = getItem(position)
-        viewHolder.username.text = if(author?.id.toString() == "2"){
+        viewHolder.username.text = if(author?.id.toString() == user.id.toString()){
             "You"
         } else {
             author?.username

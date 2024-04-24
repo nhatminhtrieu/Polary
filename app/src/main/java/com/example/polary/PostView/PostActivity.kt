@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Author
+import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 
@@ -18,6 +19,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
     private lateinit var postFragment: Fragment
     private lateinit var authorSpinner: Spinner
     private lateinit var gridViewButton: ImageButton
+    private lateinit var user: User
 
     companion object {
         var currentPosition = 0
@@ -37,6 +39,8 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         authorSpinner = findViewById(R.id.author_spinner)
         gridViewButton = findViewById(R.id.grid_view_button)
         gridViewButton.setImageResource(imageSrcIcon)
+        user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
+        Log.d("User", user.toString())
         getUsers()
     }
 
@@ -50,7 +54,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
             override fun onSuccess(data: Any) {
                 val users = ArrayList(data as List<Author>)
                 users.add(0, Author(0, "All", null))
-                val adapter = AuthorAdapterSpinner(this@PostActivity, R.layout.author_spinner_item, users)
+                val adapter = AuthorAdapterSpinner(this@PostActivity, R.layout.author_spinner_item, users, user)
                 adapter.setDropDownViewResource(R.layout.author_spinner_item)
                 authorSpinner.adapter = adapter
 
@@ -59,7 +63,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         val authorId = users[position].id
                         val bundle = Bundle()
-                        bundle.putString("userId", "2") // the value of userId is this account's id
+                        bundle.putString("userId", user.id.toString()) // the value of userId is this account's id
                         bundle.putString("authorId", authorId.toString()) // the value of authorId is the selected author's id
                         currentPosition = 0
                         if (isInitialSelection) {
@@ -98,7 +102,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
                     if(!canChangeView) return@OnClickListener
                     val bundle = Bundle()
                     val author = authorSpinner.selectedItem as Author
-                    bundle.putString("userId", "2") // the value of userId is this account's id
+                    bundle.putString("userId", user.id.toString()) // the value of userId is this account's id
                     bundle.putString("authorId", author.id.toString()) // the value of authorId is the selected author's id
 
                      if(mode == GridView) {

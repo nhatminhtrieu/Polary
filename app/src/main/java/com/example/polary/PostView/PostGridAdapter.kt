@@ -1,3 +1,4 @@
+import android.content.Context.MODE_PRIVATE
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.transition.TransitionSet
@@ -18,6 +19,7 @@ import com.example.polary.PostView.PostActivity
 import com.example.polary.PostView.PostPagerFragment
 import com.example.polary.R
 import com.example.polary.dataClass.Post
+import com.example.polary.utils.SessionManager
 import java.util.concurrent.atomic.AtomicBoolean
 
 interface ViewHolderListener {
@@ -88,7 +90,8 @@ class PostGridAdapter(
             (fragment.exitTransition as TransitionSet).excludeTarget(view, true)
             val transitioningView: ImageView = view.findViewById(R.id.post_grid_image)
             val bundle = Bundle()
-            bundle.putString("userId", "2") // the value of userId is this account's id
+            val user = SessionManager(fragment.requireContext().getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
+            bundle.putString("userId", user.id.toString()) // the value of userId is this account's id
             bundle.putString("authorId", authorId) // the value of authorId is the selected author's id
             val postPagerFragment = PostPagerFragment()
             postPagerFragment.arguments = bundle
