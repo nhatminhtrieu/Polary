@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/post_view"
+    android:padding="@dimen/default_margin"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,12 +11,10 @@
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/post_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,8 +22,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/post_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             app:cardBackgroundColor="@color/md_theme_onSurface"
             app:cardCornerRadius="250dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,17 +56,13 @@
         android:id="@+id/post_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="60dp"
         app:cardBackgroundColor="@color/polaroidBackground"
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="H,0.8:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header"
-        app:layout_constraintHeight_percent="0.5">
+        app:layout_constraintTop_toTopOf="parent">
 
         <include layout="@layout/card_polaroid" />
 
@@ -81,8 +76,7 @@
         android:background="@drawable/rounded_edittext"
         app:layout_constraintBottom_toTopOf="@+id/reaction_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_card">
+        app:layout_constraintStart_toStartOf="parent">
 
         <FrameLayout
             android:id="@+id/latest_reaction"
@@ -126,13 +120,11 @@
         android:id="@+id/reaction_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="@dimen/default_margin"
         android:gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/add_comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/total_reaction"
         app:layout_constraintHorizontal_bias="0.0">
 
         <LinearLayout
@@ -141,46 +133,46 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:padding="12dp">
+            android:padding="8dp">
 
             <ImageButton
                 android:id="@+id/love"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/heart_emoji" />
+                android:foreground="@drawable/heart_emoji" />
 
             <ImageButton
                 android:id="@+id/cry"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/default_margin"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/cry_emoji" />
+                android:foreground="@drawable/cry_emoji" />
 
             <ImageButton
                 android:id="@+id/smile"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/default_margin"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/smile_emoji" />
+                android:foreground="@drawable/smile_emoji" />
 
             <ImageButton
                 android:id="@+id/clown"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/default_margin"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/clown_emoji" />
+                android:foreground="@drawable/clown_emoji" />
 
             <ImageButton
                 android:id="@+id/skull"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/default_margin"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@drawable/skull_emoji" />
+                android:foreground="@drawable/skull_emoji" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -188,17 +180,15 @@
         android:id="@+id/add_comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="92dp"
+        android:layout_marginBottom="36dp"
         android:background="@drawable/rounded_edittext"
         android:drawableEnd="@drawable/ic_send"
         android:drawableTint="@color/md_theme_onSurface"
+        android:hint="@string/add_your_comment"
         android:inputType="text"
         android:padding="12dp"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reaction_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
@@ -207,9 +197,8 @@
         android:id="@+id/total_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/small_margin"
+        android:text="Hello"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_comment" />
 </androidx.constraintlayout.widget.ConstraintLayout>
