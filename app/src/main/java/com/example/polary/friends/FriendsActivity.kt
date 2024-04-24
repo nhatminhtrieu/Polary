@@ -8,8 +8,6 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import com.example.polary.R
-import com.example.polary.dataClass.Friend
-import com.example.polary.dataClass.FriendRequest
 import com.example.polary.dataClass.User
 import com.example.polary.utils.SessionManager
 import com.google.android.material.textfield.TextInputEditText
