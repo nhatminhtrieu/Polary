@@ -39,7 +39,11 @@ class AuthorAdapterSpinner(context: Context, private val layoutId: Int, users: L
             viewHolder = view.tag as ViewHolder
         }
         val author = getItem(position)
-        viewHolder.username.text = author?.username
+        viewHolder.username.text = if(author?.id.toString() == "2"){
+            "You"
+        } else {
+            author?.username
+        }
         val image = if (author?.avatar.isNullOrEmpty()) {
             if (position == 0) R.drawable.ic_people else R.drawable.ic_launcher_foreground
         } else {

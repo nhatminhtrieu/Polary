@@ -31,21 +31,25 @@ import com.example.polary.utils.ApiCallBack
 class PostFragment : Fragment(), OnCommentSentListener {
     companion object {
         private const val ARG_POST = "post"
+        private const val ARG_USER_ID = "userId"
 
-        fun newInstance(post: Post): PostFragment {
+        fun newInstance(post: Post, userId: String): PostFragment {
             val fragment = PostFragment()
             val args = Bundle()
             args.putSerializable(ARG_POST, post)
+            args.putString(ARG_USER_ID, userId)
             fragment.arguments = args
             return fragment
         }
     }
 
     private lateinit var post: Post
+    private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         post = arguments?.getSerializable(ARG_POST) as Post
+        userId = arguments?.getString(ARG_USER_ID) ?: ""
     }
 
     override fun onCreateView(
@@ -94,9 +98,16 @@ class PostFragment : Fragment(), OnCommentSentListener {
         Glide.with(this).load(post.author.avatar).into(avatar)
 
         val username: TextView = view.findViewById(R.id.author_username)
-        username.text = post.author.username
+        username.text = if(post.author.id.toString() == userId) {
+            "You"
+        } else {
+            post.author.username
+        }
 
         val totalReactions: RelativeLayout = view.findViewById(R.id.total_reaction)
+        if(userId != post.author.id.toString()) {
+            totalReactions.visibility = View.INVISIBLE
+        }
         val listReactions = post.reactions
         val latestUser = view.findViewById<TextView>(R.id.latest_user)
        when {
@@ -104,6 +115,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
                 val firstEmojiDrawable= EmojiDrawable.map[listReactions[0].type ?: ""]
                 val secondEmojiDrawable = EmojiDrawable.map[listReactions[1].type ?: ""]
                 val thirdEmojiDrawable = EmojiDrawable.map[listReactions[2].type ?: ""]
+
 
                 if(firstEmojiDrawable != null)
                      Glide.with(this).load(firstEmojiDrawable).into(view.findViewById<ImageView>(R.id.n1_reaction))
@@ -150,6 +162,9 @@ class PostFragment : Fragment(), OnCommentSentListener {
 
        }
         val totalComments = view.findViewById<TextView>(R.id.total_comment)
+        if(userId != post.author.id.toString()) {
+            totalComments.visibility = View.INVISIBLE
+        }
         when(val countComments = post.countComments.toInt()) {
             0 -> totalComments.text = requireContext().getString(R.string.no_comment)
             1 -> totalComments.text = requireContext().getString(R.string.one_comment)
@@ -160,14 +175,21 @@ class PostFragment : Fragment(), OnCommentSentListener {
             openCommentSheet(post.id, post.countComments.toInt())
         }
 
-
         totalReactions.setOnClickListener {
             openReactionSheet(post.id, listReactions.size)
         }
 
         val buttonInputComment = view.findViewById<ImageButton>(R.id.button_input_comment)
+        if(userId == post.author.id.toString()) {
+            buttonInputComment.isEnabled = false
+        }
         buttonInputComment.setOnClickListener {
             openCommentDialog()
+        }
+
+        val reactionLayout = view.findViewById<RelativeLayout>(R.id.reaction_layout)
+        if(userId == post.author.id.toString()) {
+            reactionLayout.isClickable = false
         }
 
         return view
@@ -211,6 +233,14 @@ class PostFragment : Fragment(), OnCommentSentListener {
         val smile = view?.findViewById<ImageButton>(R.id.smile)
         val clown = view?.findViewById<ImageButton>(R.id.clown)
         val skull = view?.findViewById<ImageButton>(R.id.skull)
+
+        if(userId == post.author.id.toString()) {
+            heart?.isEnabled = false
+            cry?.isEnabled = false
+            smile?.isEnabled = false
+            clown?.isEnabled = false
+            skull?.isEnabled = false
+        }
 
         heart?.setOnClickListener {
             sendReactions(post.id, 5, "heart", it)

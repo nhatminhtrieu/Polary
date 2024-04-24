@@ -90,6 +90,7 @@
 
             <ImageView
                 android:id="@+id/n3_reaction"
+                android:clickable="true"
                 android:layout_width="28dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="24dp"

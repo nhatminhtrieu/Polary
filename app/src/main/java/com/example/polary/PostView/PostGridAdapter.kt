@@ -88,7 +88,7 @@ class PostGridAdapter(
             (fragment.exitTransition as TransitionSet).excludeTarget(view, true)
             val transitioningView: ImageView = view.findViewById(R.id.post_grid_image)
             val bundle = Bundle()
-            bundle.putString("userId", "5") // the value of userId is this account's id
+            bundle.putString("userId", "2") // the value of userId is this account's id
             bundle.putString("authorId", authorId) // the value of authorId is the selected author's id
             val postPagerFragment = PostPagerFragment()
             postPagerFragment.arguments = bundle

@@ -59,7 +59,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                         val authorId = users[position].id
                         val bundle = Bundle()
-                        bundle.putString("userId", "5") // the value of userId is this account's id
+                        bundle.putString("userId", "2") // the value of userId is this account's id
                         bundle.putString("authorId", authorId.toString()) // the value of authorId is the selected author's id
                         currentPosition = 0
                         if (isInitialSelection) {
@@ -98,7 +98,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
                     if(!canChangeView) return@OnClickListener
                     val bundle = Bundle()
                     val author = authorSpinner.selectedItem as Author
-                    bundle.putString("userId", "5") // the value of userId is this account's id
+                    bundle.putString("userId", "2") // the value of userId is this account's id
                     bundle.putString("authorId", author.id.toString()) // the value of authorId is the selected author's id
 
                      if(mode == GridView) {

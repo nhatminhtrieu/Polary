@@ -71,7 +71,7 @@ class PostPagerFragment : Fragment() {
                 view.findViewById<ImageView>(R.id.empty_icon).visibility = View.GONE
                 view.findViewById<TextView>(R.id.empty_caption).visibility = View.GONE
                 PostActivity.canChangeView = true
-                val postAdapter = PostPagerAdapter(childFragmentManager, posts)
+                val postAdapter = PostPagerAdapter(childFragmentManager, posts, userId ?: "")
                 viewPager.adapter = postAdapter
                 viewPager.setCurrentItem(PostActivity.currentPosition)
                 viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
