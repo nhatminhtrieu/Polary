@@ -1,12 +1,14 @@
 package com.example.polary.friends
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polary.Class.CustomDividerItemDecoration
@@ -14,18 +16,21 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Friend
 import com.example.polary.dataClass.FriendRequest
+import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.SessionManager
 
-class FriendsFragment :
+class FriendsFragment:
     Fragment(),
     FriendRequestsAdapter.OnFriendRequestListener {
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var friends: MutableList<Friend>
     private lateinit var friendsAdapter: FriendsAdapter
     private lateinit var rvFriend : RecyclerView
     private lateinit var friendRequests: MutableList<FriendRequest>
     private lateinit var friendRequestsAdapter: FriendRequestsAdapter
     private lateinit var rvFriendRequests: RecyclerView
-    private val userId = 1
+    private lateinit var user: User
     private val TAG = "FriendsActivity"
     override fun onDeleteSentRequest() {
         // Do nothing
@@ -40,6 +45,9 @@ class FriendsFragment :
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sharedPreferences = requireActivity().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        user = sessionManager.getUserFromSharedPreferences()!!
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_friends, container, false)
     }
@@ -62,11 +70,11 @@ class FriendsFragment :
     private fun getFriends() {
         // get friends from server
         val httpMethod = HttpMethod()
-        httpMethod.doGet<Friend>("users/${userId}/friends", object: ApiCallBack<Any> {
+        httpMethod.doGet<Friend>("users/${user.id}/friends", object: ApiCallBack<Any> {
             @SuppressLint("NotifyDataSetChanged")
             override fun onSuccess(data: Any) {
                 friends = data as MutableList<Friend>
-                friendsAdapter = FriendsAdapter(friends, 0, userId, null, false)
+                friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
                 rvFriend.adapter = friendsAdapter
 
                 val loadMoreButton = view?.findViewById<View>(R.id.btn_more_friends)
@@ -91,11 +99,11 @@ class FriendsFragment :
     private fun getFriendRequests() {
         // get friend requests from server
         val httpMethod = HttpMethod()
-        httpMethod.doGetDataWithParams<FriendRequest>("friend-requests/$userId", mapOf("type" to "receiver"), object:
+        httpMethod.doGetDataWithParams<FriendRequest>("friend-requests/${user.id}", mapOf("type" to "receiver"), object:
             ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 friendRequests = data as MutableList<FriendRequest>
-                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, userId, 0, this@FriendsFragment)
+                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, user.id, 0, this@FriendsFragment)
                 rvFriendRequests.adapter = friendRequestsAdapter
                 Log.d(TAG, "Successfully fetched friend requests data")
             }
