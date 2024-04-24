@@ -95,7 +95,7 @@ class FriendsFragment :
             ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 friendRequests = data as MutableList<FriendRequest>
-                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, userId, 0, null)
+                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, userId, 0, this@FriendsFragment)
                 rvFriendRequests.adapter = friendRequestsAdapter
                 Log.d(TAG, "Successfully fetched friend requests data")
             }
