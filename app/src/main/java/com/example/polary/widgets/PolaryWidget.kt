@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.text.TextPaint
 import android.text.TextUtils
 import android.widget.RemoteViews
@@ -56,8 +57,9 @@ class PolaryWidget : AppWidgetProvider() {
         if (user == null) {
             updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.white_background)
         } else {
-            httpMethod.doGet<Post>("users/${user.id}/viewable-posts", object :
-                ApiCallBack<Any> {
+            val endpoint = "users/${user.id}/viewable-posts"
+            val queryParam = mapOf("authorId" to "0")
+            httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     val posts = data as List<Post>
                     val latestPost = posts.maxByOrNull { it.id.toInt() }
@@ -114,11 +116,14 @@ class PolaryWidget : AppWidgetProvider() {
             TextUtils.ellipsize(latestPost.caption, TextPaint(), 100f, TextUtils.TruncateAt.END)
         )
 
-        latestPost.imageUrl =
-            "https://firebasestorage.googleapis.com/v0/b/polary-8862a.appspot.com/o/1713290324647_IMG_8141.jpeg?alt=media&token=7c27954d-7d22-4493-897b-375721a059b0"
-
-        loadImage(context, postImageTarget, latestPost.imageUrl)
-        loadImage(context, avatarTarget, latestPost.author.avatar)
+        val avatarUri = latestPost.author.avatar?.let { Uri.parse(it) }
+        if(avatarUri == null) {
+            views.setImageViewResource(R.id.avatar, R.mipmap.ic_launcher)
+        } else {
+            views.setImageViewUri(R.id.avatar, avatarUri)
+        }
+        loadImage(context, postImageTarget, latestPost.imageUrl ?: "")
+        loadImage(context, avatarTarget, latestPost.author.avatar ?: "")
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }

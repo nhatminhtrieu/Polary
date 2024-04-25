@@ -87,8 +87,8 @@ dependencies {
     implementation(libs.play.services.base)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverterGson)
-
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.okhttp)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

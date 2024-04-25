@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.GestureDetector
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -34,8 +33,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import kotlin.properties.Delegates
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
 class SendPhotoActivity: AppCompatActivity(), AddCaptionFragment.OnInputListener {
