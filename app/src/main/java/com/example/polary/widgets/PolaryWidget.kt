@@ -56,8 +56,9 @@ class PolaryWidget : AppWidgetProvider() {
         if (user == null) {
             updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.white_background)
         } else {
-            httpMethod.doGet<Post>("users/${user.id}/viewable-posts", object :
-                ApiCallBack<Any> {
+            val endpoint = "users/${user.id}/viewable-posts"
+            val queryParam = mapOf("authorId" to "0")
+            httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     val posts = data as List<Post>
                     val latestPost = posts.maxByOrNull { it.id.toInt() }
