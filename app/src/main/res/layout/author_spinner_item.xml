@@ -27,7 +27,8 @@
                 android:id="@+id/user_avatar_view"
                 android:layout_width="wrap_content"
                 android:layout_height="150dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:tintMode="add"
+                android:src="@drawable/ic_people"/>
         </androidx.cardview.widget.CardView>
     </androidx.cardview.widget.CardView>
 
