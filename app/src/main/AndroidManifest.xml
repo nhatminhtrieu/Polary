@@ -7,10 +7,8 @@
     <uses-feature android:name="android.hardware.camera.any" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".friends.FriendsActivity"
+            android:exported="false" />
         <receiver
             android:name=".widgets.PolaryWidget"
             android:exported="true">
@@ -35,9 +36,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/polary_widget_info" />
         </receiver>
-        <activity
-            android:name=".friends.FriendsActivity"
-            android:exported="false" />
         <activity
             android:name=".authentication.SignIn"
             android:exported="false" />
