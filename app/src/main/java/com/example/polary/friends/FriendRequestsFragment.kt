@@ -74,7 +74,7 @@ class FriendRequestsFragment:
 
     private fun getSentFriendRequests() {
         val httpMethod = HttpMethod()
-        httpMethod.doGetDataWithParams<FriendRequest>("friend-requests/${user.id}", mapOf("type" to "sender"), object:
+        httpMethod.doGetWithQuery<FriendRequest>("friend-requests/${user.id}", mapOf("type" to "sender"), object:
             ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 sentFriendRequests = data as MutableList<FriendRequest>

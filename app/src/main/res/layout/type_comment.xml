@@ -34,6 +34,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:background="@drawable/ic_send"
+            android:backgroundTint="@color/md_theme_onSurface"
             android:layout_marginEnd="@dimen/default_margin"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true" />

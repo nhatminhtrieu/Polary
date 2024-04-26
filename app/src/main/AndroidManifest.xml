@@ -39,9 +39,6 @@
             android:name=".friends.FriendsActivity"
             android:exported="false" />
         <activity
-            android:name=".friends.FriendsActivity"
-            android:exported="false" />
-        <activity
             android:name=".authentication.SignIn"
             android:exported="false" />
         <activity
