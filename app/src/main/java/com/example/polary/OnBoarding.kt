@@ -1,5 +1,6 @@
 package com.example.polary
 
+import AppIconFragment
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,12 +13,13 @@ import com.example.polary.authentication.SignUpMain
 import com.example.polary.utils.SessionManager
 import com.example.polary.widgets.PolaryWidget
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 
 class OnBoarding : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // Enable dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         sessionManager = SessionManager(getSharedPreferences("user", MODE_PRIVATE))
 
@@ -45,6 +47,12 @@ class OnBoarding : AppCompatActivity() {
             signUpButton.setOnClickListener {
                 val intent = Intent(this, SignUpMain::class.java)
                 startActivity(intent)
+            }
+
+            val totallyNotAButton = findViewById<MaterialTextView>(R.id.orMatTV)
+            totallyNotAButton.setOnClickListener {
+                val appIconFragment = AppIconFragment()
+                appIconFragment.show(supportFragmentManager, "app_icon_fragment")
             }
         }
 
