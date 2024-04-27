@@ -66,8 +66,9 @@
         <activity
             android:name=".PostView.PostActivity"
             android:exported="false"
-            android:label="Posts"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Posts" />
+
         <activity
             android:name=".Profile.ProfileActivity"
             android:exported="false"
