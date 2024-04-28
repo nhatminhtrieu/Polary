@@ -1,4 +1,7 @@
+package com.example.polary.Profile
 
+import AppIcon
+import AppIconAdapter
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Bundle

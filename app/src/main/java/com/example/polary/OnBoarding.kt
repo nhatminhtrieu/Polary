@@ -1,6 +1,5 @@
 package com.example.polary
 
-import AppIconFragment
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.polary.Photo.TakePhotoActivity
+import com.example.polary.Profile.AppIconFragment
 import com.example.polary.authentication.SignIn
 import com.example.polary.authentication.SignUpMain
 import com.example.polary.utils.SessionManager
