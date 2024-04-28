@@ -19,7 +19,6 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.OnBoarding
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
-import com.example.polary.dataClass.Author
 import com.example.polary.dataClass.Post
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
@@ -84,8 +83,7 @@ class PolaryWidget : AppWidgetProvider() {
                 }
 
                 override fun onError(error: Throwable) {
-//                    updateViewWithText(context, appWidgetManager, appWidgetId, views, "No pics, yet")
-                    updateAppWidget(context, appWidgetManager, appWidgetId, generateFakePost())
+                    updateViewWithText(context, appWidgetManager, appWidgetId, views, "No pics, yet")
                 }
             })
         }
@@ -208,20 +206,5 @@ class PolaryWidget : AppWidgetProvider() {
         val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
         return sessionManager.getUserFromSharedPreferences()
-    }
-
-    fun generateFakePost(): Post {
-        return Post(
-            id = 1,
-            caption = "This is a caption",
-            imageUrl = "https://picsum.photos/1600/1200",
-            author = Author(
-                id = 1,
-                username = "username",
-                avatar = "https://picsum.photos/1600/1200"
-            ),
-            countComments = 0,
-            reactions = emptyList()
-        )
     }
 }
