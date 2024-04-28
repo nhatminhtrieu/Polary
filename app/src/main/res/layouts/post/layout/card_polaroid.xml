@@ -35,7 +35,7 @@
         android:layout_margin="8dp"
         android:textAlignment="center"
         android:textColor="@color/captionColor"
-        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textAppearance="@style/DefaultCaption"
         android:text="Hello"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/cardView3"

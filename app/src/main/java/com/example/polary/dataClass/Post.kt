@@ -8,5 +8,7 @@ data class Post(
     val caption: String,
     var imageUrl: String,
     val reactions: List<PostReaction>,
-    val countComments: Number
+    val countComments: Number,
+    val frame: Int,
+    val font: Int
 ) : Serializable

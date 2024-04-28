@@ -31,6 +31,8 @@ interface IApi {
         @Part file: MultipartBody.Part,
         @Part authorId: MultipartBody.Part,
         @Part caption: MultipartBody.Part,
+        @Part frame: MultipartBody.Part,
+        @Part font: MultipartBody.Part,
         @Part visibleToIds: List<MultipartBody.Part>
     ): Call<ResponseBody<JsonElement>>
 
