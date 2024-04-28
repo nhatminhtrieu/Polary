@@ -143,7 +143,7 @@ class PolaryWidget : AppWidgetProvider() {
         )
     }
 
-    private fun calculateWidgetSizeInDp(context: Context): Pair<Int, Int> {
+    fun calculateWidgetSizeInDp(context: Context): Pair<Int, Int> {
         // Size in dp (width x height)
         // Portrait mode: (73n - 16) x (118m - 16)
         // Landscape mode: (142n - 15) x (66m - 15)
@@ -198,7 +198,7 @@ class PolaryWidget : AppWidgetProvider() {
                 .into(avatarTarget)
         }
     }
-    private fun dpToPx(context: Context, dp: Int): Int {
+    fun dpToPx(context: Context, dp: Int): Int {
         val displayMetrics = context.resources.displayMetrics
         return (dp * (displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
     }

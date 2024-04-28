@@ -2,19 +2,21 @@ package com.example.polary.PostView
 
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
-import com.example.polary.dataClass.Post
 import com.example.polary.R
+import com.example.polary.dataClass.Post
 import com.example.polary.utils.ApiCallBack
 
-class PostActivity : AppCompatActivity() {
+class PostActivity : BaseActivity() {
     private var posts: ArrayList<Post> = ArrayList()
     private lateinit var postAdapter: PostPagerAdapter
     private lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Force hide the action bar
+        supportActionBar?.hide()
         getUsersPosts(5)
     }
 

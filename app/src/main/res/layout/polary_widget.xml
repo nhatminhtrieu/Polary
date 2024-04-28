@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/avatar"
             android:background="@drawable/rounded_textview"
-            android:text="Todo"
+            android:text="The post's caption"
             android:ellipsize="end"
             android:textSize="12sp"
             android:maxLines="1"/>

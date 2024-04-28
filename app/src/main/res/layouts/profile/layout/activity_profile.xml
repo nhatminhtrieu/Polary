@@ -92,19 +92,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/app_icon_profile_item"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="128dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -112,8 +114,8 @@
 
                     <ImageView
                         android:id="@+id/app_icon_profile_item_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:contentDescription="App icon"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_launcher_foreground" />
@@ -122,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="App icon" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -130,7 +132,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/add_widget_profile_item"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
@@ -144,18 +146,51 @@
                     android:padding="16dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:contentDescription="Add widget"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_launcher_foreground" />
+                        android:src="@drawable/round_add_circle_outline" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:text="Add widget" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/change_theme_profile_item"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="Change theme"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/outline_bedtime" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingBottom="8dp"
+                        android:text="Change theme" />
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

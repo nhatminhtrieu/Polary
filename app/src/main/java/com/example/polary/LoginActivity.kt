@@ -1,11 +1,9 @@
 package com.example.polary
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
     private lateinit var usernameEditText: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {

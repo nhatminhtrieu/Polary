@@ -2,10 +2,10 @@ package com.example.polary.authentication
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.utils.ApiCallBack
@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
-class EnterNewPassword : AppCompatActivity() {
+class EnterNewPassword : BaseActivity() {
     private lateinit var password: TextInputEditText
     private lateinit var confirmPassword: TextInputEditText
     private lateinit var saveMatBtn: MaterialButton

@@ -1,20 +1,20 @@
 package com.example.polary.Profile
 
-import AppIcon
-import AppIconAdapter
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.polary.BaseActivity
 import com.example.polary.R
 import com.example.polary.authentication.SignIn
 import com.example.polary.constant.IconDrawable
@@ -23,40 +23,43 @@ import com.example.polary.widgets.PolaryWidget
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : BaseActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var appIconCardView: CardView
     private lateinit var addWidgetCardView: CardView
+    private lateinit var changeThemeCardView: CardView
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val currentTheme = sharedPreferences.getString("theme", "Dark")
+        val currentThemeResId = when (currentTheme) {
+            "Light" -> R.style.AppTheme_Light
+            "Dark" -> R.style.AppTheme_Dark
+            else -> R.style.AppTheme_Dark
+        }
+        setTheme(currentThemeResId)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        // Force hide the action bar
+        supportActionBar?.hide()
 
         appIconCardView = findViewById(R.id.app_icon_profile_item)
         addWidgetCardView = findViewById(R.id.add_widget_profile_item)
-        appIconCardView.findViewById<ImageView>(R.id.app_icon_profile_item_image).setImageResource(
-            IconDrawable.map[SessionManager(sharedPreferences).getAppIcon()] ?: R.mipmap.ic_launcher
-        )
+        changeThemeCardView = findViewById(R.id.change_theme_profile_item)
 
         appIconCardView.setOnClickListener {
             showIconBottomSheet()
         }
 
         addWidgetCardView.setOnClickListener {
-            try {
-                // Open the widget section in the application list
-                val pickIntent = Intent(Intent.ACTION_MAIN).apply {
-                    addCategory(Intent.CATEGORY_HOME)
-                    addCategory(Intent.CATEGORY_DEFAULT)
-                }
-                val chooser = Intent.createChooser(pickIntent, "Select Widget")
-                startActivity(chooser)
-            } catch (e: Exception) {
-                // Handle exception
-            }
+            showAddWidgetInstructions()
+        }
+
+        changeThemeCardView.setOnClickListener {
+            showThemeDialog()
         }
 
         val signOutBtn = findViewById<TextView>(R.id.signOutBtn)
@@ -65,6 +68,35 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun showThemeDialog() {
+        // Array of themes
+        val themes = arrayOf("Light", "Dark")
+
+        // Get the current theme
+        val currentThemeResId = sharedPreferences.getInt("themeResId", R.style.AppTheme_Dark)
+
+        // Find the index of the current theme in the themes array
+        val checkedItem = if (currentThemeResId == R.style.AppTheme_Light) 0 else 1
+
+        // Create an AlertDialog Builder
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose a theme")
+
+        // Set the single choice items on the dialog
+        builder.setSingleChoiceItems(themes, checkedItem) { dialog, which ->
+            // Save the selected theme in SharedPreferences
+            val selectedThemeResId =
+                if (which == 0) R.style.AppTheme_Light else R.style.AppTheme_Dark
+            switchTheme(selectedThemeResId)
+
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
+
+        // Create and show the dialog
+        val dialog = builder.create()
+        dialog.show()
+    }
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
 
@@ -111,6 +143,25 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         finish()
+    }
+
+    private fun showAddWidgetInstructions() {
+        val appWidgetManager = getSystemService(AppWidgetManager::class.java)
+        val myProvider = ComponentName(this, PolaryWidget::class.java)
+
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val successCallback = Intent(this, PolaryWidget::class.java).apply {
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            }
+            appWidgetManager.requestPinAppWidget(
+                myProvider,
+                null,
+                PendingIntent.getBroadcast(
+                    this, 0, successCallback,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+        }
     }
 
     @SuppressLint("QueryPermissionsNeeded")

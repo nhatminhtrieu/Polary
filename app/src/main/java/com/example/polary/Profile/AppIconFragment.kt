@@ -1,7 +1,5 @@
 package com.example.polary.Profile
 
-import AppIcon
-import AppIconAdapter
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -37,7 +35,6 @@ class AppIconFragment : BottomSheetDialogFragment() {
         return view
     }
 
-
     private fun changeAppIcon(icon: AppIcon) {
         val pm = context?.packageManager ?: run {
             Toast.makeText(requireContext(), "Failed to change app icon", Toast.LENGTH_SHORT).show()
@@ -45,7 +42,7 @@ class AppIconFragment : BottomSheetDialogFragment() {
         }
 
         val iconComponent = ComponentName(requireContext(), "${requireContext().packageName}.${icon.aliasName}")
-        val onBoardingComponent = ComponentName(requireContext(), "${requireContext().packageName}.OnBoarding")
+        val onBoardingComponent = ComponentName(requireContext(), requireContext().packageName)
 
         val isIconEnabled = pm.getComponentEnabledSetting(iconComponent) == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
 
@@ -61,6 +58,4 @@ class AppIconFragment : BottomSheetDialogFragment() {
             PackageManager.DONT_KILL_APP
         )
     }
-
 }
-
