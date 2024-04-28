@@ -17,7 +17,11 @@
         app:layout_constraintDimensionRatio="H,0.8:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
+        <ImageView
+            android:id="@+id/post_frame"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            tools:src="@drawable/frame4"/>
         <include layout="@layout/card_polaroid" />
 
     </com.google.android.material.card.MaterialCardView>

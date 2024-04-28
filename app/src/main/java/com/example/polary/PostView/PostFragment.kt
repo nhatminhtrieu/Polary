@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -23,6 +24,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.polary.Class.HttpMethod
+import com.example.polary.`object`.GlobalResources
 import com.example.polary.dataClass.Post
 import com.example.polary.R
 import com.example.polary.constant.EmojiDrawable
@@ -61,6 +63,11 @@ class PostFragment : Fragment(), OnCommentSentListener {
         val view = inflater.inflate(R.layout.post, container, false)
         val caption = view.findViewById<TextView>(R.id.post_caption)
         caption.text = post.caption
+        val typeface = ResourcesCompat.getFont(requireContext(), GlobalResources.fonts[post.font])
+        caption.typeface = typeface
+
+        val frame = view.findViewById<ImageView>(R.id.post_frame)
+        Glide.with(this).load(GlobalResources.frames[post.frame]).into(frame)
 
         val image = view.findViewById<ImageView>(R.id.post_image)
         image.transitionName = post.imageUrl

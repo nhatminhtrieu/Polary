@@ -9,4 +9,12 @@
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+    <style name="DefaultCaption" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/permanent_marker</item>
+    </style>
+
+    <style name="Style1Caption" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/pangolin</item>
+    </style>
 </resources>

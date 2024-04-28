@@ -104,10 +104,18 @@ class HttpMethod {
         })
     }
 
-    fun doPostMultiPart(url: String, file: MultipartBody.Part, authorId: MultipartBody.Part, caption: MultipartBody.Part, visibleToIds: List<MultipartBody.Part>, callback: ApiCallBack<Any>) {
+    fun doPostMultiPart(
+        url: String,
+        file: MultipartBody.Part,
+        authorId: MultipartBody.Part,
+        caption: MultipartBody.Part,
+        frame: MultipartBody.Part,
+        font: MultipartBody.Part,
+        visibleToIds: List<MultipartBody.Part>,
+        callback: ApiCallBack<Any>) {
         Log.d("HttpMethod", "doPostMultiPart: $authorId")
         val api = retrofitBuilder.create(IApi::class.java)
-        val call = api.postDataMultipart(url, file, authorId, caption, visibleToIds)
+        val call = api.postDataMultipart(url, file, authorId, caption, frame, font, visibleToIds)
         call.enqueue(object : Callback<ResponseBody<JsonElement>> {
             override fun onResponse(
                 call: Call<ResponseBody<JsonElement>>,
