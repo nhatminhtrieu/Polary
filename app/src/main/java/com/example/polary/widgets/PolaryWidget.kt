@@ -19,6 +19,7 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.OnBoarding
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
+import com.example.polary.dataClass.Author
 import com.example.polary.dataClass.Post
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
@@ -69,7 +70,7 @@ class PolaryWidget : AppWidgetProvider() {
         if (user == null) {
             updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.white_background)
         } else {
-            // TODO:  Fix query post later
+            // TODO: Fix query post later
             HttpMethod().doGet<Post>("users/${user.id}/viewable-posts", object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     val posts = data as List<Post>
@@ -83,7 +84,8 @@ class PolaryWidget : AppWidgetProvider() {
                 }
 
                 override fun onError(error: Throwable) {
-                    updateViewWithText(context, appWidgetManager, appWidgetId, views, "No pics, yet")
+//                    updateViewWithText(context, appWidgetManager, appWidgetId, views, "No pics, yet")
+                    updateAppWidget(context, appWidgetManager, appWidgetId, generateFakePost())
                 }
             })
         }
@@ -127,6 +129,12 @@ class PolaryWidget : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.polary_widget)
         setTextViewText(views, latestPost)
         loadImage(context, views, appWidgetId, latestPost)
+
+        // Set onClickPendingIntent for post_image
+        val intent = Intent(context, TakePhotoActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        views.setOnClickPendingIntent(R.id.post_image, pendingIntent)
+
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
@@ -174,7 +182,6 @@ class PolaryWidget : AppWidgetProvider() {
         // Convert to pixels to load the image with the correct size
         val targetWidth = dpToPx(context, max(widgetSize.first, widgetSize.second))
 
-
         latestPost.imageUrl.let {
             Glide.with(context.applicationContext)
                 .asBitmap()
@@ -201,5 +208,20 @@ class PolaryWidget : AppWidgetProvider() {
         val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
         return sessionManager.getUserFromSharedPreferences()
+    }
+
+    fun generateFakePost(): Post {
+        return Post(
+            id = 1,
+            caption = "This is a caption",
+            imageUrl = "https://picsum.photos/1600/1200",
+            author = Author(
+                id = 1,
+                username = "username",
+                avatar = "https://picsum.photos/1600/1200"
+            ),
+            countComments = 0,
+            reactions = emptyList()
+        )
     }
 }
