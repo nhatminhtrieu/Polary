@@ -50,7 +50,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
     }
     private fun getUsers() {
         val httpMethod = HttpMethod()
-        httpMethod.doGet<Author>("users", object: ApiCallBack<Any> {
+        httpMethod.doGet<Author>("users/${user.id}/friends", object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val users = ArrayList(data as List<Author>)
                 users.add(0, Author(0, "All", null))

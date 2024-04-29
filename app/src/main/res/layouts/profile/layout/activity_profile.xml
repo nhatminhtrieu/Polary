@@ -9,6 +9,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/avatar_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_camera"
         style="?attr/materialIconButtonStyle"
@@ -228,23 +237,6 @@
                     android:src="@drawable/ic_chevron_right"
                     app:tint="@color/md_theme_onSurface" />
             </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:text="Archive"
-            style="@style/TextAppearance.Material3.TitleMedium" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@color/md_theme_outlineVariant"
-            android:orientation="vertical"
-            android:showDividers="middle">
 
             <LinearLayout
                 android:id="@+id/posts_archive_profile_item"
@@ -274,35 +266,18 @@
                     android:src="@drawable/ic_chevron_right"
                     app:tint="@color/md_theme_onSurface" />
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/timeline_profile_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/md_theme_outlineVariant"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_calendar"
-                    app:tint="@color/md_theme_onSurface" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="Timeline"
-                    android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
-            </LinearLayout>
+
         </LinearLayout>
 
 

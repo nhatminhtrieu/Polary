@@ -38,7 +38,13 @@ interface IApi {
 
     @Multipart
     @PUT("{endpoint}")
-    fun putDataMultipart(@Path("endpoint", encoded = true) endpoint: String, @Part file: MultipartBody.Part): Call<ResponseBody<JsonElement>>
+    fun putDataMultipart(
+        @Path("endpoint", encoded = true) endpoint: String,
+        @Part file: MultipartBody.Part,
+    ): Call<ResponseBody<JsonElement>>
+
+    @PUT("{endpoint}")
+    fun putData(@Path("endpoint", encoded = true) endpoint: String, @Body body: Any): Call<ResponseBody<JsonElement>>
 
     @DELETE("{endpoint}")
     fun deleteData(@Path("endpoint", encoded = true) endpoint: String, @QueryMap queryMap: Map<String, String>): Call<ResponseBody<JsonElement>>
