@@ -24,14 +24,17 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.example.polary.Class.NotificationService
 import com.example.polary.BaseActivity
 import com.example.polary.PostView.PostActivity
 import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
+import com.example.polary.utils.SessionManager
+import com.google.android.gms.tasks.OnCompleteListener
 import com.example.polary.friends.FriendsActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.common.util.concurrent.ListenableFuture
+import com.google.firebase.messaging.FirebaseMessaging
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -39,7 +42,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class TakePhotoActivity : BaseActivity() {
-    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else TODO())
     private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
@@ -64,6 +67,8 @@ class TakePhotoActivity : BaseActivity() {
                     Toast.LENGTH_SHORT).show()
             } else {
                 startCamera()
+                getFCMToken()
+                NotificationService.createNotificationChannel(this)
             }
         }
 
@@ -254,9 +259,20 @@ class TakePhotoActivity : BaseActivity() {
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("TakePhotoActivity", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            // Get new FCM registration token
+            val token = task.result
+            val user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
+            NotificationService().sendRegistrationToServer(token!!, user.id.toString())
+        })
+    }
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
     }
-
 }
