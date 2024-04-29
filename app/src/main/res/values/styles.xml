@@ -17,4 +17,9 @@
     <style name="Style1Caption" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:fontFamily">@font/pangolin</item>
     </style>
+
+    <style name="Widget.AppTheme.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
 </resources>

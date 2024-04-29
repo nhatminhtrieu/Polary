@@ -15,15 +15,23 @@ import com.example.polary.widgets.PolaryWidget
 import com.google.firebase.auth.FirebaseAuth
 import com.example.polary.dataClass.Profile
 import com.example.polary.dataClass.User
+import com.example.polary.friends.FriendsActivity
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity(), AvatarFragment.OnAvatarFragmentListener, UsernameFragment.OnUsernameFragmentListener{
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var user: User
     private lateinit var profile: Profile
+
+    override fun onAvatarUpdated() {
+        getUserProfile()
+    }
+    override fun onUsernameUpdated() {
+        getUserProfile()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -35,15 +43,28 @@ class ProfileActivity : AppCompatActivity() {
 
         val cameraBtn = findViewById<MaterialButton>(R.id.btn_camera)
         cameraBtn.bringToFront()
+        cameraBtn.setOnClickListener {
+            val avatarFragment = AvatarFragment()
+            avatarFragment.show(supportFragmentManager, AvatarFragment.TAG)
+        }
 
-        val signOutBtn = findViewById<TextView>(R.id.signOutBtn)
-        signOutBtn.setOnClickListener {
+        findViewById<android.widget.LinearLayout>(R.id.log_out_profile_item).setOnClickListener {
             signOut()
         }
 
         val usernameFragment = UsernameFragment()
         findViewById<android.widget.LinearLayout>(R.id.username_profile_item).setOnClickListener {
             usernameFragment.show(supportFragmentManager, UsernameFragment.TAG)
+        }
+
+        val passwordFragment = PasswordFragment()
+        findViewById<android.widget.LinearLayout>(R.id.password_profile_item).setOnClickListener {
+            passwordFragment.show(supportFragmentManager, PasswordFragment.TAG)
+        }
+
+        findViewById<android.widget.LinearLayout>(R.id.friends_profile_item).setOnClickListener {
+            val intent = Intent(this, FriendsActivity::class.java)
+            startActivity(intent)
         }
     }
 
