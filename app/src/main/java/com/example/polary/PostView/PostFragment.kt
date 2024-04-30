@@ -326,7 +326,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
     }
 
     private fun openCommentDialog() {
-        val modalBottomSheet = TypeCommentFragment(5, post.id)
+        val modalBottomSheet = TypeCommentFragment(userId.toInt(), post.id)
         modalBottomSheet.listener = this
         modalBottomSheet.show(parentFragmentManager, TypeCommentFragment.TAG)
     }
