@@ -191,7 +191,11 @@ class HttpMethod {
                 response: Response<ResponseBody<JsonElement>>
             ) {
                 if (response.isSuccessful) {
-                    response.body()?.data?.let { callback.onSuccess(it) }
+                    if (response.body()?.data != null) {
+                        callback.onSuccess(response.body()?.data!!)
+                    } else {
+                        callback.onSuccess("Deleted")
+                    }
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "No error body"
                     callback.onError(Throwable("Unsuccessful response. Status code: ${response.code()}, Error body: $errorBody"))

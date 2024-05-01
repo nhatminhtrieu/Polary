@@ -20,11 +20,12 @@ class FriendsActivity : AppCompatActivity() {
     private val TAG = "FriendsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Initialize the shared preferences and get the user from the shared preferences
+        setContentView(R.layout.activity_friends)
         sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
         user = sessionManager.getUserFromSharedPreferences()!!
 
-        setContentView(R.layout.activity_friends)
         val inputSearch = findViewById<TextInputEditText>(R.id.input_search)
         // Remove focus when pressing "Done"
         inputSearch.setOnEditorActionListener { _, actionId, _ ->
