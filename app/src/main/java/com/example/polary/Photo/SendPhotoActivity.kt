@@ -23,9 +23,12 @@ import com.bumptech.glide.Glide
 import com.example.polary.Class.HttpMethod
 import com.example.polary.PostView.VisibilityAdapter
 import com.example.polary.R
+import com.example.polary.dataClass.User
 import com.example.polary.dataClass.Friend
-import com.example.polary.dataClass.Visibility
+import com.example.polary.dataClass.Group
+import com.example.polary.`object`.FriendsData
 import com.example.polary.`object`.GlobalResources
+import com.example.polary.`object`.GroupsData
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
@@ -34,7 +37,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import kotlin.properties.Delegates
 
 class SendPhotoActivity: AppCompatActivity(),
     AddCaptionFragment.OnInputListener,
@@ -43,14 +45,14 @@ class SendPhotoActivity: AppCompatActivity(),
     private lateinit var imageName: String
     private lateinit var imageFile: File
     private lateinit var imageUri: String
-    private lateinit var visibilityAdapter: VisibilityAdapter
     private lateinit var postCaption : TextView
     private var font = 0
     private var frame = 0
-    private var userId by Delegates.notNull<Int>()
-    private val visibleToIds = mutableListOf<Int>()
-    private var isAll = true
-    private var friends: ArrayList<Visibility> = ArrayList()
+    private lateinit var user : User
+    private val friends = mutableListOf<Friend>()
+    private val groups = mutableListOf<Group>()
+    private val selectedFriends = mutableListOf<Int>()
+    private val selectedGroups = mutableListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +61,7 @@ class SendPhotoActivity: AppCompatActivity(),
         // Get the user ID from the SharedPreferences
         val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
-        val user = sessionManager.getUserFromSharedPreferences()!!
-        userId = user.id
+        user = sessionManager.getUserFromSharedPreferences()!!
 
         // Get the image name from the intent extras
         imageName = intent.getStringExtra("imageName").toString()
@@ -74,9 +75,15 @@ class SendPhotoActivity: AppCompatActivity(),
         findViewById<MaterialButton>(R.id.btn_cancel).setOnClickListener {
             finish()
         }
+
         findViewById<MaterialButton>(R.id.btn_send).setOnClickListener {
-            createPost(imageFile, userId, postCaption.text.toString(), frame, font, visibleToIds)
+            if (selectedFriends.isEmpty()) {
+                Toast.makeText(this, "Please select at least one friend", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            else createPost(user.id, postCaption.text.toString(), frame, font, selectedFriends)
         }
+
         findViewById<MaterialButton>(R.id.btn_save_image).setOnClickListener {
             if (imageUri != "null") {
                 Toast.makeText(this, "Image is already in your device", Toast.LENGTH_SHORT).show()
@@ -137,7 +144,18 @@ class SendPhotoActivity: AppCompatActivity(),
         postCaption.setOnClickListener {
             openFragment()
         }
-        getFriends()
+        FriendsData.getFriends(user.id, "SendPhotoActivity") { friends ->
+            if (friends != null) {
+                this.friends.addAll(friends)
+                selectedFriends.addAll(friends.map { it.id })
+                GroupsData.getGroupsWithMembers(user.id, "SendPhotoActivity") { groups ->
+                    if (groups != null) {
+                        this.groups.addAll(groups)
+                        renderFriends()
+                    }
+                }
+            }
+        }
     }
 
     override fun onFrameChanged(frame: Int) {
@@ -152,38 +170,20 @@ class SendPhotoActivity: AppCompatActivity(),
         Log.d("SendPhotoActivity", "Font changed to: ${this.font}")
     }
 
-    private fun getFriends() {
-        val httpMethod = HttpMethod()
-        httpMethod.doGet<Friend>("users/$userId/friends", object : ApiCallBack<Any> {
-            override fun onSuccess(data: Any) {
-                Log.d("SendPhotoActivity", "Successfully fetched friends: $data")
-                val friendsResponse = data as ArrayList<Friend>
-                friends = friendsResponse.map { Visibility(it.id, it.username, it.avatar) } as ArrayList<Visibility>
-                renderFriends()
-            }
-
-            override fun onError(error: Throwable) {
-                Log.e("SendPhotoActivity", "Failed to fetch friends: $error")
-            }
-        })
-    }
     private fun openFragment() {
         val addCaptionFragment = AddCaptionFragment(postCaption.text.toString())
         addCaptionFragment.show(supportFragmentManager, "AddCaptionFragment")
     }
     override fun sendInput(input: String) {
-        // Use the input value here
         postCaption.text = input
     }
-    private fun createPost(imageName: File?, userId: Int, caption: String, frame: Int, font: Int, visibleToIds: List<Int>) {
+    private fun createPost(userId: Int, caption: String, frame: Int, font: Int, visibleToIds: List<Int>) {
         // Show a ProgressDialog
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Creating post...")
         progressDialog.setCancelable(false)
         progressDialog.show()
-
         lifecycleScope.launch {
-            Log.i("SendPhotoActivity", "Creating post: $imageName")
             val httpMethod = HttpMethod()
 
             // Create a request body with the file and content type
@@ -198,7 +198,6 @@ class SendPhotoActivity: AppCompatActivity(),
             val visibleToIdsBodies = visibleToIds.map { id ->
                 MultipartBody.Part.createFormData("visibleToIds[]", id.toString())
             }
-            Log.d("SendPhotoActivity", "frame: $frame, font: $font")
             httpMethod.doPostMultiPart("/posts/created-posts", multipartBody, authorBody, captionBody, frameBody, fontBody, visibleToIdsBodies, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     Log.d("SendPhotoActivity", "Successfully posted image: $data")
@@ -217,30 +216,8 @@ class SendPhotoActivity: AppCompatActivity(),
     }
 
     private fun renderFriends() {
-        visibleToIds.addAll(friends.map { it.id })
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerVisibilities)
-        visibilityAdapter = VisibilityAdapter(friends, object : AdapterBehavior {
-            override fun onFriendClick(id: Int, on: Boolean) {
-                if (isAll) {
-                    isAll = false
-                    visibleToIds.clear()
-                }
-                // Handle item click here
-                if (on) visibleToIds.add(id)
-                else visibleToIds.remove(id)
-                Log.i("SendPhotoActivity", "Visible to: $visibleToIds")
-            }
-
-            override fun onAllClick(on: Boolean) {
-                if (on) {
-                    isAll = true
-                    visibleToIds.clear()
-                    visibleToIds.addAll(friends.map { it.id }.filter { it !in visibleToIds })
-                }
-                else visibleToIds.clear()
-                Log.i("SendPhotoActivity", "Visible to: $visibleToIds")
-            }
-        })
+        val visibilityAdapter = VisibilityAdapter(friends, groups, selectedFriends, selectedGroups)
         recyclerView.adapter = visibilityAdapter
         recyclerView.layoutManager = LinearLayoutManager(this@SendPhotoActivity, RecyclerView.HORIZONTAL, false)
     }
