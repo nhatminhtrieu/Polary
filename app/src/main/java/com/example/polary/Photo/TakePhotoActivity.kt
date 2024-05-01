@@ -6,7 +6,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -14,17 +13,21 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.polary.Class.FocusCircleView
 import com.example.polary.Class.NotificationService
 import com.example.polary.BaseActivity
 import com.example.polary.PostView.PostActivity
@@ -46,11 +49,12 @@ class TakePhotoActivity : BaseActivity() {
     private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else TODO())
     private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
+    private lateinit var camera: Camera
     private lateinit var cameraExecutor: ExecutorService
-    // Camera front or back
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    // Preview
+    private var flashMode = ImageCapture.FLASH_MODE_OFF
     private var preview: Preview? = null
+    private lateinit var scaleGestureDetector : ScaleGestureDetector
     private lateinit var gestureDetector: SwipeGestureDetector
     private val activityResultLauncher =
         registerForActivityResult(
@@ -90,7 +94,7 @@ class TakePhotoActivity : BaseActivity() {
             }
         }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take_photo)
@@ -103,6 +107,21 @@ class TakePhotoActivity : BaseActivity() {
             startCamera()
         } else {
             requestPermissions()
+        }
+        val flashBtn = findViewById<MaterialButton>(R.id.btn_flash)
+        flashBtn.setOnClickListener {
+            val imageCapture = imageCapture ?: return@setOnClickListener
+            flashMode = imageCapture.flashMode
+            imageCapture.flashMode = if (flashMode == ImageCapture.FLASH_MODE_ON) {
+                ImageCapture.FLASH_MODE_OFF
+            } else {
+                ImageCapture.FLASH_MODE_ON
+            }
+            flashBtn.icon = if (flashMode == ImageCapture.FLASH_MODE_OFF) {
+                getDrawable(R.drawable.ic_flash)
+            } else {
+                getDrawable(R.drawable.ic_flash_off)
+            }
         }
 
         findViewById<MaterialButton>(R.id.btn_profile).setOnClickListener {
@@ -144,6 +163,14 @@ class TakePhotoActivity : BaseActivity() {
             }
         }
 
+        scaleGestureDetector = ScaleGestureDetector(this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                val zoomRatio = camera.cameraInfo.zoomState.value?.zoomRatio ?: 1f
+                val newZoomRatio = zoomRatio * detector.scaleFactor
+                camera.cameraControl.setLinearZoom(newZoomRatio)
+                return true
+            }
+        })
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -171,11 +198,6 @@ class TakePhotoActivity : BaseActivity() {
         val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
             .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Polary")
-        }
 
         // Create output file in internal storage
         val outputFile = File(cacheDir, name)
@@ -183,8 +205,7 @@ class TakePhotoActivity : BaseActivity() {
             .Builder(outputFile)
             .build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        // Set up image capture listener, which is triggered after photo has been taken
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
@@ -195,10 +216,7 @@ class TakePhotoActivity : BaseActivity() {
                         Toast.LENGTH_SHORT).show()
                     Log.e("PolaryApp", "Photo capture failed: ${exc.message}", exc)
                 }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-
+                override fun onImageSaved(output: ImageCapture.OutputFileResults){
                     val msg = "Photo capture succeeded"
                     Log.d("PolaryApp", msg)
                     // Start SendPhotoActivity and pass the image name as an extra
@@ -211,12 +229,14 @@ class TakePhotoActivity : BaseActivity() {
         )
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val previewView = findViewById<androidx.camera.view.PreviewView>(R.id.previewView)
+            val focusCircleView = findViewById<FocusCircleView>(R.id.focusCircleView)
             // Preview
             preview = Preview.Builder()
                 .build()
@@ -226,15 +246,32 @@ class TakePhotoActivity : BaseActivity() {
             try {
                 // Unbind use cases before rebinding
                 cameraProvider.unbindAll()
-
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
+                camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture)
-
+                // Set a touch listener on the previewView
+                previewView.setOnTouchListener { _, event ->
+                    when (event.actionMasked) {
+                        MotionEvent.ACTION_DOWN -> {
+                            // Focus
+                            val factory = SurfaceOrientedMeteringPointFactory(
+                                previewView.width.toFloat(), previewView.height.toFloat()
+                            )
+                            val point = factory.createPoint(event.x, event.y)
+                            val action = FocusMeteringAction.Builder(point).build()
+                            camera.cameraControl.startFocusAndMetering(action)
+                            focusCircleView.focusAt(event.x, event.y)
+                        }
+                        MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
+                            // Pass the event to the ScaleGestureDetector in all cases
+                            scaleGestureDetector.onTouchEvent(event)
+                        }
+                    }
+                    true
+                }
             } catch(exc: Exception) {
                 Log.e("PolaryApp", "Use case binding failed", exc)
             }
-
         }, ContextCompat.getMainExecutor(this))
         imageCapture = ImageCapture.Builder().build()
     }
@@ -249,7 +286,6 @@ class TakePhotoActivity : BaseActivity() {
 
         // Create an animator set so we can play the animations together
         val animatorSet = AnimatorSet()
-
         // Create the first half of the flip animation
         val firstHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 1.0f, 0.0f)
         firstHalfFlip.duration = 250
@@ -259,15 +295,14 @@ class TakePhotoActivity : BaseActivity() {
                 startCamera()
             }
         })
-
         // Create the second half of the flip animation
         val secondHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 0.0f, 1.0f)
         secondHalfFlip.duration = 250
-
         // Play the animations together
         animatorSet.playSequentially(firstHalfFlip, secondHalfFlip)
         animatorSet.start()
     }
+
     private fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
     }
