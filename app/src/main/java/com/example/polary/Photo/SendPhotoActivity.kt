@@ -4,6 +4,8 @@ import AddCaptionFragment
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -30,13 +32,18 @@ import com.example.polary.`object`.FriendsData
 import com.example.polary.`object`.GlobalResources
 import com.example.polary.`object`.GroupsData
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.ImageDownloader
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SendPhotoActivity: BaseActivity(),
     AddCaptionFragment.OnInputListener,
@@ -46,6 +53,7 @@ class SendPhotoActivity: BaseActivity(),
     private lateinit var imageFile: File
     private lateinit var imageUri: String
     private lateinit var postCaption : TextView
+    private lateinit var post : MaterialCardView
     private var font = 0
     private var frame = 0
     private lateinit var user : User
@@ -72,6 +80,7 @@ class SendPhotoActivity: BaseActivity(),
             loadImageFromCache(imageName)
         }
 
+        post = findViewById(R.id.post_card)
         findViewById<MaterialButton>(R.id.btn_cancel).setOnClickListener {
             finish()
         }
@@ -85,11 +94,7 @@ class SendPhotoActivity: BaseActivity(),
         }
 
         findViewById<MaterialButton>(R.id.btn_save_image).setOnClickListener {
-            if (imageUri != "null") {
-                Toast.makeText(this, "Image is already in your device", Toast.LENGTH_SHORT).show()
-            } else {
-                saveImage(imageName, imageFile)
-            }
+            ImageDownloader.saveImage(post, this)
         }
 
         findViewById<MaterialButton>(R.id.btn_change_frame).setOnClickListener {
@@ -151,7 +156,10 @@ class SendPhotoActivity: BaseActivity(),
                 GroupsData.getGroupsWithMembers(user.id, "SendPhotoActivity") { groups ->
                     if (groups != null) {
                         this.groups.addAll(groups)
-                        renderFriends()
+                        val recyclerView = findViewById<RecyclerView>(R.id.recyclerVisibilities)
+                        val visibilityAdapter = VisibilityAdapter(friends, groups, selectedFriends, selectedGroups)
+                        recyclerView.adapter = visibilityAdapter
+                        recyclerView.layoutManager = LinearLayoutManager(this@SendPhotoActivity, RecyclerView.HORIZONTAL, false)
                     }
                 }
             }
@@ -171,7 +179,7 @@ class SendPhotoActivity: BaseActivity(),
     }
 
     private fun openFragment() {
-        val addCaptionFragment = AddCaptionFragment(postCaption.text.toString())
+        val addCaptionFragment = AddCaptionFragment()
         addCaptionFragment.show(supportFragmentManager, "AddCaptionFragment")
     }
     override fun sendInput(input: String) {
@@ -215,16 +223,8 @@ class SendPhotoActivity: BaseActivity(),
         }
     }
 
-    private fun renderFriends() {
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerVisibilities)
-        val visibilityAdapter = VisibilityAdapter(friends, groups, selectedFriends, selectedGroups)
-        recyclerView.adapter = visibilityAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this@SendPhotoActivity, RecyclerView.HORIZONTAL, false)
-    }
-
     private fun loadImageFromCache(imageName: String?) {
         if (imageName === null || !File(cacheDir, imageName).exists()) {
-            // Handle error
             Toast.makeText(this, "Error: Image not found", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -264,24 +264,5 @@ class SendPhotoActivity: BaseActivity(),
                 .load(imageUri)
                 .into(imageView)
         }
-    }
-    private fun saveImage(imageName: String?, imageFile: File) {
-        Log.i("SendPhotoActivity", "Saving image: $imageName")
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, imageName)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Polary")
-        }
-
-        val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        contentResolver.openOutputStream(uri!!).use { outputStream ->
-            imageFile.inputStream().use { inputStream ->
-                inputStream.copyTo(outputStream!!)
-            }
-        }
-
-        Log.i("SendPhotoActivity", "Image saved to: $uri")
-        cacheDir.deleteRecursively()
-        Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show()
     }
 }

@@ -7,18 +7,22 @@ import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainer
+import androidx.fragment.app.FragmentContainerView
 import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Author
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.ImageDownloader
 import com.example.polary.utils.SessionManager
+import com.google.android.material.button.MaterialButton
 
 class PostActivity : BaseActivity() {
     private lateinit var postFragment: Fragment
     private lateinit var authorSpinner: Spinner
-    private lateinit var gridViewButton: ImageButton
+    private lateinit var gridViewButton: MaterialButton
     private lateinit var user: User
 
     companion object {
@@ -41,7 +45,7 @@ class PostActivity : BaseActivity() {
         }
         authorSpinner = findViewById(R.id.author_spinner)
         gridViewButton = findViewById(R.id.grid_view_button)
-        gridViewButton.setImageResource(imageSrcIcon)
+        gridViewButton.setIconResource(imageSrcIcon)
         user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
         getUsers()
     }
@@ -104,12 +108,19 @@ class PostActivity : BaseActivity() {
                             replace(R.id.post_fragment, postFragment)
                             commit()
                         }
+
+                        findViewById<MaterialButton>(R.id.btn_save_image).setOnClickListener {
+                            if (mode == GridView) return@setOnClickListener
+                            val fragment = findViewById<FragmentContainerView>(R.id.post_fragment)
+                            ImageDownloader.saveImage(fragment, this@PostActivity)
+                        }
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
                         // Do nothing
                     }
                 }
+                val btn_save_image = findViewById<MaterialButton>(R.id.btn_save_image)
                 gridViewButton.setOnClickListener(View.OnClickListener {
                     if(!canChangeView) return@OnClickListener
                     val bundle = Bundle()
@@ -118,13 +129,15 @@ class PostActivity : BaseActivity() {
                     bundle.putString("authorId", author.id.toString()) // the value of authorId is the selected author's id
 
                      if(mode == GridView) {
+                        btn_save_image.visibility = View.VISIBLE
                         imageSrcIcon = R.drawable.ic_grid
-                        gridViewButton.setImageResource(imageSrcIcon)
+                        gridViewButton.setIconResource(imageSrcIcon)
                         mode = PagerView
                         postFragment = PostPagerFragment()
                     } else {
+                        btn_save_image.visibility = View.GONE
                         imageSrcIcon = R.drawable.ic_pager
-                        gridViewButton.setImageResource(imageSrcIcon)
+                        gridViewButton.setIconResource(imageSrcIcon)
                         mode = GridView
                         postFragment = PostGridFragment()
                     }
@@ -144,7 +157,7 @@ class PostActivity : BaseActivity() {
         })
     }
     fun updateViewIcon() {
-        gridViewButton.setImageResource(imageSrcIcon)
+        gridViewButton.setIconResource(imageSrcIcon)
     }
 
     override fun finish() {

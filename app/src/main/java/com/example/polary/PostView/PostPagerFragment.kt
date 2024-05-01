@@ -29,7 +29,6 @@ private const val ARG_PARAM3 = "postId"
  * create an instance of this fragment.
  */
 class PostPagerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var userId: String? = null
     private var authorId: String? = null
     private lateinit var viewPager: ViewPager

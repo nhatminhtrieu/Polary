@@ -29,7 +29,6 @@ private const val ARG_PARAM2 = "authorId"
  * create an instance of this fragment.
  */
 class PostGridFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var userId: String? = null
     private var authorId: String? = null
     private lateinit var rvPostGrid: RecyclerView
@@ -96,7 +95,6 @@ class PostGridFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment PostGridFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             PostGridFragment().apply {
