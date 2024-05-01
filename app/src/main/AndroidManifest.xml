@@ -5,10 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,8 +24,14 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".friends.GroupsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Profile.ProfileActivity"/>
+        <activity
             android:name=".friends.FriendsActivity"
             android:exported="false" />
+
         <receiver
             android:name=".widgets.PolaryWidget"
             android:exported="true">
@@ -36,6 +45,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/polary_widget_info" />
         </receiver>
+
         <activity
             android:name=".authentication.SignIn"
             android:exported="false" />
@@ -77,7 +87,7 @@
         <activity
             android:name=".PostView.PostActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Profile.ProfileActivity"
             android:exported="false"

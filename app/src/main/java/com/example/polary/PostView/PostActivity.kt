@@ -53,6 +53,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         httpMethod.doGet<Author>("users/${user.id}/friends", object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val users = ArrayList(data as List<Author>)
+                users.add(0, Author(user.id, user.username, null))
                 users.add(0, Author(0, "All", null))
                 val adapter = AuthorAdapterSpinner(this@PostActivity, R.layout.author_spinner_item, users, user)
                 adapter.setDropDownViewResource(R.layout.author_spinner_item)

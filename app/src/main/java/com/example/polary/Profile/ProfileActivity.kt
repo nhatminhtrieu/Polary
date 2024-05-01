@@ -16,10 +16,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.example.polary.dataClass.Profile
 import com.example.polary.dataClass.User
 import com.example.polary.friends.FriendsActivity
+import com.example.polary.friends.GroupsActivity
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
-
 
 class ProfileActivity : AppCompatActivity(), AvatarFragment.OnAvatarFragmentListener, UsernameFragment.OnUsernameFragmentListener{
     private lateinit var sharedPreferences: SharedPreferences
@@ -64,6 +64,11 @@ class ProfileActivity : AppCompatActivity(), AvatarFragment.OnAvatarFragmentList
 
         findViewById<android.widget.LinearLayout>(R.id.friends_profile_item).setOnClickListener {
             val intent = Intent(this, FriendsActivity::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<android.widget.LinearLayout>(R.id.groups_profile_item).setOnClickListener {
+            val intent = Intent(this, GroupsActivity::class.java)
             startActivity(intent)
         }
     }
