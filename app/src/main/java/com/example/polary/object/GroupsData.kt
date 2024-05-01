@@ -20,12 +20,10 @@ object GroupsData {
             revalidate = false
             // Get the groups from the database
             val httpMethod = HttpMethod()
-            var response: List<Group>? = null
             httpMethod.doGet<Group>("users/$userId/groups", object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     Log.d(TAG, "Successfully fetched groups: $data")
-                    response = data as List<Group>
-                    groups = response as List<Group>
+                    groups = data as List<Group>
                     updatedAt = now
                     onSuccess(groups)
                 }
@@ -38,6 +36,20 @@ object GroupsData {
         else {
             onSuccess(groups)
         }
+    }
+
+    fun getGroupsWithMembers(userId: Int, TAG: String? = "FetchData", onSuccess: (List<Group>?) -> Unit) {
+        val httpMethod = HttpMethod()
+        httpMethod.doGetWithQuery<Group>("users/$userId/groups", mapOf("include-members" to "true"), object : ApiCallBack<Any> {
+            override fun onSuccess(data: Any) {
+                Log.d(TAG, "Successfully fetched groups: $data")
+                onSuccess(data as List<Group>)
+            }
+
+            override fun onError(error: Throwable) {
+                Log.e(TAG, "Failed to fetch groups: $error")
+            }
+        })
     }
 
     fun getGroupById(groupId: String, TAG: String? = "FetchData", onSuccess: (Group?) -> Unit) {

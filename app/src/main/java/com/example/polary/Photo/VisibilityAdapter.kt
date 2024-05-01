@@ -1,5 +1,6 @@
 package com.example.polary.PostView
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,105 +8,179 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.example.polary.Photo.AdapterBehavior
-import com.example.polary.dataClass.Visibility
 import com.example.polary.R
+import com.example.polary.dataClass.Friend
+import com.example.polary.dataClass.Group
+import java.util.Locale
 
-class VisibilityAdapter(private var visibilities: List<Visibility>, private val listener: AdapterBehavior) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VisibilityAdapter(
+    private var friends: List<Friend>,
+    private var groups: List<Group>,
+    private var selectedFriends: MutableList<Int>,
+    private var selectedGroups: MutableList<Int>
+) : RecyclerView.Adapter<ViewHolder>() {
+    private var isAllPeopleSelected: Boolean = true
     companion object {
-        private const val VIEW_TYPE_ALL_PEOPLE = 0
-        private const val VIEW_TYPE_FRIEND = 1
+        private const val ALL_PEOPLE = 0
+        private const val FRIEND = 1
+        private const val GROUP = 2
     }
 
-    inner class AllPeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        private var isColorChanged = false
-        private val visibilityStroke: androidx.cardview.widget.CardView = itemView.findViewById(R.id.visibility_stroke_all)
-
+    inner class AllPeopleViewHolder(itemView: View) : ViewHolder(itemView) {
+        val visibilityStroke: androidx.cardview.widget.CardView = itemView.findViewById(R.id.visibility_stroke_all)
         init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            isColorChanged = toggleColor(visibilityStroke, isColorChanged)
-            listener.onAllClick(isColorChanged)
+            itemView.setOnClickListener {
+                if (isAllPeopleSelected) {
+                    isAllPeopleSelected = false
+                    selectedFriends.clear()
+                    selectedGroups.clear()
+                } else {
+                    isAllPeopleSelected = true
+                    selectedFriends.clear()
+                    selectedGroups.clear()
+                    selectedFriends.addAll(friends.map { it.id })
+                }
+                notifyItemRangeChanged(0, itemCount - 1)
+            }
         }
     }
 
-    inner class VisibilityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class FriendViewHolder(itemView: View) : ViewHolder(itemView) {
         val displayName: TextView = itemView.findViewById(R.id.display_name)
         val avatar: ImageView = itemView.findViewById(R.id.user_avatar_view)
-        private val visibilityStroke: androidx.cardview.widget.CardView = itemView.findViewById(R.id.visibility_stroke)
-        private var isOn = false // Add this line
-
+        val visibilityStroke: androidx.cardview.widget.CardView = itemView.findViewById(R.id.visibility_stroke)
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                val friend: Friend = friends[adapterPosition - groups.size - 1]
+                if (isAllPeopleSelected) {
+                    isAllPeopleSelected = false
+                    selectedFriends.clear()
+                    notifyItemChanged(0)
+                }
+                if (selectedFriends.contains(friend.id)) {
+                    selectedFriends.remove(friend.id)
+                    notifyItemChanged(adapterPosition)
+                } else {
+                    selectedFriends.add(friend.id)
+                    notifyItemChanged(adapterPosition)
+                }
+            }
         }
+    }
 
-        override fun onClick(v: View?) {
-            val position = adapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onFriendClick(visibilities[position - 1].id, !isOn)
-                // Toggle the color of visibilityStroke when the item is clicked
-                isOn = toggleColor(visibilityStroke, isOn)
+    inner class GroupViewHolder(itemView: View) : ViewHolder(itemView) {
+        val displayName: TextView = itemView.findViewById(R.id.display_name)
+        val groupName: TextView = itemView.findViewById(R.id.group_shorten_name)
+        val visibilityStroke: androidx.cardview.widget.CardView = itemView.findViewById(R.id.visibility_stroke)
+        init {
+            itemView.setOnClickListener {
+                val group: Group = groups[adapterPosition - 1]
+                if (selectedGroups.contains(group.id)) {
+                    selectedGroups.remove(group.id)
+                    notifyItemChanged(adapterPosition)
+                } else {
+                    if (isAllPeopleSelected) {
+                        isAllPeopleSelected = false
+                        selectedFriends.clear()
+                        notifyItemChanged(0)
+                    }
+                    selectedGroups.add(group.id)
+                    group.memberIds?.let { it1 -> selectedFriends.addAll(it1) }
+                    notifyItemRangeChanged(groups.size, itemCount)
+                    notifyItemChanged(adapterPosition)
+                }
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) VIEW_TYPE_ALL_PEOPLE else VIEW_TYPE_FRIEND
+        return when (position) {
+            0 -> ALL_PEOPLE
+            in 1..groups.size -> GROUP
+            else -> FRIEND
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_ALL_PEOPLE -> {
+            ALL_PEOPLE -> {
                 val view = inflater.inflate(R.layout.all_people_item, parent, false)
                 AllPeopleViewHolder(view)
             }
-            VIEW_TYPE_FRIEND -> {
+            FRIEND -> {
                 val view = inflater.inflate(R.layout.friend_visibility_item, parent, false)
-                VisibilityViewHolder(view)
+                FriendViewHolder(view)
+            }
+            GROUP -> {
+                val view = inflater.inflate(R.layout.group_visibility_item, parent, false)
+                GroupViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is AllPeopleViewHolder -> {
-                // Bind your data to the views of AllPeopleViewHolder if needed
+                if (isAllPeopleSelected) {
+                    turnOnColor(holder)
+                } else {
+                    turnOffColor(holder)
+                }
             }
-            is VisibilityViewHolder -> {
-                // Since position 0 is AllPeopleViewHolder, we subtract 1 to get the correct index for visibilities list
-                val visibility: Visibility = visibilities[position - 1]
-                holder.displayName.text = visibility.displayName
-                Glide.with(holder.itemView).load(visibility.avatar).into(holder.avatar)
+            is FriendViewHolder -> {
+                val friend : Friend = friends[position - groups.size - 1]
+                holder.displayName.text = friend.username
+                Glide.with(holder.itemView).load(friend.avatar).into(holder.avatar)
+                if (selectedFriends.contains(friend.id) && !isAllPeopleSelected) {
+                    turnOnColor(holder)
+                } else {
+                    turnOffColor(holder)
+                }
+            }
+            is GroupViewHolder -> {
+                val group : Group = groups[position - 1]
+                holder.displayName.text = group.name
+                val groupNameFormatted = if (group.name.split(" ").size == 1) {
+                    if (group.name.length < 2) group.name else group.name.take(2)
+                } else {
+                    group.name.split(" ").take(2).joinToString("") { it[0].toString() }
+                }
+                holder.groupName.text = groupNameFormatted.uppercase(Locale.ROOT)
+                if (selectedGroups.contains(group.id)) {
+                    turnOnColor(holder)
+                } else {
+                    turnOffColor(holder)
+                }
             }
         }
     }
 
     override fun getItemCount(): Int {
-        // We add 1 to the size of visibilities list because we have an extra item (AllPeopleViewHolder)
-        return visibilities.size + 1
+        return groups.size + friends.size + 1
     }
 
-    private fun toggleColor(cardView: androidx.cardview.widget.CardView, isColorChanged: Boolean): Boolean {
-        if (isColorChanged) {
-            // Change it back to the original color
-            cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, com.google.android.material.R.color.m3_ref_palette_dynamic_neutral50)) // Replace 'original_color' with your original color resource
-        } else {
-            // Change the color to md_theme_primary
-            cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, R.color.md_theme_primary))
+    @SuppressLint("PrivateResource")
+    private fun turnOffColor(holder: ViewHolder) {
+        val stroke = when (holder) {
+            is AllPeopleViewHolder -> holder.visibilityStroke
+            is FriendViewHolder -> holder.visibilityStroke
+            is GroupViewHolder -> holder.visibilityStroke
+            else -> return
         }
-        return !isColorChanged // Toggle the flag
+        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, com.google.android.material.R.color.m3_ref_palette_dynamic_neutral50)) // Replace 'original_color' with your original color resource
     }
 
-    private fun turnOffColor(cardView: androidx.cardview.widget.CardView) {
-        cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, com.google.android.material.R.color.m3_ref_palette_dynamic_neutral50)) // Replace 'original_color' with your original color resource
-    }
-
-    private fun turnOnColor(cardView: androidx.cardview.widget.CardView) {
-        cardView.setCardBackgroundColor(ContextCompat.getColor(cardView.context, R.color.md_theme_primary))
+    private fun turnOnColor(holder: ViewHolder) {
+        val stroke = when (holder) {
+            is AllPeopleViewHolder -> holder.visibilityStroke
+            is FriendViewHolder -> holder.visibilityStroke
+            is GroupViewHolder -> holder.visibilityStroke
+            else -> return
+        }
+        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, R.color.md_theme_primary))
     }
 }
