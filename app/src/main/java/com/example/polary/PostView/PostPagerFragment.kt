@@ -27,7 +27,6 @@ private const val ARG_PARAM2 = "authorId"
  * create an instance of this fragment.
  */
 class PostPagerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var userId: String? = null
     private var authorId: String? = null
     private lateinit var viewPager: ViewPager
@@ -47,7 +46,7 @@ class PostPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         postponeEnterTransition()
         val view = inflater.inflate(R.layout.fragment_post_view, container, false)
-        viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        viewPager = view.findViewById(R.id.viewPager)
         prepareSharedElementTransition()
         return view
     }

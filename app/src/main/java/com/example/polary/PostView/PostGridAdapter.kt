@@ -20,6 +20,7 @@ import com.example.polary.PostView.PostPagerFragment
 import com.example.polary.R
 import com.example.polary.dataClass.Post
 import com.example.polary.utils.SessionManager
+import com.google.android.material.card.MaterialCardView
 import java.util.concurrent.atomic.AtomicBoolean
 
 interface ViewHolderListener {
