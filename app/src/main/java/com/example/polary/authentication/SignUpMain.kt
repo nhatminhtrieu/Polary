@@ -81,7 +81,7 @@ class SignUpMain : AppCompatActivity() {
             startActivityForResult(mGoogleSignInClient.signInIntent, RC_SIGN_IN)
         }
 
-        applyClickableSpan(findViewById(R.id.signIn_text), "Sign in", this, SignIn::class.java)
+        applyClickableSpan(findViewById(R.id.signIn_text), getString(R.string.log_in), this, SignIn::class.java)
     }
 
     @Deprecated("Deprecated in Java")

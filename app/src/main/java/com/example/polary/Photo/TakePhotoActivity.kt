@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,10 @@ import com.example.polary.Class.FocusCircleView
 import com.example.polary.PostView.PostActivity
 import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
+import com.example.polary.dataClass.User
 import com.example.polary.friends.FriendsActivity
+import com.example.polary.`object`.FriendRequestsData
+import com.example.polary.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import java.io.File
@@ -50,6 +54,7 @@ class TakePhotoActivity : AppCompatActivity() {
     private var preview: Preview? = null
     private lateinit var scaleGestureDetector : ScaleGestureDetector
     private lateinit var gestureDetector: SwipeGestureDetector
+    private lateinit var user: User
     private val activityResultLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions())
@@ -78,6 +83,18 @@ class TakePhotoActivity : AppCompatActivity() {
             startCamera()
         } else {
             requestPermissions()
+        }
+        // Get the user ID from the SharedPreferences
+        val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        user = sessionManager.getUserFromSharedPreferences()!!
+        FriendRequestsData.getFriendRequestsOfReceiver(user.id, "TakePhotoActivity") {
+            val cnt = FriendRequestsData.cntFriendRequestsOfReceiver()
+            Log.i("TakePhotoActivity", "cnt: $cnt")
+            if (cnt > 0) {
+                findViewById<MaterialCardView>(R.id.cnt_friends_bubble).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.cnt_friends).text = cnt.toString()
+            }
         }
         val flashBtn = findViewById<MaterialButton>(R.id.btn_flash)
         flashBtn.setOnClickListener {
@@ -142,6 +159,18 @@ class TakePhotoActivity : AppCompatActivity() {
             }
         })
         cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FriendRequestsData.getFriendRequestsOfReceiver(user.id, "TakePhotoActivity") {
+            val cnt = FriendRequestsData.cntFriendRequestsOfReceiver()
+            Log.i("TakePhotoActivity", "cnt: $cnt")
+            if (cnt > 0) {
+                findViewById<MaterialCardView>(R.id.cnt_friends_bubble).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.cnt_friends).text = cnt.toString()
+            }
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

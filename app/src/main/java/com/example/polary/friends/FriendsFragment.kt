@@ -12,13 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polary.Class.CustomDividerItemDecoration
-import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Friend
 import com.example.polary.dataClass.FriendRequest
 import com.example.polary.dataClass.User
-import com.example.polary.utils.ApiCallBack
+import com.example.polary.`object`.FriendRequestsData
+import com.example.polary.`object`.FriendsData
 import com.example.polary.utils.SessionManager
+import com.google.android.material.appbar.MaterialToolbar
 
 class FriendsFragment:
     Fragment(),
@@ -38,7 +39,12 @@ class FriendsFragment:
 
     override fun onAcceptRequest() {
         Log.i(TAG, "Accept friend request")
-        getFriends()
+        FriendsData.revalidate = true
+        FriendsData.getFriends(user.id, TAG) {
+            friends = it as MutableList<Friend>
+            friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
+            rvFriend.adapter = friendsAdapter
+        }
     }
 
     override fun onCreateView(
@@ -52,64 +58,47 @@ class FriendsFragment:
         return inflater.inflate(R.layout.fragment_friends, container, false)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         rvFriend = view.findViewById(R.id.recyclerView_friends)
         rvFriend.layoutManager = LinearLayoutManager(requireContext())
         val dividerItemDecoration = CustomDividerItemDecoration(rvFriend.context, LinearLayoutManager(requireContext()).orientation)
         rvFriend.addItemDecoration(dividerItemDecoration)
+
         rvFriendRequests = view.findViewById(R.id.recyclerView_friend_requests)
         rvFriendRequests.layoutManager = LinearLayoutManager(requireContext())
         val dividerItemDecoration2 = CustomDividerItemDecoration(rvFriendRequests.context, LinearLayoutManager(requireContext()).orientation)
         rvFriendRequests.addItemDecoration(dividerItemDecoration2)
-        getFriends()
-        getFriendRequests()
+
+        FriendsData.getFriends(user.id, TAG) {
+            friends = it as MutableList<Friend>
+            friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
+            rvFriend.adapter = friendsAdapter
+            val loadMoreButton = view.findViewById<View>(R.id.btn_more_friends)
+            val layoutMore = view.findViewById<View>(R.id.more_friends)
+            if (friends.size < 6) {
+                loadMoreButton?.visibility = View.GONE
+            }
+            loadMoreButton?.setOnClickListener {
+                // load more friends
+                friendsAdapter.setIsLoadedAll(true)
+                friendsAdapter.notifyDataSetChanged()
+                layoutMore?.visibility = View.GONE
+            }
+            if (friends.size > 0)
+                configTopAppBar("${friends.size} friend${if (friends.size > 1) "s" else ""}")
+        }
+
+        FriendRequestsData.getFriendRequestsOfReceiver(user.id, TAG) {
+            friendRequests = it as MutableList<FriendRequest>
+            friendRequestsAdapter = FriendRequestsAdapter(friendRequests, user.id, 0, this)
+            rvFriendRequests.adapter = friendRequestsAdapter
+        }
     }
 
-
-    private fun getFriends() {
-        // get friends from server
-        val httpMethod = HttpMethod()
-        httpMethod.doGet<Friend>("users/${user.id}/friends", object: ApiCallBack<Any> {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onSuccess(data: Any) {
-                friends = data as MutableList<Friend>
-                friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
-                rvFriend.adapter = friendsAdapter
-
-                val loadMoreButton = view?.findViewById<View>(R.id.btn_more_friends)
-                val layoutMore = view?.findViewById<View>(R.id.more_friends)
-                if (friends.size < 6) {
-                    loadMoreButton?.visibility = View.GONE
-                }
-                loadMoreButton?.setOnClickListener {
-                    // load more friends
-                    friendsAdapter.setIsLoadedAll(true)
-                    friendsAdapter.notifyDataSetChanged()
-                    layoutMore?.visibility = View.GONE
-                }
-                Log.d(TAG, "Successfully fetched friends data")
-            }
-            override fun onError(error: Throwable) {
-                Log.e(TAG, "Failed to fetch friends data: $error")
-            }
-        })
-    }
-
-    private fun getFriendRequests() {
-        // get friend requests from server
-        val httpMethod = HttpMethod()
-        httpMethod.doGetWithQuery<FriendRequest>("friend-requests/${user.id}", mapOf("type" to "receiver"), object:
-            ApiCallBack<Any> {
-            override fun onSuccess(data: Any) {
-                friendRequests = data as MutableList<FriendRequest>
-                friendRequestsAdapter = FriendRequestsAdapter(friendRequests, user.id, 0, this@FriendsFragment)
-                rvFriendRequests.adapter = friendRequestsAdapter
-                Log.d(TAG, "Successfully fetched friend requests data")
-            }
-            override fun onError(error: Throwable) {
-                Log.e(TAG, "Failed to fetch friend requests data: $error")
-            }
-        })
+    private fun configTopAppBar(name: String) {
+        val appBar = requireActivity().findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar.title = name
     }
 }

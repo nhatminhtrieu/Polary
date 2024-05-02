@@ -1,12 +1,9 @@
 <resources>
-    <string name="app_name">Polary</string>
-    <string name="no_reaction">No reaction yet</string>
+    <string name="app_name" translatable="false">Polary</string>
     <string name="other_user">and others</string>
     <string name="no_comment">No comment yet</string>
     <string name="one_comment">View one comment</string>
-    <string name="comment_sample">Comment Sample</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comment_sample" translatable="false">Comment Sample</string>
     <string name="friends">Friends</string>
     <string name="groups">Groups</string>
     <string name="history">History</string>
@@ -18,21 +15,42 @@
     <string name="add_your_comment">Add your comment</string>
     <string name="comment_header">Comments</string>
     <string name="reaction_header">Reactions</string>
-    <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid</string>
-    <string name="author_Sample">Author username</string>
+    <string name="none_post_text">Looks like you don\'t have any posts. \nTry sending a new polaroid!</string>
+    <string name="author_Sample" translatable="false">Author username</string>
     <string name="add_caption">Add caption</string>
     <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">Polary</string>
+    <string name="app_widget_description" translatable="false">Polary</string>
     <string name="leave_comment">Leave a comment…</string>
     <string name="more">More</string>
     <string name="friend_requests">Your friend requests</string>
     <string name="add_a_new_friend">Add a new friend</string>
     <string name="add">Add</string>
-    <string name="ab">Ab</string>
+    <string name="ab" translatable="false">Ab</string>
     <string name="current_password">Current password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="new_password">New password</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="click_to_upload_an_image_from_your_device">Click to upload an image from your device</string>
+    <string name="ask_sign_up">Don\'t have an account? Sign up</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="or">or</string>
+    <string name="on_boarding_title">Let\'s get started?</string>
+    <string name="on_boarding_description">Let\'s keep our memories with polaroids!! There gonna be a polaroid love!</string>
+    <string name="no_reaction">No reaction yet</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="ask_log_in">Already have an account? Log in</string>
+    <string name="email">Email</string>
+    <string name="next">Continue</string>
+    <string name="sign_up_announcement">Please enter the email address associated\nwith your account</string>
+    <string name="otp_support_text">Please enter the verification code sent to\nyour email address</string>
+    <string name="submit">Submit</string>
+    <string name="ask_resend_otp">Didn\'t receive an OTP? Resend OTP</string>
+    <string name="sign_up_title">Let\'s be friends!</string>
+    <string name="resent_otp">Resend OTP</string>
+    <string name="general">General</string>
+    <string name="delete_group">Delete group</string>
+    <string name="group_s_name">Group\'s name</string>
 </resources>

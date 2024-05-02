@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -12,13 +13,36 @@
         android:text="@string/friends"
         android:theme="@style/ThemeOverlay.Material3.Button.TonalButton"
         app:icon="@drawable/ic_people"
+        app:iconSize="28dp"
         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         app:layout_constraintBottom_toBottomOf="@+id/btn_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_profile" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cnt_friends_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-6dp"
+        android:layout_marginEnd="-8dp"
+        android:visibility="invisible"
+        android:backgroundTint="@color/md_theme_primary"
+        app:layout_constraintEnd_toEndOf="@+id/btn_friends"
+        app:layout_constraintTop_toTopOf="@+id/btn_friends"
+        app:strokeColor="@android:color/transparent"
+        app:cardCornerRadius="@dimen/default_margin">
 
+        <TextView
+            android:id="@+id/cnt_friends"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="12"
+            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+            android:textColor="@color/md_theme_inverseOnSurface"
+            tools:ignore="HardcodedText" />
+    </com.google.android.material.card.MaterialCardView>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_profile"
         style="?attr/materialIconButtonStyle"
@@ -111,7 +135,7 @@
         android:id="@+id/btn_history_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/extra_large_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_take_photo"
         app:layout_constraintStart_toStartOf="@+id/btn_take_photo"
         app:layout_constraintTop_toBottomOf="@+id/btn_take_photo"

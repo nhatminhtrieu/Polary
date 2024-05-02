@@ -33,8 +33,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_flash_off" />
-                            <entry key="sourceFile" value="D:\Dev\frame_btn_4.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="img_on_boarding" />
+                            <entry key="sourceFile" value="D:\Dev\Group 4031.svg" />
                           </map>
                         </option>
                       </PersistentState>

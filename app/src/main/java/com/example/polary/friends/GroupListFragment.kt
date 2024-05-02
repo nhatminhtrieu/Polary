@@ -1,9 +1,7 @@
 package com.example.polary.friends
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.polary.Class.CustomDividerItemDecoration
-import com.example.polary.Class.HttpMethod
 import com.example.polary.PostView.GroupsAdapter
 import com.example.polary.R
-import com.example.polary.dataClass.Friend
-import com.example.polary.dataClass.FriendRequest
 import com.example.polary.dataClass.User
 import com.example.polary.`object`.GroupsData
-import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -45,7 +39,7 @@ class GroupListFragment:
         super.onViewCreated(view, savedInstanceState)
         val rvGroup = view.findViewById<RecyclerView>(R.id.groups_recycler_view)
         rvGroup.layoutManager = LinearLayoutManager(requireContext())
-        configTopAppBar("Groups")
+        configTopAppBar(getString(R.string.groups))
         GroupsData.getGroups(user.id, "GroupsActivity") { groups ->
             groupsAdapter = groups?.let { GroupsAdapter(it) }!!
             rvGroup.adapter = groupsAdapter

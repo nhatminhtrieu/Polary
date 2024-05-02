@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-feature android:name="android.hardware.camera.any" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,15 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
-        <activity
-            android:name=".friends.GroupsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".Profile.ProfileActivity"/>
-        <activity
-            android:name=".friends.FriendsActivity"
-            android:exported="false" />
-
         <receiver
             android:name=".widgets.PolaryWidget"
             android:exported="true">
@@ -40,35 +27,47 @@
                 <action android:name="com.example.polary.ACTION_USER_LOGGED_IN" />
                 <action android:name="com.example.polary.ACTION_USER_LOGGED_OUT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/polary_widget_info" />
         </receiver>
-
-        <activity
-            android:name=".authentication.SignIn"
-            android:exported="false" />
         <activity
             android:name=".OnBoarding"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".friends.GroupsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".Profile.ProfileActivity"/>
+        <activity
+            android:name=".friends.FriendsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".authentication.SignIn"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".authentication.SignUpMain"
             android:exported="false"
             android:label="Sign up"
-            android:parentActivityName=".OnBoarding" />
+            android:parentActivityName=".OnBoarding"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".authentication.SignUpFull"
             android:exported="false"
             android:label="Sign up"
-            android:parentActivityName=".OnBoarding" />
+            android:parentActivityName=".OnBoarding"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".authentication.EnterNewPassword"
             android:exported="false"

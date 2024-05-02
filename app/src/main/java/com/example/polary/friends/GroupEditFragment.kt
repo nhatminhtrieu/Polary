@@ -2,7 +2,6 @@ package com.example.polary.friends
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +19,6 @@ import com.example.polary.R
 import com.example.polary.dataClass.User
 import com.example.polary.`object`.FriendsData
 import com.example.polary.`object`.GroupsData
-import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -73,7 +71,7 @@ class GroupEditFragment:
                     requireActivity().supportFragmentManager.popBackStackImmediate("GroupDetailsFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 }
             }
-            builder.setNegativeButton("Cancel") { dialog, _ ->
+            builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             dialog = builder.create()
