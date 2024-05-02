@@ -209,7 +209,8 @@
         <item name="android:windowExitTransition">@android:transition/move</item>
     </style>
 
-    <style name="Theme.Polary" parent="Theme.Material3.Dark" />
+    <style name="Theme.Polary" parent="Theme.Material3.Dark">
+    </style>
 
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>

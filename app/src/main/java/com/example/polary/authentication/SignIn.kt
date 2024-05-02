@@ -53,7 +53,7 @@ class SignIn : BaseActivity() {
         forgotPassword.setOnClickListener { startActivity(Intent(this, ResetPassword::class.java)) }
 
         val signUpText: MaterialTextView = findViewById(R.id.signup_text)
-        applyClickableSpan(signUpText, "Sign up", this, SignUpMain::class.java)
+        applyClickableSpan(signUpText, getString(R.string.sign_up), this, SignUpMain::class.java)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))

@@ -7,15 +7,17 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import com.example.polary.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.polary.R
 import com.example.polary.dataClass.User
 import com.example.polary.utils.SessionManager
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputEditText
 
 class FriendsActivity : BaseActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var user: User
-    private val TAG = "FriendsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Initialize the shared preferences and get the user from the shared preferences
@@ -65,6 +67,16 @@ class FriendsActivity : BaseActivity() {
                 return@setOnKeyListener true
             }
             false
+        }
+        configTopAppBar()
+    }
+
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
         }
     }
 }

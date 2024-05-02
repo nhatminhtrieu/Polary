@@ -39,7 +39,6 @@
                 <action android:name="com.example.polary.ACTION_USER_LOGGED_IN" />
                 <action android:name="com.example.polary.ACTION_USER_LOGGED_OUT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/polary_widget_info" />
@@ -73,6 +72,7 @@
             android:name=".authentication.SignIn"
             android:exported="false"
             android:label="Sign in"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.Dark"
             android:parentActivityName=".OnBoarding" />
         <activity
@@ -82,7 +82,6 @@
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -91,12 +90,14 @@
             android:name=".authentication.SignUpMain"
             android:exported="false"
             android:label="Sign up"
-            android:theme="@style/AppTheme.Dark"
-            android:parentActivityName=".OnBoarding" />
+            android:parentActivityName=".OnBoarding"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".authentication.SignUpFull"
             android:exported="false"
             android:label="Sign up"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme.Dark"
             android:parentActivityName=".OnBoarding" />
         <activity
