@@ -2,8 +2,8 @@ package com.example.polary.dataClass
 
 import java.io.Serializable
 
-data class Author(
+data class PostNotification(
     val id: Number,
-    val username: String,
-    val avatar: String?
+    val emoji: String,
+    val postId: String,
 ): Serializable

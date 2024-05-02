@@ -4,7 +4,9 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -17,6 +19,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.polary.PostView.PostActivity
 import com.example.polary.R
 import com.example.polary.constant.EmojiText
 import com.example.polary.utils.ApiCallBack
@@ -29,7 +32,8 @@ import java.util.concurrent.ExecutionException
 class NotificationService() : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        val user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
+        val user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()
+        if(user == null) return
         val httpMethod = HttpMethod()
         httpMethod.doPost("users/${user.id}/fcm-token", mapOf("token" to token), object : ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
@@ -46,7 +50,6 @@ class NotificationService() : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        Log.d("data", message.data.toString())
         showNotification(message.notification!!.title!!, message.notification!!.body!!, message.data)
     }
 
@@ -72,11 +75,23 @@ class NotificationService() : FirebaseMessagingService() {
         val avatarUrl = data?.get("avatar")
         val emojiText = EmojiText.map[data?.get("emoji")] ?: ""
         val displayContent = message + emojiText
+        Log.d("NotificationData", data?.get("postId").toString())
+        val resultIntent = Intent(this, PostActivity::class.java).apply {
+            putExtra("postId", data?.get("postId"))
+        }
+        val resultPendingIntent: PendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            resultIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(displayContent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(resultPendingIntent)
+            .setAutoCancel(true)
 
         if (avatarUrl != null) {
             Glide.with(this)

@@ -23,6 +23,7 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.example.polary.Class.NotificationService
 import com.example.polary.BaseActivity
@@ -57,9 +58,20 @@ class TakePhotoActivity : BaseActivity() {
         { permissions ->
             // Handle Permission granted/rejected
             var permissionGranted = true
+            var notificationGranted = true
             permissions.entries.forEach {
-                if (it.key in REQUIRED_PERMISSIONS && it.value == false)
-                    permissionGranted = false
+                if (it.key in REQUIRED_PERMISSIONS && it.value == false) {
+                    when(it.key) {
+                        android.Manifest.permission.CAMERA -> {
+                            Log.d("Permission", "Camera permission denied")
+                            permissionGranted = false
+                        }
+                        android.Manifest.permission.POST_NOTIFICATIONS -> {
+                            Log.d("Permission", "Notification permission denied")
+                            notificationGranted = false
+                        }
+                    }
+                }
             }
             if (!permissionGranted) {
                 Toast.makeText(baseContext,
@@ -67,6 +79,12 @@ class TakePhotoActivity : BaseActivity() {
                     Toast.LENGTH_SHORT).show()
             } else {
                 startCamera()
+            }
+            if (!notificationGranted) {
+                Toast.makeText(baseContext,
+                    "Notification permission denied",
+                    Toast.LENGTH_SHORT).show()
+            } else {
                 getFCMToken()
                 NotificationService.createNotificationChannel(this)
             }
@@ -270,6 +288,19 @@ class TakePhotoActivity : BaseActivity() {
             val user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
             NotificationService().sendRegistrationToServer(token!!, user.id.toString())
         })
+    }
+    private fun checkNotificationIsEnabled() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+                getFCMToken()
+                NotificationService.createNotificationChannel(this)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkNotificationIsEnabled()
     }
     override fun onDestroy() {
         super.onDestroy()
