@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
+import com.example.polary.PostView.PostActivity
 import com.example.polary.R
 import com.example.polary.authentication.SignIn
 import com.example.polary.constant.IconDrawable
@@ -95,6 +96,14 @@ class ProfileActivity : BaseActivity(), AvatarFragment.OnAvatarFragmentListener,
         findViewById<android.widget.LinearLayout>(R.id.log_out_profile_item).setOnClickListener {
             signOut()
         }
+
+        findViewById<android.widget.LinearLayout>(R.id.posts_archive_profile_item).setOnClickListener {
+            val intent = Intent(this, PostActivity::class.java).apply {
+                putExtra("myPost", true)
+            }
+            startActivity(intent)
+        }
+
 
         val usernameFragment = UsernameFragment()
         findViewById<android.widget.LinearLayout>(R.id.username_profile_item).setOnClickListener {
