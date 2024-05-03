@@ -18,14 +18,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_camera"
         style="?attr/materialIconButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:theme="@style/ThemeOverlay.Material3.Button.TonalButton"
         app:icon="@drawable/ic_camera"
+        app:iconGravity="textStart"
         app:layout_constraintBottom_toBottomOf="@+id/frameAvatar"
         app:layout_constraintEnd_toEndOf="@+id/frameAvatar"
         tools:elevation="24dp" />
@@ -95,26 +95,27 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:text="Features" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/small_margin"
-            android:layout_marginEnd="@dimen/small_margin">
+            android:layout_height="150dp"
+            android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/app_icon_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:layout_width="128dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -123,7 +124,9 @@
                     <ImageView
                         android:id="@+id/app_icon_profile_item_image"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:padding="@dimen/default_margin"
                         android:contentDescription="App icon"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_launcher_foreground" />
@@ -141,8 +144,10 @@
                 android:id="@+id/add_widget_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
                 android:layout_weight="1"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
@@ -152,14 +157,14 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
-
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:contentDescription="Add widget"
                         android:scaleType="centerCrop"
+                        android:layout_weight="1"
+                        android:padding="@dimen/default_margin"
                         android:src="@drawable/round_add_circle_outline" />
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -173,9 +178,11 @@
                 android:id="@+id/change_theme_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="1:1"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardElevation="4dp">
 
                 <LinearLayout
@@ -187,8 +194,9 @@
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:contentDescription="Change theme"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/outline_bedtime" />
 
@@ -210,76 +218,89 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:text="@string/friends"
             style="@style/TextAppearance.Material3.TitleMedium" />
 
-        <LinearLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/md_theme_outlineVariant"
-            android:orientation="vertical"
-            android:showDividers="middle">
-
+            android:backgroundTint="@color/md_theme_surfaceContainer"
+            app:cardCornerRadius="@dimen/default_margin"
+            app:strokeColor="@android:color/transparent"
+            >
             <LinearLayout
-                android:id="@+id/friends_profile_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:divider="@color/md_theme_outlineVariant"
+                android:orientation="vertical"
+                android:showDividers="middle"
+                >
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_people"
-                    app:tint="@color/md_theme_onSurface" />
-
-                <TextView
-                    android:id="@+id/friends_title"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/friends_profile_item"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/friends"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_people"
+                        app:tint="@color/md_theme_outline_mediumContrast" />
 
-            <LinearLayout
-                android:id="@+id/groups_profile_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp">
+                    <TextView
+                        android:id="@+id/friends_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/friends"
+                        android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_group"
-                    app:tint="@color/md_theme_onSurface" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/md_theme_outline_mediumContrast" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/groups_title"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/groups_profile_item"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="@string/groups"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_group"
+                        app:tint="@color/md_theme_outline_mediumContrast" />
+
+                    <TextView
+                        android:id="@+id/groups_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/groups"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/md_theme_outline_mediumContrast" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:layout_width="match_parent"
@@ -287,16 +308,24 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
-            android:text="General"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:text="@string/general"
             style="@style/TextAppearance.Material3.TitleMedium" />
-
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/md_theme_surfaceContainer"
+            app:cardCornerRadius="@dimen/default_margin"
+            app:strokeColor="@android:color/transparent"
+            >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@color/md_theme_outlineVariant"
             android:orientation="vertical"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
             android:showDividers="middle">
-
             <LinearLayout
                 android:id="@+id/username_profile_item"
                 android:layout_width="match_parent"
@@ -308,7 +337,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_account"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -316,14 +345,14 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
             </LinearLayout>
 
             <LinearLayout
@@ -337,7 +366,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_password"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -352,7 +381,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
             </LinearLayout>
 
             <LinearLayout
@@ -366,7 +395,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -381,10 +410,10 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_theme_onSurface" />
+                    app:tint="@color/md_theme_outline_mediumContrast" />
             </LinearLayout>
         </LinearLayout>
-
+        </com.google.android.material.card.MaterialCardView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -404,6 +433,7 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:text="Danger zone"
             style="@style/TextAppearance.Material3.TitleMedium" />
 

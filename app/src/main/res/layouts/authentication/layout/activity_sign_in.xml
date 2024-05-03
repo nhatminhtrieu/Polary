@@ -10,7 +10,51 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/gradient_background"
         tools:context=".authentication.SignIn">
+        <TextView
+            android:id="@+id/log_in_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_back"
+            android:layout_marginTop="@dimen/extra_large_margin"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/default_margin"
+            />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@android:color/transparent"
+            >
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_back"
+                android:background="@android:color/transparent"
+                app:navigationIconTint="@color/md_theme_onSurface" />
+        </com.google.android.material.appbar.AppBarLayout>
+        <TextView
+            android:id="@+id/log_in_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_back"
+            android:layout_marginTop="@dimen/default_margin"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/default_margin"
+            />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_layout"
@@ -19,20 +63,21 @@
             app:helperTextEnabled="true"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/default_margin"
-            android:hint="Username"
+            android:hint="@string/username"
             app:endIconContentDescription="Username icon"
             app:endIconDrawable="@drawable/baseline_person_24"
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/log_in_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,7 +90,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/extra_large_margin"
             android:layout_marginEnd="@dimen/default_margin"
-            android:hint="Password"
+            android:hint="@string/password"
             app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +101,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -67,7 +111,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/extra_large_margin"
             android:layout_marginEnd="@dimen/default_margin"
-            android:text="Forgot password?"
+            android:text="@string/forgot_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,8 +132,9 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Login"
+                android:layout_height="@dimen/large_button"
+                android:text="@string/log_in"
+                android:textStyle="bold"
                 android:layout_marginBottom="@dimen/default_margin"
                 app:layout_constraintBottom_toTopOf="@id/or"
                 app:layout_constraintTop_toTopOf="parent"
@@ -100,7 +145,7 @@
                 android:id="@+id/or"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="or"
+                android:text="@string/or"
                 android:textColor="@color/md_theme_onSurface"
                 app:layout_constraintBottom_toTopOf="@id/GoogleLogin"
                 android:layout_marginBottom="@dimen/default_margin"
@@ -111,9 +156,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/GoogleLogin"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/large_button"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:text="Continue with Google"
+                android:text="@string/continue_with_google"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/signup_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -124,7 +170,7 @@
                 android:id="@+id/signup_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Don't have an account? Sign up"
+                android:text="@string/ask_sign_up"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="parent"

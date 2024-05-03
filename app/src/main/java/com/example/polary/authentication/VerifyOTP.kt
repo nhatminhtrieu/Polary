@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.polary.BaseActivity
 import com.example.polary.R
 import com.example.polary.utils.Validate
 import com.example.polary.utils.applyClickableSpan
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
@@ -19,8 +21,9 @@ class VerifyOTP : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_verify_otp)
+        configTopAppBar()
 
-        applyClickableSpan(findViewById(R.id.resendOTP), "Resend OTP", this, VerifyOTP::class.java)
+        applyClickableSpan(findViewById(R.id.resendOTP), getString(R.string.resent_otp), this, VerifyOTP::class.java)
 
         val email = intent.getStringExtra("email")
         val message = intent.getStringExtra("message")
@@ -63,6 +66,14 @@ class VerifyOTP : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
         }
     }
     private fun createTextWatcher(nextEditText: EditText): TextWatcher {

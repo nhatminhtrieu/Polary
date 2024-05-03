@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -16,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
-            android:hint="Group's name">
+            android:hint="@string/group_s_name">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/group_name"
                 android:layout_width="match_parent"
@@ -36,10 +35,11 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_delete_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/large_button"
             android:layout_marginTop="@dimen/default_margin"
+            android:backgroundTintMode="@color/md_theme_errorContainer"
             android:theme="@style/ThemeOverlay.Material3.Button.TextButton"
             android:textColor="@color/md_theme_error"
-            android:text="Delete group"/>
+            android:text="@string/delete_group"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -4,11 +4,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
+import com.example.polary.`object`.GroupsData
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.example.polary.utils.applyClickableSpan
@@ -18,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -38,6 +42,7 @@ class SignIn : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
+        configTopAppBar()
         usernameEditText = findViewById(R.id.username)
 
         sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
@@ -53,7 +58,7 @@ class SignIn : BaseActivity() {
         forgotPassword.setOnClickListener { startActivity(Intent(this, ResetPassword::class.java)) }
 
         val signUpText: MaterialTextView = findViewById(R.id.signup_text)
-        applyClickableSpan(signUpText, "Sign up", this, SignUpMain::class.java)
+        applyClickableSpan(signUpText, getString(R.string.sign_up), this, SignUpMain::class.java)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -62,6 +67,14 @@ class SignIn : BaseActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
+        }
+    }
     private fun signInWithUsernameAndPassword() {
         val username = findViewById<TextInputEditText>(R.id.username).text.toString()
         val password = findViewById<TextInputEditText>(R.id.password).text.toString()
