@@ -3,7 +3,8 @@ package com.example.polary.authentication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.utils.ApiCallBack
@@ -15,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -24,7 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 data class EmailRequestBody(val email: String)
 
 @Suppress("DEPRECATION")
-class SignUpMain : AppCompatActivity() {
+class SignUpMain : BaseActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
 
@@ -36,6 +38,7 @@ class SignUpMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_main)
+        configTopAppBar()
 
         emailLayout = findViewById(R.id.email_layout)
         emailEditText = findViewById(R.id.email)
@@ -54,7 +57,7 @@ class SignUpMain : AppCompatActivity() {
             }
 
             val requestBody = EmailRequestBody(email)
-            HttpMethod().doPost("auth/signup", requestBody, object : ApiCallBack<Any> {
+            HttpMethod().doPost("auth/sign-up", requestBody, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     Log.d("SignUpMain", "Successfully sent OTP to email")
                 }
@@ -81,7 +84,17 @@ class SignUpMain : AppCompatActivity() {
             startActivityForResult(mGoogleSignInClient.signInIntent, RC_SIGN_IN)
         }
 
-        applyClickableSpan(findViewById(R.id.signIn_text), "Sign in", this, SignIn::class.java)
+        applyClickableSpan(findViewById(R.id.signIn_text), getString(R.string.log_in), this, SignIn::class.java)
+    }
+
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            Log.d("SignUpMain", "Back button clicked")
+            finish()
+        }
     }
 
     @Deprecated("Deprecated in Java")

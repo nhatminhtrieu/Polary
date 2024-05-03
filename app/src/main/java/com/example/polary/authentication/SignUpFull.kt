@@ -4,24 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.Validate
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class SignUpFull : AppCompatActivity() {
+class SignUpFull : BaseActivity() {
     private val httpMethod = HttpMethod()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_full)
+        configTopAppBar()
 
         val email = intent.getStringExtra("email")
         val username: TextInputEditText = findViewById(R.id.username)
@@ -38,10 +41,17 @@ class SignUpFull : AppCompatActivity() {
             val passwordText = password.text.toString()
             val confirmPasswordText = confirmPassword.text.toString()
 
-            if (!Validate.validatePassword(passwordText, confirmPasswordText)) {
+            val passwordValidationResult =
+                Validate.validatePassword(passwordText, confirmPasswordText)
+
+            if (passwordValidationResult != 1) {
                 findViewById<TextInputLayout>(R.id.password_layout).apply {
                     isErrorEnabled = true
-                    error = "Passwords do not match"
+                    error = when (passwordValidationResult) {
+                        -2 -> "Passwords do not match"
+                        -1 -> "Password must be at least 6 characters long"
+                        else -> null
+                    }
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         isErrorEnabled = false
@@ -60,6 +70,7 @@ class SignUpFull : AppCompatActivity() {
                         if (task.isSuccessful) {
                             val firebaseUser = auth.currentUser
                             val user = User(
+                                id = 0,
                                 firebaseUID = firebaseUser?.uid ?: "",
                                 username = username.text.toString(),
                                 email = email,
@@ -82,6 +93,14 @@ class SignUpFull : AppCompatActivity() {
                         }
                     }
             }
+        }
+    }
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
         }
     }
 }

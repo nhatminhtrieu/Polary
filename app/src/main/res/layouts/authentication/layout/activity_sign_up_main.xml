@@ -3,13 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@drawable/gradient_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".authentication.SignUpMain">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@android:color/transparent"
+            >
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_back"
+                android:background="@android:color/transparent"
+                app:navigationIconTint="@color/md_theme_onSurface" />
+        </com.google.android.material.appbar.AppBarLayout>
+        <TextView
+            android:id="@+id/sign_up_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up_title"
+            android:layout_marginTop="@dimen/default_margin"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/default_margin" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_layout"
@@ -17,14 +47,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="@dimen/default_margin"
-            android:hint="Email"
+            android:hint="@string/email"
             app:errorEnabled="true"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/sign_up_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email"
@@ -48,9 +78,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/large_button"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:text="Sign up"
+                android:text="@string/sign_up"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/or"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:text="or"
+                android:text="@string/or"
                 android:textColor="@color/md_theme_onSurface"
                 app:layout_constraintBottom_toTopOf="@id/GoogleLogin"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,10 +102,11 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/GoogleLogin"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/large_button"
+                android:textStyle="bold"
                 android:layout_marginTop="@dimen/default_margin"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:text="Continue with Google"
+                android:text="@string/continue_with_google"
                 app:layout_constraintBottom_toTopOf="@id/signIn_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +116,7 @@
                 android:id="@+id/signIn_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account? Sign in"
+                android:text="@string/ask_log_in"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

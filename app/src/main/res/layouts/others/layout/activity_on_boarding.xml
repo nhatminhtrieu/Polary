@@ -5,23 +5,55 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".OnBoarding">
-
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/img_on_boarding"
+        android:layout_marginTop="@dimen/extra_large_margin"
+        android:layout_marginBottom="@dimen/extra_large_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/onBoardingTitle"/>
+    />
+    <TextView
+        android:id="@+id/onBoardingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/on_boarding_title"
+        app:layout_constraintBottom_toTopOf="@id/onBoardingDescription"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/onBoardingDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:text="@string/on_boarding_description"
+        app:layout_constraintBottom_toTopOf="@id/onBoardingContent"
+        app:layout_constraintStart_toStartOf="@id/onBoardingTitle"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/onBoardingContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signInMatBtn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/large_button"
             android:layout_margin="@dimen/default_margin"
-            android:text="Sign in"
+            android:text="@string/log_in"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/orMatTV"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +64,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:text="or"
+            android:text="@string/or"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/signUpMatBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,9 +74,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signUpMatBtn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/large_button"
             android:layout_margin="@dimen/default_margin"
-            android:text="Sign up"
+            android:text="@string/sign_up"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

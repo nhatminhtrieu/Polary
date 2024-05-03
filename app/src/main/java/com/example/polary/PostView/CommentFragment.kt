@@ -28,7 +28,6 @@ class CommentFragment(private val postId: Number) : BottomSheetDialogFragment() 
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.comment, container, false)
-        rvComment = view.findViewById(R.id.comment_recycler_view)
         getComments(postId)
         return view
     }
@@ -61,6 +60,7 @@ class CommentFragment(private val postId: Number) : BottomSheetDialogFragment() 
             override fun onSuccess(data: Any) {
                 val comments = data as List<Comment>
                 _comments = comments
+                rvComment = view?.findViewById(R.id.comment_recycler_view)!!
                 commentAdapter = CommentAdapter(comments)
                 rvComment.layoutManager = LinearLayoutManager(context)
                 rvComment.adapter = commentAdapter

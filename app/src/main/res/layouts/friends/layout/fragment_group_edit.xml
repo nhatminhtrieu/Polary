@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".friends.GroupsActivity"
+        android:padding="@dimen/default_margin"
+        android:orientation="vertical">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:hint="@string/group_s_name">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/group_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/group_members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="Group members"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/group_members_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete_group"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_button"
+            android:layout_marginTop="@dimen/default_margin"
+            android:backgroundTintMode="@color/md_theme_errorContainer"
+            android:theme="@style/ThemeOverlay.Material3.Button.TextButton"
+            android:textColor="@color/md_theme_error"
+            android:text="@string/delete_group"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
