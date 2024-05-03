@@ -1,6 +1,7 @@
 package com.example.polary.utils
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.polary.dataClass.User
 import com.google.gson.Gson
 
@@ -40,7 +41,10 @@ class SessionManager(private val sharedPreferences: SharedPreferences) {
         }
     }
 
-    fun getAppIcon(): String? {
-        return sharedPreferences.getString("appIcon", null)
+    fun getAppIcon(): User? {
+        val userJson = sharedPreferences.getString("user", null) ?: return null
+        Log.d("SessionManager", "User JSON: $userJson")
+        val gson = Gson()
+        return gson.fromJson(userJson, User::class.java)
     }
 }

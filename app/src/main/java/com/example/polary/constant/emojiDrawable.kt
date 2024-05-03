@@ -9,5 +9,6 @@ object EmojiDrawable{
         "smile" to R.drawable.smile_emoji,
         "skull" to R.drawable.skull_emoji,
         "cry" to R.drawable.cry_emoji,
+        "comment" to R.drawable.comment_emoji
     )
 }

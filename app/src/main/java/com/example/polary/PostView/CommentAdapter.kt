@@ -41,7 +41,7 @@ class CommentAdapter(private var comments: List<Comment>) : RecyclerView.Adapter
         return comments.size
     }
 
-    fun getDuration(createdAt: String): String {
+    private fun getDuration(createdAt: String): String {
         val createdAtDate = Instant.parse(createdAt).atZone(ZoneId.systemDefault()).toLocalDate()
 
         val today = LocalDate.now()

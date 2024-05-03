@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/post_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginHorizontal="@dimen/default_margin"
+        app:cardBackgroundColor="@color/polaroidBackground"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="H,0.8:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/post_frame"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            tools:src="@drawable/frame4"/>
+        <include layout="@layout/card_polaroid" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/post_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/post_avatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:cardBackgroundColor="@color/md_theme_onSurface"
+        app:cardCornerRadius="250dp"
+        app:layout_constraintBottom_toTopOf="@id/total_reaction"
+        app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toStartOf="@id/author_username"
+        app:layout_constraintTop_toBottomOf="@id/post_card">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:cardCornerRadius="250dp">
+
+            <ImageView
+                android:id="@+id/author_avatar_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/author_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:text="@string/author_Sample"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/total_reaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/post_avatar"
+        app:layout_constraintTop_toBottomOf="@id/post_card" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/total_reaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:background="@drawable/rounded_edittext"
+        app:layout_constraintBottom_toTopOf="@+id/reaction_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout
+            android:id="@+id/latest_reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/n3_reaction"
+                android:clickable="true"
+                android:layout_width="28dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="24dp"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <ImageView
+                android:id="@+id/n2_reaction"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <ImageView
+                android:id="@+id/n1_reaction"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?android:attr/selectableItemBackground" />
+
+            <TextView
+                android:id="@+id/latest_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="64dp"
+                android:textSize="12sp" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reaction_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/add_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/add_reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/love"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/heart_emoji" />
+
+            <ImageButton
+                android:id="@+id/cry"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/cry_emoji" />
+
+            <ImageButton
+                android:id="@+id/smile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/smile_emoji" />
+
+            <ImageButton
+                android:id="@+id/clown"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/clown_emoji" />
+
+            <ImageButton
+                android:id="@+id/skull"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/skull_emoji" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/add_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="@dimen/extra_large_margin"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.089">
+
+        <ImageButton
+            android:id="@+id/button_input_comment"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/send_comment"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@drawable/ic_send"
+            android:backgroundTint="@color/md_theme_onSurface" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/total_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:padding="12dp"
+        android:text="hello"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_comment" />
+</androidx.constraintlayout.widget.ConstraintLayout>

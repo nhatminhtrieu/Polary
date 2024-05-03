@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.DisplayMetrics
@@ -40,18 +41,10 @@ class PolaryWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        context.sendBroadcast(Intent(context, PolaryWidget::class.java).apply {
+        val intent = Intent(context, PolaryWidget::class.java).apply {
             action = ACTION_UPDATE_WIDGET
-        })
-    }
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        appWidgetIds.forEach { getLatestPost(context, it) }
+        }
+        context.sendBroadcast(intent)
     }
 
     fun updateWidgets(context: Context) {
@@ -62,15 +55,19 @@ class PolaryWidget : AppWidgetProvider() {
     }
 
     private fun getLatestPost(context: Context, appWidgetId: Int) {
+        val httpMethod = HttpMethod()
+        val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        val user = sessionManager.getUserFromSharedPreferences()
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        val user = getUserFromSession(context)
         var views = RemoteViews(context.packageName, R.layout.polary_empty_widget)
 
         if (user == null) {
             updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.white_background)
         } else {
-            // TODO: Fix query post later
-            HttpMethod().doGet<Post>("users/${user.id}/viewable-posts", object : ApiCallBack<Any> {
+            val endpoint = "users/${user.id}/viewable-posts"
+            val queryParam = mapOf("authorId" to "0")
+            httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object : ApiCallBack<Any> {
                 override fun onSuccess(data: Any) {
                     val posts = data as List<Post>
                     val latestPost = posts.maxByOrNull { it.id.toInt() }
@@ -91,6 +88,24 @@ class PolaryWidget : AppWidgetProvider() {
 
     private fun updateViewWithText(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, views: RemoteViews, text: String, image: Int = R.drawable.white_background) {
         views.setTextViewText(R.id.textView, text)
+        val backgroundIVTarget = AppWidgetTarget(
+            context.applicationContext,
+            R.id.backgroundIV,
+            views,
+            appWidgetId
+        )
+
+        Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .transform(
+                CenterCrop(),
+                RoundedCorners(32)
+            )
+            .override(300, 300)
+            .into(backgroundIVTarget)
+
+        appWidgetManager.updateAppWidget(appWidgetId, views)
         loadImage(context, views, appWidgetId, image)
         setOnClickPendingIntent(context, views)
         appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -125,6 +140,10 @@ class PolaryWidget : AppWidgetProvider() {
         latestPost: Post
     ) {
         val views = RemoteViews(context.packageName, R.layout.polary_widget)
+        val postImageTarget =
+            AppWidgetTarget(context.applicationContext, R.id.post_image, views, appWidgetId)
+        val avatarTarget = AppWidgetTarget(context.applicationContext, R.id.avatar, views, appWidgetId)
+
         setTextViewText(views, latestPost)
         loadImage(context, views, appWidgetId, latestPost)
 
@@ -132,6 +151,15 @@ class PolaryWidget : AppWidgetProvider() {
         val intent = Intent(context, TakePhotoActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         views.setOnClickPendingIntent(R.id.post_image, pendingIntent)
+
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+        val avatarUri = latestPost.author.avatar?.let { Uri.parse(it) }
+        if(avatarUri == null) {
+            views.setImageViewResource(R.id.avatar, R.mipmap.ic_launcher)
+        } else {
+            views.setImageViewUri(R.id.avatar, avatarUri)
+        }
+        loadImage(context,views, appWidgetId, latestPost)
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
@@ -143,7 +171,7 @@ class PolaryWidget : AppWidgetProvider() {
         )
     }
 
-    fun calculateWidgetSizeInDp(context: Context): Pair<Int, Int> {
+    private fun calculateWidgetSizeInDp(context: Context): Pair<Int, Int> {
         // Size in dp (width x height)
         // Portrait mode: (73n - 16) x (118m - 16)
         // Landscape mode: (142n - 15) x (66m - 15)
@@ -198,7 +226,7 @@ class PolaryWidget : AppWidgetProvider() {
                 .into(avatarTarget)
         }
     }
-    fun dpToPx(context: Context, dp: Int): Int {
+    private fun dpToPx(context: Context, dp: Int): Int {
         val displayMetrics = context.resources.displayMetrics
         return (dp * (displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
     }

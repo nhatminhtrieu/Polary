@@ -25,6 +25,11 @@ ui = "1.6.4"
 uiTooling = "1.6.4"
 material3Android = "1.2.1"
 firebaseFirestoreKtx = "24.11.0"
+legacySupportV4 = "1.0.0"
+lifecycleLivedataKtx = "2.7.0"
+lifecycleViewmodelKtx = "2.7.0"
+fragmentKtx = "1.5.6"
+okhttp = "4.9.1"
 
 [libraries]
 androidx-activity-compose-v131 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -62,6 +67,11 @@ ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

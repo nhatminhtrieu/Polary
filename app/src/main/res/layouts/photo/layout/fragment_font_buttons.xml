@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_font0"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:alpha="0.5"
+        android:background="@drawable/frame_btn_0"
+        app:backgroundTint="#ffffff"
+        android:text="@string/ab"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="0dp"
+        android:fontFamily="@font/permanent_marker"
+        app:cornerRadius="60dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_font1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:alpha="0.5"
+        android:background="@drawable/frame_btn_0"
+        app:backgroundTint="#ffffff"
+        android:text="@string/ab"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/default_margin"
+        app:layout_constraintStart_toEndOf="@id/btn_font0"
+        app:layout_constraintTop_toTopOf="@id/btn_font0"
+        app:layout_constraintBottom_toBottomOf="@id/btn_font0"
+        android:padding="0dp"
+        android:fontFamily="@font/pangolin"
+        app:cornerRadius="60dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_font2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:alpha="0.5"
+        android:layout_marginStart="@dimen/default_margin"
+        android:background="@drawable/frame_btn_0"
+        app:layout_constraintStart_toEndOf="@id/btn_font1"
+        app:layout_constraintTop_toTopOf="@id/btn_font0"
+        app:layout_constraintBottom_toBottomOf="@id/btn_font0"
+        app:backgroundTint="#ffffff"
+        android:text="@string/ab"
+        android:padding="0dp"
+        android:gravity="center"
+        android:fontFamily="@font/caveat"
+        app:cornerRadius="60dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_font3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:alpha="0.5"
+        android:background="@drawable/frame_btn_0"
+        android:layout_marginStart="@dimen/default_margin"
+        app:layout_constraintStart_toEndOf="@id/btn_font2"
+        app:layout_constraintTop_toTopOf="@id/btn_font0"
+        app:layout_constraintBottom_toBottomOf="@id/btn_font0"
+        app:backgroundTint="#ffffff"
+        android:text="@string/ab"
+        android:gravity="center"
+        android:padding="0dp"
+        android:fontFamily="@font/pacifico"
+        app:cornerRadius="60dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_font4"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:alpha="0.5"
+        android:background="@drawable/frame_btn_0"
+        android:layout_marginStart="@dimen/default_margin"
+        app:layout_constraintStart_toEndOf="@id/btn_font3"
+        app:layout_constraintTop_toTopOf="@id/btn_font0"
+        app:layout_constraintBottom_toBottomOf="@id/btn_font0"
+        app:backgroundTint="#ffffff"
+        android:text="@string/ab"
+        android:gravity="center"
+        android:padding="0dp"
+        android:fontFamily="@font/gloria"
+        app:cornerRadius="60dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
