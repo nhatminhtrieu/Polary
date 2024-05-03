@@ -22,6 +22,27 @@ class SessionManager(private val sharedPreferences: SharedPreferences) {
 
     fun getUserFromSharedPreferences(): User? {
         val userJson = sharedPreferences.getString("user", null) ?: return null
+        val gson = Gson()
+        return gson.fromJson(userJson, User::class.java)
+    }
+
+    fun saveAppIcon(aliasName: String?) {
+        if (aliasName != null) {
+            with(sharedPreferences.edit()) {
+                putString("appIcon", aliasName)
+                apply()
+            }
+        }
+        else {
+            with(sharedPreferences.edit()) {
+                remove("appIcon")
+                apply()
+            }
+        }
+    }
+
+    fun getAppIcon(): User? {
+        val userJson = sharedPreferences.getString("user", null) ?: return null
         Log.d("SessionManager", "User JSON: $userJson")
         val gson = Gson()
         return gson.fromJson(userJson, User::class.java)

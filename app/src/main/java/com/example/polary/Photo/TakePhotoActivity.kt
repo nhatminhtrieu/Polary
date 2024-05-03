@@ -24,6 +24,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.example.polary.BaseActivity
 import com.example.polary.PostView.PostActivity
 import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
@@ -37,7 +38,7 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class TakePhotoActivity : AppCompatActivity() {
+class TakePhotoActivity : BaseActivity() {
     private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
     private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
@@ -70,12 +71,17 @@ class TakePhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take_photo)
+
+        // Force hide the action bar
+        supportActionBar?.hide()
+
         // Request permissions for camera
         if (allPermissionsGranted()) {
             startCamera()
         } else {
             requestPermissions()
         }
+
         findViewById<MaterialButton>(R.id.btn_profile).setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)

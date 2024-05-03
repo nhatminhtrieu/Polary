@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.Author
@@ -15,7 +15,7 @@ import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 
-class PostActivity : AppCompatActivity(R.layout.activity_post) {
+class PostActivity : BaseActivity() {
     private lateinit var postFragment: Fragment
     private lateinit var authorSpinner: Spinner
     private lateinit var gridViewButton: ImageButton
@@ -32,6 +32,9 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_post)
+        // Force hide the action bar
+        supportActionBar?.hide()
         if(savedInstanceState != null){
             currentPosition = savedInstanceState.getInt("currentPosition", 0)
             return;

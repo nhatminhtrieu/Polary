@@ -3,7 +3,7 @@ package com.example.polary.authentication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.utils.ApiCallBack
@@ -24,7 +24,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 data class EmailRequestBody(val email: String)
 
 @Suppress("DEPRECATION")
-class SignUpMain : AppCompatActivity() {
+class SignUpMain : BaseActivity() {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
 

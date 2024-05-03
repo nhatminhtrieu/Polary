@@ -15,11 +15,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.PostView.VisibilityAdapter
 import com.example.polary.R
@@ -36,7 +36,7 @@ import okhttp3.RequestBody
 import java.io.File
 import kotlin.properties.Delegates
 
-class SendPhotoActivity: AppCompatActivity(),
+class SendPhotoActivity: BaseActivity(),
     AddCaptionFragment.OnInputListener,
     FrameButtonsFragment.OnFrameChangeListener,
     FontButtonsFragment.OnFontChangeListener{

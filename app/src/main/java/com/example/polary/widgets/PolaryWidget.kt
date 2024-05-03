@@ -1,5 +1,6 @@
 package com.example.polary.widgets
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -8,16 +9,23 @@ import android.content.Intent
 import android.net.Uri
 import android.text.TextPaint
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.example.polary.Class.HttpMethod
+import com.example.polary.OnBoarding
+import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.Post
+import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 class PolaryWidget : AppWidgetProvider() {
     companion object {
@@ -98,6 +106,31 @@ class PolaryWidget : AppWidgetProvider() {
             .into(backgroundIVTarget)
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
+        loadImage(context, views, appWidgetId, image)
+        setOnClickPendingIntent(context, views)
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
+
+    private fun loadImage(context: Context, views: RemoteViews, appWidgetId: Int, image: Int) {
+        val backgroundIVTarget =
+            AppWidgetTarget(context.applicationContext, R.id.backgroundIV, views, appWidgetId)
+        Glide.with(context.applicationContext)
+            .asBitmap()
+            .load(image)
+            .transform(CenterCrop(), RoundedCorners(32))
+            .override(300, 300)
+            .into(backgroundIVTarget)
+    }
+
+    private fun setOnClickPendingIntent(context: Context, views: RemoteViews) {
+        val user = getUserFromSession(context)
+        val intent = if (user != null) Intent(context, TakePhotoActivity::class.java) else Intent(
+            context,
+            OnBoarding::class.java
+        )
+        val pendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
     }
 
     private fun updateAppWidget(
@@ -111,29 +144,95 @@ class PolaryWidget : AppWidgetProvider() {
             AppWidgetTarget(context.applicationContext, R.id.post_image, views, appWidgetId)
         val avatarTarget = AppWidgetTarget(context.applicationContext, R.id.avatar, views, appWidgetId)
 
-        views.setTextViewText(
-            R.id.post_caption,
-            TextUtils.ellipsize(latestPost.caption, TextPaint(), 100f, TextUtils.TruncateAt.END)
-        )
+        setTextViewText(views, latestPost)
+        loadImage(context, views, appWidgetId, latestPost)
 
+        // Set onClickPendingIntent for post_image
+        val intent = Intent(context, TakePhotoActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        views.setOnClickPendingIntent(R.id.post_image, pendingIntent)
+
+        appWidgetManager.updateAppWidget(appWidgetId, views)
         val avatarUri = latestPost.author.avatar?.let { Uri.parse(it) }
         if(avatarUri == null) {
             views.setImageViewResource(R.id.avatar, R.mipmap.ic_launcher)
         } else {
             views.setImageViewUri(R.id.avatar, avatarUri)
         }
-        loadImage(context, postImageTarget, latestPost.imageUrl ?: "")
-        loadImage(context, avatarTarget, latestPost.author.avatar ?: "")
+        loadImage(context,views, appWidgetId, latestPost)
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun loadImage(context: Context, target: AppWidgetTarget, url: String) {
-        Glide.with(context.applicationContext)
-            .asBitmap()
-            .load(url)
-            .transform(CenterCrop(), RoundedCorners(32))
-            .override(300, 300)
-            .into(target)
+    private fun setTextViewText(views: RemoteViews, latestPost: Post) {
+        views.setTextViewText(
+            R.id.post_caption,
+            TextUtils.ellipsize(latestPost.caption, TextPaint(), 100f, TextUtils.TruncateAt.END)
+        )
+    }
+
+    private fun calculateWidgetSizeInDp(context: Context): Pair<Int, Int> {
+        // Size in dp (width x height)
+        // Portrait mode: (73n - 16) x (118m - 16)
+        // Landscape mode: (142n - 15) x (66m - 15)
+        // https://developer.android.com/develop/ui/views/appwidgets/layouts#anatomy_determining_size
+        val widthInCells = 3
+        val heightInCells = 2
+
+        // check if the device is in portrait or landscape mode
+        val displayMetrics = context.resources.displayMetrics
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
+
+        return if (width < height) {
+            Pair((73 * widthInCells) - 16, (118 * heightInCells) - 16)
+        } else {
+            Pair((142 * widthInCells) - 15, (66 * heightInCells) - 15)
+        }
+    }
+
+    private fun loadImage(
+        context: Context,
+        views: RemoteViews,
+        appWidgetId: Int,
+        latestPost: Post
+    ) {
+        val postImageTarget =
+            AppWidgetTarget(context.applicationContext, R.id.post_image, views, appWidgetId)
+        val avatarTarget =
+            AppWidgetTarget(context.applicationContext, R.id.avatar, views, appWidgetId)
+
+        // Widget size in dp
+        val widgetSize = calculateWidgetSizeInDp(context)
+
+        // Convert to pixels to load the image with the correct size
+        val targetWidth = dpToPx(context, max(widgetSize.first, widgetSize.second))
+
+        latestPost.imageUrl.let {
+            Glide.with(context.applicationContext)
+                .asBitmap()
+                .load(it)
+                .transform(CenterCrop(), RoundedCorners(32))
+                .override(targetWidth, targetWidth)
+                .into(postImageTarget)
+        }
+
+        latestPost.author.avatar.let {
+            Glide.with(context.applicationContext)
+                .asBitmap()
+                .load(it)
+                .transform(CircleCrop())
+                .override(300, 300)
+                .into(avatarTarget)
+        }
+    }
+    private fun dpToPx(context: Context, dp: Int): Int {
+        val displayMetrics = context.resources.displayMetrics
+        return (dp * (displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
+    }
+    private fun getUserFromSession(context: Context): User? {
+        val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val sessionManager = SessionManager(sharedPreferences)
+        return sessionManager.getUserFromSharedPreferences()
     }
 }

@@ -14,7 +14,6 @@
         android:id="@+id/visibility_stroke"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        app:cardBackgroundColor="@color/material_dynamic_neutral50"
         app:cardCornerRadius="250dp">
         <androidx.cardview.widget.CardView
             android:layout_width="34dp"

@@ -12,7 +12,6 @@
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_gravity="center"
-        app:cardBackgroundColor="@color/material_dynamic_neutral50"
         app:cardCornerRadius="250dp">
         <androidx.cardview.widget.CardView
             android:layout_width="34dp"
@@ -24,7 +23,6 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="@color/material_dynamic_neutral50"
                 app:cardCornerRadius="250dp">
                 <ImageView
                     android:layout_width="wrap_content"

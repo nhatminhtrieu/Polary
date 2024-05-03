@@ -3,10 +3,9 @@
     android:description="@string/app_widget_description"
     android:initialKeyguardLayout="@layout/polary_empty_widget"
     android:initialLayout="@layout/polary_empty_widget"
-    android:minWidth="160dp"
-    android:minHeight="80dp"
+    android:minWidth="240dp"
+    android:minHeight="160dp"
     android:previewImage="@drawable/example_appwidget_preview"
-
     android:previewLayout="@layout/polary_empty_widget"
     android:targetCellWidth="3"
     android:targetCellHeight="2"

@@ -6,15 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.app.AppCompatActivity
+import com.example.polary.BaseActivity
 import com.example.polary.R
-import com.example.polary.dataClass.Friend
-import com.example.polary.dataClass.FriendRequest
 import com.example.polary.dataClass.User
 import com.example.polary.utils.SessionManager
 import com.google.android.material.textfield.TextInputEditText
 
-class FriendsActivity : AppCompatActivity() {
+class FriendsActivity : BaseActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var user: User
     private val TAG = "FriendsActivity"

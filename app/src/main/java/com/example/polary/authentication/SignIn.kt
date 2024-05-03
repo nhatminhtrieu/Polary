@@ -4,7 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
@@ -28,7 +28,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 @Suppress("DEPRECATION")
-class SignIn : AppCompatActivity() {
+class SignIn : BaseActivity() {
     private lateinit var usernameEditText: TextInputEditText
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var sharedPreferences: SharedPreferences
