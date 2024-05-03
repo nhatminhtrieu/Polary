@@ -49,4 +49,5 @@
     <string name="general">Thông tin chung</string>
     <string name="delete_group">Xóa nhóm</string>
     <string name="group_s_name">Tên nhóm</string>
+    <string name="default_web_client_id">543502116747-095vrudrrphk8ek6jne709jlr1es95e3.apps.googleusercontent.com</string>
 </resources>

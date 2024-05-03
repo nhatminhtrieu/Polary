@@ -2,6 +2,7 @@ package com.example.polary.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +11,7 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.Validate
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -22,6 +24,7 @@ class ResetPassword : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password)
+        configTopAppBar()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -38,6 +41,14 @@ class ResetPassword : BaseActivity() {
             } else {
                 showError()
             }
+        }
+    }
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
         }
     }
 

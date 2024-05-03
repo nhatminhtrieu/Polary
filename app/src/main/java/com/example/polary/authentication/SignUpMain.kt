@@ -3,6 +3,7 @@ package com.example.polary.authentication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.example.polary.BaseActivity
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
@@ -15,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -36,6 +38,7 @@ class SignUpMain : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up_main)
+        configTopAppBar()
 
         emailLayout = findViewById(R.id.email_layout)
         emailEditText = findViewById(R.id.email)
@@ -82,6 +85,16 @@ class SignUpMain : BaseActivity() {
         }
 
         applyClickableSpan(findViewById(R.id.signIn_text), getString(R.string.log_in), this, SignIn::class.java)
+    }
+
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            Log.d("SignUpMain", "Back button clicked")
+            finish()
+        }
     }
 
     @Deprecated("Deprecated in Java")

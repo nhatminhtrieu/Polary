@@ -95,26 +95,27 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:text="Features" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/small_margin"
-            android:layout_marginEnd="@dimen/small_margin">
+            android:layout_height="150dp"
+            android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/app_icon_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
+                app:layout_constraintDimensionRatio="1:1"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:layout_width="128dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -123,7 +124,9 @@
                     <ImageView
                         android:id="@+id/app_icon_profile_item_image"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:padding="@dimen/default_margin"
                         android:contentDescription="App icon"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_launcher_foreground" />
@@ -141,8 +144,10 @@
                 android:id="@+id/add_widget_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
                 android:layout_weight="1"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
@@ -152,14 +157,14 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
-
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:contentDescription="Add widget"
                         android:scaleType="centerCrop"
+                        android:layout_weight="1"
+                        android:padding="@dimen/default_margin"
                         android:src="@drawable/round_add_circle_outline" />
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -173,9 +178,11 @@
                 android:id="@+id/change_theme_profile_item"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="8dp"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="1:1"
+                android:backgroundTint="@color/md_theme_surfaceContainer"
                 app:cardElevation="4dp">
 
                 <LinearLayout
@@ -187,8 +194,9 @@
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:contentDescription="Change theme"
+                        android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/outline_bedtime" />
 

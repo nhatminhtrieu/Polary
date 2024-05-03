@@ -12,15 +12,34 @@
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_background"
         tools:context=".authentication.SignIn">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@android:color/transparent"
+            >
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/app_top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_back"
+                android:background="@android:color/transparent"
+                app:navigationIconTint="@color/md_theme_onSurface" />
+        </com.google.android.material.appbar.AppBarLayout>
         <TextView
             android:id="@+id/log_in_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/welcome_back"
-            android:layout_marginTop="@dimen/extra_large_margin"
+            android:layout_marginTop="@dimen/default_margin"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/default_margin"
             />

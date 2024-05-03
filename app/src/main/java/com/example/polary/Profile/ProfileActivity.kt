@@ -1,5 +1,6 @@
 package com.example.polary.Profile
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -14,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -30,6 +32,7 @@ import com.example.polary.friends.GroupsActivity
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.example.polary.widgets.PolaryWidget
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
@@ -52,6 +55,8 @@ class ProfileActivity : BaseActivity(), AvatarFragment.OnAvatarFragmentListener,
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        configTopAppBar()
         sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val currentTheme = sharedPreferences.getString("theme", "Dark")
         val currentThemeResId = when (currentTheme) {
@@ -60,8 +65,12 @@ class ProfileActivity : BaseActivity(), AvatarFragment.OnAvatarFragmentListener,
             else -> R.style.AppTheme_Dark
         }
         setTheme(currentThemeResId)
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        val permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // You can request the permission here or handle the situation as per your requirement
+        }
 
         sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
@@ -123,6 +132,15 @@ class ProfileActivity : BaseActivity(), AvatarFragment.OnAvatarFragmentListener,
         findViewById<android.widget.LinearLayout>(R.id.groups_profile_item).setOnClickListener {
             val intent = Intent(this, GroupsActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun configTopAppBar() {
+        val appBar = findViewById<MaterialToolbar>(R.id.app_top_app_bar)
+        appBar?.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_back)
+        appBar?.setNavigationOnClickListener {
+            // Go back to the parent activity
+            finish()
         }
     }
 

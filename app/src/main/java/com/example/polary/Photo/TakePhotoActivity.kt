@@ -49,7 +49,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class TakePhotoActivity : BaseActivity() {
-    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else TODO())
+    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else android.Manifest.permission.POST_NOTIFICATIONS)
     private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
     private lateinit var camera: Camera
@@ -77,6 +77,10 @@ class TakePhotoActivity : BaseActivity() {
                         android.Manifest.permission.POST_NOTIFICATIONS -> {
                             Log.d("Permission", "Notification permission denied")
                             notificationGranted = false
+                        }
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE -> {
+                            Log.d("Permission", "Read external storage permission denied")
+                            permissionGranted = false
                         }
                     }
                 }
