@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Display.Mode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.bumptech.glide.request.target.Target
 import com.example.polary.Class.HttpMethod
 import com.example.polary.`object`.GlobalResources
 import com.example.polary.dataClass.Post
+import com.example.polary.dataClass.PostNotification
 import com.example.polary.R
 import com.example.polary.constant.EmojiDrawable
 import com.example.polary.utils.ApiCallBack
@@ -35,12 +37,14 @@ class PostFragment : Fragment(), OnCommentSentListener {
     companion object {
         private const val ARG_POST = "post"
         private const val ARG_USER_ID = "userId"
+        private const val ARG_NOTIFICATION = "notification"
 
-        fun newInstance(post: Post, userId: String): PostFragment {
+        fun newInstance(post: Post, userId: String, postNotification: PostNotification?): PostFragment {
             val fragment = PostFragment()
             val args = Bundle()
             args.putSerializable(ARG_POST, post)
             args.putString(ARG_USER_ID, userId)
+            args.putSerializable(ARG_NOTIFICATION, postNotification)
             fragment.arguments = args
             return fragment
         }
@@ -48,11 +52,13 @@ class PostFragment : Fragment(), OnCommentSentListener {
 
     private lateinit var post: Post
     private lateinit var userId: String
+    private lateinit var postNotification: PostNotification
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         post = arguments?.getSerializable(ARG_POST) as Post
         userId = arguments?.getString(ARG_USER_ID) ?: ""
+        postNotification = arguments?.getSerializable(ARG_NOTIFICATION) as? PostNotification ?: PostNotification(0, "none", "0")
     }
 
     @SuppressLint("SetTextI18n")
@@ -214,6 +220,30 @@ class PostFragment : Fragment(), OnCommentSentListener {
         eventClickReaction()
     }
 
+    override fun onResume() {
+        super.onResume()
+        postNotification.let { notification ->
+            if(notification.emoji != "none" && postNotification.postId == post.id.toString()) {
+                animateReaction(notification.emoji, "RECEIVE")
+                val httpMethod = HttpMethod()
+                httpMethod.doPatch("notifications/${notification.id}", mapOf("status" to "read"), object: ApiCallBack<Any> {
+                    override fun onSuccess(data: Any) {
+                        Log.d("Notification", "Notification read")
+                    }
+
+                    override fun onError(error: Throwable) {
+                        Log.e("Notification", "Error: ${error.message}")
+                    }
+                })
+                postNotification = PostNotification(0, "none", "0")
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        postNotification = PostNotification(0, "none", "0")
+    }
     private fun openCommentSheet(postId: Number, totalComments: Int) {
         if(totalComments == 0) return
         val modalBottomSheet = CommentFragment(postId)
@@ -232,7 +262,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
         val body = mapOf("authorId" to authorId, "type" to type)
         httpMethod.doPost(endpoint, body, object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
-                animateReaction(type)
+                animateReaction(type, "SEND")
             }
 
             override fun onError(error: Throwable) {
@@ -278,7 +308,7 @@ class PostFragment : Fragment(), OnCommentSentListener {
         }
     }
 
-    private fun animateReaction(type: String) {
+    private fun animateReaction(type: String, mode: String) {
         val drawableId = EmojiDrawable.map[type] ?: return
 
         val parentLayout = activity?.findViewById<ConstraintLayout>(R.id.main)
@@ -288,11 +318,11 @@ class PostFragment : Fragment(), OnCommentSentListener {
         val spaces = ArrayList<Int>(
             listOf(
                 100,
-                -200,
+                -150,
+                200,
+                -250,
                 300,
-                -400,
-                500,
-                -600
+                -350
             )
         )
         for (i in 0 until 6) { // Change this to the number of emojis you want
@@ -310,8 +340,12 @@ class PostFragment : Fragment(), OnCommentSentListener {
             parentLayout?.addView(reactionImage)
 
             val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-            val anim = TranslateAnimation((screenWidth/2 + spaces[i]).toFloat(), (screenWidth/2 + spaces[i]).toFloat(), screenHeight.toFloat(), 0f)
-            anim.duration = 2000
+            val anim = if(mode == "SEND") {
+                TranslateAnimation((screenWidth/2 + spaces[i]).toFloat(), (screenWidth/2 + spaces[i]).toFloat(), screenHeight.toFloat(), -500f)
+            } else {
+                TranslateAnimation((screenWidth/2 + spaces[i]).toFloat(), (screenWidth/2 + spaces[i]).toFloat(), -500f, screenHeight.toFloat())
+            }
+            anim.duration = 1000
             anim.fillAfter = true
             anim.startOffset = (i * 300).toLong() // Add a delay to the start of each animation
             anim.setAnimationListener(object : Animation.AnimationListener {
@@ -326,12 +360,12 @@ class PostFragment : Fragment(), OnCommentSentListener {
     }
 
     private fun openCommentDialog() {
-        val modalBottomSheet = TypeCommentFragment(5, post.id)
+        val modalBottomSheet = TypeCommentFragment(userId.toInt(), post.id)
         modalBottomSheet.listener = this
         modalBottomSheet.show(parentFragmentManager, TypeCommentFragment.TAG)
     }
 
     override fun onCommentSent() {
-       animateReaction("comment")
+       animateReaction("comment", "SEND")
     }
 }

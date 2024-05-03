@@ -43,10 +43,8 @@ class PostActivity : BaseActivity() {
         gridViewButton = findViewById(R.id.grid_view_button)
         gridViewButton.setImageResource(imageSrcIcon)
         user = SessionManager(getSharedPreferences("user", MODE_PRIVATE)).getUserFromSharedPreferences()!!
-        Log.d("User", user.toString())
         getUsers()
     }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("currentPosition", currentPosition)
@@ -62,13 +60,23 @@ class PostActivity : BaseActivity() {
                 adapter.setDropDownViewResource(R.layout.author_spinner_item)
                 authorSpinner.adapter = adapter
 
+                val myPost = intent.getBooleanExtra("myPost", false)
+                if(myPost) {
+                    val position = users.indexOfFirst { it.id == user.id }
+                    authorSpinner.setSelection(position)
+                } else {
+                    authorSpinner.setSelection(0)
+                }
+
                 authorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     var isInitialSelection = true
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                        val postId = intent.getStringExtra("postId")
                         val authorId = users[position].id
                         val bundle = Bundle()
                         bundle.putString("userId", user.id.toString()) // the value of userId is this account's id
                         bundle.putString("authorId", authorId.toString()) // the value of authorId is the selected author's id
+                        bundle.putString("postId", postId)
                         currentPosition = 0
                         if (isInitialSelection) {
                             isInitialSelection = false

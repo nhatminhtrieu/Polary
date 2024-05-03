@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.core.app.SharedElementCallback
 import androidx.viewpager.widget.ViewPager
 import com.example.polary.Class.HttpMethod
+import com.example.polary.dataClass.PostNotification
 import com.example.polary.R
 import com.example.polary.dataClass.Post
 import com.example.polary.utils.ApiCallBack
@@ -20,6 +21,7 @@ import com.example.polary.utils.ApiCallBack
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "userId"
 private const val ARG_PARAM2 = "authorId"
+private const val ARG_PARAM3 = "postId"
 
 /**
  * A simple [Fragment] subclass.
@@ -31,12 +33,16 @@ class PostPagerFragment : Fragment() {
     private var userId: String? = null
     private var authorId: String? = null
     private lateinit var viewPager: ViewPager
+    private lateinit var postNotification: List<PostNotification>
+    private lateinit var posts: List<Post>
+    private lateinit var postId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             userId = it.getString(ARG_PARAM1)
             authorId = it.getString(ARG_PARAM2)
+            postId = it.getString(ARG_PARAM3) ?: ""
         }
     }
 
@@ -47,7 +53,7 @@ class PostPagerFragment : Fragment() {
         // Inflate the layout for this fragment
         postponeEnterTransition()
         val view = inflater.inflate(R.layout.fragment_post_view, container, false)
-        viewPager = view.findViewById<ViewPager>(R.id.viewPager)
+        viewPager = view.findViewById(R.id.viewPager)
         prepareSharedElementTransition()
         return view
     }
@@ -55,11 +61,22 @@ class PostPagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val httpMethod = HttpMethod()
+        httpMethod.doGet<PostNotification>("users/${userId}/notifications", object: ApiCallBack<Any> {
+            override fun onSuccess(data: Any) {
+                postNotification = ArrayList(data as List<PostNotification>).ifEmpty {
+                    emptyList()
+                }
+            }
+
+            override fun onError(error: Throwable) {
+                Log.e("Error", error.toString())
+            }
+        })
         val endpoint = "users/${userId}/viewable-posts"
         val queryParam = mapOf("authorId" to authorId.toString())
         httpMethod.doGetWithQuery<Post>(endpoint, queryParam, object: ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
-                val posts = ArrayList(data as List<Post>)
+                posts = ArrayList(data as List<Post>)
                 if(posts.isEmpty()){
                     PostActivity.canChangeView = false
                     viewPager.visibility = View.GONE
@@ -71,7 +88,7 @@ class PostPagerFragment : Fragment() {
                 view.findViewById<ImageView>(R.id.empty_icon).visibility = View.GONE
                 view.findViewById<TextView>(R.id.empty_caption).visibility = View.GONE
                 PostActivity.canChangeView = true
-                val postAdapter = PostPagerAdapter(childFragmentManager, posts, userId ?: "")
+                val postAdapter = PostPagerAdapter(childFragmentManager, posts, userId.toString(), postNotification)
                 viewPager.adapter = postAdapter
                 viewPager.setCurrentItem(PostActivity.currentPosition)
                 viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
@@ -92,6 +109,13 @@ class PostPagerFragment : Fragment() {
                     }
                 })
 
+                if(postId.isNotEmpty()){
+                    val post = posts.find { it.id.toString() == postId }
+                    if(post != null){
+                        val position = posts.indexOf(post)
+                        moveToPage(position)
+                    }
+                }
                 prepareSharedElementTransition()
                 if(savedInstanceState == null){
                     postponeEnterTransition()
@@ -127,7 +151,9 @@ class PostPagerFragment : Fragment() {
         authorId = bundle.getString("authorId")
         onViewCreated(requireView(), null)
     }
-
+    fun moveToPage(position: Int) {
+        viewPager.setCurrentItem(position, true)
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -139,11 +165,12 @@ class PostPagerFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String, param2: String, param3: String) =
             PostPagerFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
+                    putString(ARG_PARAM3, param3)
                 }
             }
     }
