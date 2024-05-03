@@ -319,6 +319,7 @@ class TakePhotoActivity : BaseActivity() {
 
         // Create an animator set so we can play the animations together
         val animatorSet = AnimatorSet()
+
         // Create the first half of the flip animation
         val firstHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 1.0f, 0.0f)
         firstHalfFlip.duration = 250
@@ -328,9 +329,11 @@ class TakePhotoActivity : BaseActivity() {
                 startCamera()
             }
         })
+
         // Create the second half of the flip animation
         val secondHalfFlip = ObjectAnimator.ofFloat(previewView, View.SCALE_X, 0.0f, 1.0f)
         secondHalfFlip.duration = 250
+
         // Play the animations together
         animatorSet.playSequentially(firstHalfFlip, secondHalfFlip)
         animatorSet.start()
