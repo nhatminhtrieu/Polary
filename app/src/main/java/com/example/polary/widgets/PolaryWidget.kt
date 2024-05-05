@@ -47,6 +47,10 @@ class PolaryWidget : AppWidgetProvider() {
         context.sendBroadcast(intent)
     }
 
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        appWidgetIds.forEach { getLatestPost(context, it) }
+    }
+
     fun updateWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val appWidgetIds =

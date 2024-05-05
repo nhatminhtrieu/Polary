@@ -16,8 +16,7 @@ object FriendsData {
     private lateinit var friends: List<Friend>
     fun getFriends(userId: Int, TAG: String? = "FetchData", onSuccess: (List<Friend>?) -> Unit) {
         val now = LocalDateTime.now()
-        if (revalidate || updatedAt == null || now.minusMinutes(5).isAfter(updatedAt)) {
-            revalidate = false
+//        if (revalidate || updatedAt == null || now.minusMinutes(5).isAfter(updatedAt)) {
             // Get the friends from the database
             val httpMethod = HttpMethod()
             var response: List<Friend>? = null
@@ -35,8 +34,4 @@ object FriendsData {
                 }
             })
         }
-        else {
-            onSuccess(friends)
-        }
     }
-}
