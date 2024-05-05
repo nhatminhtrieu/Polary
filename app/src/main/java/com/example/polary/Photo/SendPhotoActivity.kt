@@ -186,6 +186,10 @@ class SendPhotoActivity: BaseActivity(),
         postCaption.text = input
     }
     private fun createPost(userId: Int, caption: String, frame: Int, font: Int, visibleToIds: List<Int>) {
+        if (visibleToIds.isEmpty()) {
+            Toast.makeText(this, "Please select at least one friend", Toast.LENGTH_SHORT).show()
+            return
+        }
         // Show a ProgressDialog
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Creating post...")
