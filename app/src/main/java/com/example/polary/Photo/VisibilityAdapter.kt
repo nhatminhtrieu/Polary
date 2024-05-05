@@ -176,7 +176,7 @@ class VisibilityAdapter(
             is GroupViewHolder -> holder.visibilityStroke
             else -> return
         }
-        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, com.google.android.material.R.color.m3_ref_palette_dynamic_neutral50)) // Replace 'original_color' with your original color resource
+        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, androidx.appcompat.R.color.material_grey_50)) // Replace 'original_color' with your original color resource
     }
 
     private fun turnOnColor(holder: ViewHolder) {

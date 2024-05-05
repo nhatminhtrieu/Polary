@@ -94,14 +94,13 @@ class SignIn : BaseActivity() {
             return
         }
 
-        val user =
-            User(id = 0, username = username, password = password, email = "", firebaseUID = "")
-        httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
+        httpMethod.doPost("auth/sign-in", requestBody = User(id = 0, username = username, password = password, email = "", firebaseUID = ""), object : ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val gson = Gson()
                 val jsonObject = gson.fromJson(data.toString(), JsonObject::class.java)
                 val userObject = jsonObject.getAsJsonObject("user")
-                user.id = userObject.get("id").asInt
+                val user =
+                    User(id = userObject.get("id").asInt, username = username, password = password, email = "", firebaseUID = "")
                 sessionManager.saveUserToSharedPreferences(user)
 
                 // Update widget
@@ -149,21 +148,26 @@ class SignIn : BaseActivity() {
             FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     task.result?.user?.let { firebaseUser ->
-                        val user = User(
+                        httpMethod.doPost("auth/sign-in", requestBody = User(
                             id = 0,
                             firebaseUID = firebaseUser.uid,
                             username = usernameEditText.text?.toString() ?: "",
                             email = firebaseUser.email ?: "",
                             password = ""
-                        )
-
-                        httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
+                        ), object : ApiCallBack<Any> {
                             override fun onSuccess(data: Any) {
                                 val gson = Gson()
                                 val jsonObject =
                                     gson.fromJson(data.toString(), JsonObject::class.java)
                                 val userObject = jsonObject.getAsJsonObject("user")
-                                user.id = userObject.get("id").asInt
+                                val user = User(
+                                    id = userObject.get("id").asInt,
+                                    firebaseUID = firebaseUser.uid,
+                                    username = userObject.get("username").asString,
+                                    email = firebaseUser.email ?: "",
+                                    password = ""
+                                )
+                                sessionManager.saveUserToSharedPreferences(user)
                                 // Update widget
                                 val context = applicationContext
                                 val intent =
@@ -178,7 +182,6 @@ class SignIn : BaseActivity() {
                                 Log.e("SignIn", "Error signing in", error)
                             }
                         })
-                        sessionManager.saveUserToSharedPreferences(user)
                     }
                 }
         }
