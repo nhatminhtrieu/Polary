@@ -11,7 +11,6 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
-import com.example.polary.`object`.GroupsData
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.example.polary.utils.applyClickableSpan
@@ -83,13 +82,13 @@ class SignIn : BaseActivity() {
             if (username.isBlank()) {
                 findViewById<TextInputLayout>(R.id.username_layout).apply {
                     isErrorEnabled = true
-                    error = "Please enter a username"
+                    error = "Username cannot be empty"
                 }
             }
             if (password.isBlank()) {
                 findViewById<TextInputLayout>(R.id.password_layout).apply {
                     isErrorEnabled = true
-                    error = "Please enter a password"
+                    error = "Password cannot be empty"
                 }
             }
             return
@@ -115,8 +114,18 @@ class SignIn : BaseActivity() {
                 startActivity(Intent(this@SignIn, TakePhotoActivity::class.java))
             }
 
-            override fun onError(error: Throwable) {
-                Log.e("SignIn", "Error signing in", error)
+            override fun onError(errorMsg: Throwable) {
+                Log.e("SignIn", "Error signing in", errorMsg)
+                Toast.makeText(this@SignIn, "Invalid username or password", Toast.LENGTH_SHORT)
+                    .show()
+                findViewById<TextInputLayout>(R.id.username_layout).apply {
+                    isErrorEnabled = true
+                    error = "Invalid username or password"
+                }
+                findViewById<TextInputLayout>(R.id.password_layout).apply {
+                    isErrorEnabled = true
+                    error = "Invalid username or password"
+                }
             }
         })
     }
