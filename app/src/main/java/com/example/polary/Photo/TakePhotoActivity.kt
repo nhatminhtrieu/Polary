@@ -106,6 +106,7 @@ class TakePhotoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take_photo)
+        findViewById<MaterialCardView>(R.id.cnt_friends_bubble).visibility = View.GONE
 
         // Force hide the action bar
         supportActionBar?.hide()
