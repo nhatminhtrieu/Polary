@@ -4,16 +4,34 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_sent_friend_requests"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_new_friend_requests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/empty_text"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/img_no_post"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/no_results_found"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

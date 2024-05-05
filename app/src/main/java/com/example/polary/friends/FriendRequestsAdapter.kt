@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.polary.Class.HttpMethod
 import com.example.polary.R
 import com.example.polary.dataClass.FriendRequest
+import com.example.polary.`object`.FriendsData
 import com.example.polary.utils.ApiCallBack
 import com.google.android.material.button.MaterialButton
 import java.time.Instant
@@ -22,19 +23,14 @@ data class FriendRequestRequestBody(val senderId: Number, val receiverId: Number
 class FriendRequestsAdapter(
     private var friendRequests: MutableList<FriendRequest>,
     private val userId: Number,
-    private val viewType: Int,
     private val listener: OnFriendRequestListener?
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+): RecyclerView.Adapter<FriendRequestsAdapter.ViewHolder>() {
     interface OnFriendRequestListener {
-        fun onDeleteSentRequest()
         fun onAcceptRequest()
-    }
-    companion object {
-        private const val VIEW_RECEIVED = 0
-        private const val VIEW_SENT = 1
+        fun onChange()
     }
 
-    inner class ReceivedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.friend_name)
         val avatar: ImageView = itemView.findViewById(R.id.friend_avatar)
         val deleteBtn: MaterialButton = itemView.findViewById(R.id.btn_delete_request)
@@ -42,25 +38,10 @@ class FriendRequestsAdapter(
         val time: TextView = itemView.findViewById(R.id.friend_time)
     }
 
-    inner class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name: TextView = itemView.findViewById(R.id.friend_name)
-        val avatar: ImageView = itemView.findViewById(R.id.friend_avatar)
-        val cancelBtn: MaterialButton = itemView.findViewById(R.id.btn_cancel)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            VIEW_RECEIVED -> {
-                val view = inflater.inflate(R.layout.friend_request_item, parent, false)
-                ReceivedViewHolder(view)
-            }
-            VIEW_SENT -> {
-                val view = inflater.inflate(R.layout.sent_friend_request_item, parent, false)
-                SentViewHolder(view)
-            }
-            else -> throw IllegalArgumentException("Invalid view type")
-        }
+        val view = inflater.inflate(R.layout.friend_request_item, parent, false)
+        return ViewHolder(view)
     }
 
     fun removeAt(position: Int) {
@@ -68,37 +49,21 @@ class FriendRequestsAdapter(
         notifyItemRemoved(position)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return viewType
-    }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val request = friendRequests[position]
-        when (holder) {
-            is ReceivedViewHolder -> {
-                holder.name.text = request.sender?.username
-                holder.time.text = getDuration(request.createdAt)
-                Glide.with(holder.itemView).load(request.sender?.avatar).into(holder.avatar)
-                holder.deleteBtn.setOnClickListener {
-                    val pos = holder.adapterPosition
-                    Log.i("FriendRequestsAdapter", "Delete button clicked at position $pos")
-                    deleteReceivedRequest(pos)
-                }
-                holder.acceptBtn.setOnClickListener {
-                    val pos = holder.adapterPosition
-                    Log.i("FriendRequestsAdapter", "Accept button clicked at position $pos")
-                    acceptRequest(pos)
-                }
-            }
-            is SentViewHolder -> {
-                holder.name.text = request.receiver?.username
-                Glide.with(holder.itemView).load(request.receiver?.avatar).into(holder.avatar)
-                holder.cancelBtn.setOnClickListener {
-                    val pos = holder.adapterPosition
-                    Log.i("FriendRequestsAdapter", "Cancel button clicked at position $pos")
-                    deleteSentRequest(pos)
-                }
-            }
+        holder.name.text = request.sender?.username
+        holder.time.text = getDuration(request.createdAt)
+        Glide.with(holder.itemView).load(request.sender?.avatar).into(holder.avatar)
+        holder.deleteBtn.setOnClickListener {
+            val pos = holder.adapterPosition
+            Log.i("FriendRequestsAdapter", "Delete button clicked at position $pos")
+            deleteReceivedRequest(pos)
+        }
+        holder.acceptBtn.setOnClickListener {
+            val pos = holder.adapterPosition
+            Log.i("FriendRequestsAdapter", "Accept button clicked at position $pos")
+            acceptRequest(pos)
         }
     }
 
@@ -114,25 +79,10 @@ class FriendRequestsAdapter(
             override fun onSuccess(data: Any) {
                 removeAt(position)
                 listener?.onAcceptRequest()
+                listener?.onChange()
             }
             override fun onError(error: Throwable) {
                 Log.e("FriendRequestsAdapter", "Failed to accept friend request: $error")
-            }
-        })
-    }
-
-    private fun deleteSentRequest(position: Int) {
-        val httpMethod = HttpMethod()
-        val params : Map<String, String> =
-            mapOf("senderId" to userId.toString(), "receiverId" to friendRequests[position].receiver?.id.toString())
-        httpMethod.doDelete("friend-requests", params, object:
-            ApiCallBack<Any> {
-            override fun onSuccess(data: Any) {
-                removeAt(position)
-                listener?.onDeleteSentRequest()
-            }
-            override fun onError(error: Throwable) {
-                Log.e("FriendRequestsAdapter", "Failed to delete friend request: $error")
             }
         })
     }
@@ -145,6 +95,7 @@ class FriendRequestsAdapter(
             ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 removeAt(position)
+                listener?.onChange()
             }
             override fun onError(error: Throwable) {
                 Log.e("FriendRequestsAdapter", "Failed to delete friend request: $error")

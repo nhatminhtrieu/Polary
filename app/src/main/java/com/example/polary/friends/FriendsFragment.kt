@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +25,8 @@ import com.google.android.material.appbar.MaterialToolbar
 
 class FriendsFragment:
     Fragment(),
-    FriendRequestsAdapter.OnFriendRequestListener {
+    FriendRequestsAdapter.OnFriendRequestListener,
+    FriendsAdapter.OnFriendListener{
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var friends: MutableList<Friend>
     private lateinit var friendsAdapter: FriendsAdapter
@@ -33,19 +36,38 @@ class FriendsFragment:
     private lateinit var rvFriendRequests: RecyclerView
     private lateinit var user: User
     private val TAG = "FriendsActivity"
-    override fun onDeleteSentRequest() {
-        // Do nothing
-    }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onAcceptRequest() {
         Log.i(TAG, "Accept friend request")
         FriendsData.revalidate = true
         FriendsData.getFriends(user.id, TAG) {
-            friends = it as MutableList<Friend>
-            friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
-            rvFriend.adapter = friendsAdapter
+            friends.clear()
+            friends.addAll(it as MutableList<Friend>)
+            friendsAdapter.notifyDataSetChanged()
+            if (friends.size == 0) {
+                configTopAppBar("Friends")
+                requireActivity().findViewById<TextView>(R.id.no_friends_yet).visibility = View.VISIBLE
+            } else {
+                configTopAppBar("${friends.size} friend${if (friends.size > 1) "s" else ""}")
+                requireActivity().findViewById<TextView>(R.id.no_friends_yet).visibility = View.GONE
+            }
         }
     }
+
+    override fun onChange() {
+        if (friendRequests.size == 0) {
+            requireActivity().findViewById<LinearLayout>(R.id.friend_requests_title).visibility = View.INVISIBLE
+        }
+        if (friends.size == 0) {
+            configTopAppBar("Friends")
+            requireActivity().findViewById<TextView>(R.id.no_friends_yet).visibility = View.VISIBLE
+        } else {
+            configTopAppBar("${friends.size} friend${if (friends.size > 1) "s" else ""}")
+            requireActivity().findViewById<TextView>(R.id.no_friends_yet).visibility = View.GONE
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,12 +95,19 @@ class FriendsFragment:
 
         FriendsData.getFriends(user.id, TAG) {
             friends = it as MutableList<Friend>
-            friendsAdapter = FriendsAdapter(friends, 0, user.id, null, false)
+            friendsAdapter = FriendsAdapter(friends, 0, user.id, false, this)
             rvFriend.adapter = friendsAdapter
             val loadMoreButton = view.findViewById<View>(R.id.btn_more_friends)
             val layoutMore = view.findViewById<View>(R.id.more_friends)
+            val noFriendsYet = view.findViewById<TextView>(R.id.no_friends_yet)
+            if (friends.size == 0) {
+                noFriendsYet.visibility = View.VISIBLE
+            }
             if (friends.size < 6) {
-                loadMoreButton?.visibility = View.GONE
+                layoutMore?.visibility = View.GONE
+            }
+            else {
+                layoutMore?.visibility = View.VISIBLE
             }
             loadMoreButton?.setOnClickListener {
                 // load more friends
@@ -92,8 +121,10 @@ class FriendsFragment:
 
         FriendRequestsData.getFriendRequestsOfReceiver(user.id, TAG) {
             friendRequests = it as MutableList<FriendRequest>
-            friendRequestsAdapter = FriendRequestsAdapter(friendRequests, user.id, 0, this)
+            friendRequestsAdapter = FriendRequestsAdapter(friendRequests, user.id, this)
             rvFriendRequests.adapter = friendRequestsAdapter
+            if (friendRequests.size > 0)
+                requireActivity().findViewById<LinearLayout>(R.id.friend_requests_title).visibility = View.VISIBLE
         }
     }
 

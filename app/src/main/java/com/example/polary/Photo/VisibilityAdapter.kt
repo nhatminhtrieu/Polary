@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -77,6 +78,10 @@ class VisibilityAdapter(
         init {
             itemView.setOnClickListener {
                 val group: Group = groups[adapterPosition - 1]
+                if (group.memberIds?.size == 0) {
+                    Toast.makeText(itemView.context, "No members in this group", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 if (selectedGroups.contains(group.id)) {
                     selectedGroups.remove(group.id)
                     notifyItemChanged(adapterPosition)
