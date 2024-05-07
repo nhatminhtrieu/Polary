@@ -12,18 +12,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_background"
         tools:context=".authentication.SignIn">
-        <TextView
-            android:id="@+id/log_in_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_back"
-            android:layout_marginTop="@dimen/extra_large_margin"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/default_margin"
-            />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -43,6 +31,7 @@
                 android:background="@android:color/transparent"
                 app:navigationIconTint="@color/md_theme_onSurface" />
         </com.google.android.material.appbar.AppBarLayout>
+
         <TextView
             android:id="@+id/log_in_title"
             android:layout_width="wrap_content"
@@ -53,8 +42,7 @@
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/default_margin"
-            />
+            android:layout_marginStart="@dimen/default_margin" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_layout"

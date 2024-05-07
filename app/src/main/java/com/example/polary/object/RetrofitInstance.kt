@@ -9,7 +9,7 @@ object RetrofitInstance {
     private var retrofit: Retrofit? = null
     private const val SimulatorURL = "10.0.2.2"
     private const val PandaURL = "192.168.0.135"
-    private const val BASE_URL = "http://$PandaURL:3000/"
+    private const val BASE_URL = "http://$SimulatorURL:3000/"
 
     fun getRetrofitInstance(): Retrofit {
         if (retrofit == null) {

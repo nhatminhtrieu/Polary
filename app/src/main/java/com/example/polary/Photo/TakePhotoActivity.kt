@@ -28,17 +28,17 @@ import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.example.polary.BaseActivity
 import com.example.polary.Class.FocusCircleView
 import com.example.polary.Class.NotificationService
-import com.example.polary.BaseActivity
 import com.example.polary.PostView.PostActivity
 import com.example.polary.Profile.ProfileActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
-import com.example.polary.utils.SessionManager
-import com.google.android.gms.tasks.OnCompleteListener
 import com.example.polary.friends.FriendsActivity
 import com.example.polary.`object`.FriendRequestsData
+import com.example.polary.utils.SessionManager
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.messaging.FirebaseMessaging
@@ -49,7 +49,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class TakePhotoActivity : BaseActivity() {
-    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else android.Manifest.permission.POST_NOTIFICATIONS)
+    private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)android.Manifest.permission.POST_NOTIFICATIONS else android.Manifest.permission.POST_NOTIFICATIONS)
     private val REQUEST_CODE_PERMISSIONS = 10
     private var imageCapture: ImageCapture? = null
     private lateinit var camera: Camera
@@ -106,6 +106,7 @@ class TakePhotoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_take_photo)
+        findViewById<MaterialCardView>(R.id.cnt_friends_bubble).visibility = View.GONE
 
         // Force hide the action bar
         supportActionBar?.hide()

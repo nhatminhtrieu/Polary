@@ -47,6 +47,10 @@ class PolaryWidget : AppWidgetProvider() {
         context.sendBroadcast(intent)
     }
 
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        appWidgetIds.forEach { getLatestPost(context, it) }
+    }
+
     fun updateWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val appWidgetIds =
@@ -63,7 +67,7 @@ class PolaryWidget : AppWidgetProvider() {
         var views = RemoteViews(context.packageName, R.layout.polary_empty_widget)
 
         if (user == null) {
-            updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.white_background)
+            updateViewWithText(context, appWidgetManager, appWidgetId, views, "Tap to set up", R.drawable.black_background)
         } else {
             val endpoint = "users/${user.id}/viewable-posts"
             val queryParam = mapOf("authorId" to "0")
@@ -86,7 +90,7 @@ class PolaryWidget : AppWidgetProvider() {
         }
     }
 
-    private fun updateViewWithText(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, views: RemoteViews, text: String, image: Int = R.drawable.white_background) {
+    private fun updateViewWithText(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, views: RemoteViews, text: String, image: Int = R.drawable.black_background) {
         views.setTextViewText(R.id.textView, text)
         val backgroundIVTarget = AppWidgetTarget(
             context.applicationContext,

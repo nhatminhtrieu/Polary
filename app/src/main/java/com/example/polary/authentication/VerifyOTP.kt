@@ -23,7 +23,7 @@ class VerifyOTP : BaseActivity() {
         setContentView(R.layout.activity_verify_otp)
         configTopAppBar()
 
-        applyClickableSpan(findViewById(R.id.resendOTP), getString(R.string.resent_otp), this, VerifyOTP::class.java)
+        applyClickableSpan(findViewById(R.id.resendOTP), getString(R.string.resent_otp), this, ResetPassword::class.java)
 
         val email = intent.getStringExtra("email")
         val message = intent.getStringExtra("message")

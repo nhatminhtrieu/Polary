@@ -72,7 +72,7 @@
             android:name=".authentication.SignIn"
             android:exported="false"
             android:label="Sign in"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".OnBoarding" />
         <activity
             android:name=".OnBoarding"
@@ -88,12 +88,12 @@
             android:exported="false"
             android:label="Sign up"
             android:parentActivityName=".OnBoarding"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".authentication.SignUpFull"
             android:exported="false"
             android:label="Sign up"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".OnBoarding" />
         <activity
             android:name=".authentication.EnterNewPassword"
@@ -218,7 +218,7 @@
         <activity
             android:name=".Photo.SendPhotoActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more. -->

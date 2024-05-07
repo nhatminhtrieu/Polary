@@ -42,7 +42,7 @@ class Validate {
 
         fun validatePassword(password: String, confirmPasswordText: String): Int {
             return when {
-                password.length <= 6 -> -1
+                password.length < 6 -> -1
                 password != confirmPasswordText -> -2
                 else -> 1
             }

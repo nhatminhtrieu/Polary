@@ -11,7 +11,6 @@ import com.example.polary.Class.HttpMethod
 import com.example.polary.Photo.TakePhotoActivity
 import com.example.polary.R
 import com.example.polary.dataClass.User
-import com.example.polary.`object`.GroupsData
 import com.example.polary.utils.ApiCallBack
 import com.example.polary.utils.SessionManager
 import com.example.polary.utils.applyClickableSpan
@@ -83,26 +82,25 @@ class SignIn : BaseActivity() {
             if (username.isBlank()) {
                 findViewById<TextInputLayout>(R.id.username_layout).apply {
                     isErrorEnabled = true
-                    error = "Please enter a username"
+                    error = "Username cannot be empty"
                 }
             }
             if (password.isBlank()) {
                 findViewById<TextInputLayout>(R.id.password_layout).apply {
                     isErrorEnabled = true
-                    error = "Please enter a password"
+                    error = "Password cannot be empty"
                 }
             }
             return
         }
 
-        val user =
-            User(id = 0, username = username, password = password, email = "", firebaseUID = "")
-        httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
+        httpMethod.doPost("auth/sign-in", requestBody = User(id = 0, username = username, password = password, email = "", firebaseUID = ""), object : ApiCallBack<Any> {
             override fun onSuccess(data: Any) {
                 val gson = Gson()
                 val jsonObject = gson.fromJson(data.toString(), JsonObject::class.java)
                 val userObject = jsonObject.getAsJsonObject("user")
-                user.id = userObject.get("id").asInt
+                val user =
+                    User(id = userObject.get("id").asInt, username = username, password = password, email = "", firebaseUID = "")
                 sessionManager.saveUserToSharedPreferences(user)
 
                 // Update widget
@@ -115,8 +113,18 @@ class SignIn : BaseActivity() {
                 startActivity(Intent(this@SignIn, TakePhotoActivity::class.java))
             }
 
-            override fun onError(error: Throwable) {
-                Log.e("SignIn", "Error signing in", error)
+            override fun onError(errorMsg: Throwable) {
+                Log.e("SignIn", "Error signing in", errorMsg)
+                Toast.makeText(this@SignIn, "Invalid username or password", Toast.LENGTH_SHORT)
+                    .show()
+                findViewById<TextInputLayout>(R.id.username_layout).apply {
+                    isErrorEnabled = true
+                    error = "Invalid username or password"
+                }
+                findViewById<TextInputLayout>(R.id.password_layout).apply {
+                    isErrorEnabled = true
+                    error = "Invalid username or password"
+                }
             }
         })
     }
@@ -140,21 +148,26 @@ class SignIn : BaseActivity() {
             FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     task.result?.user?.let { firebaseUser ->
-                        val user = User(
+                        httpMethod.doPost("auth/sign-in", requestBody = User(
                             id = 0,
                             firebaseUID = firebaseUser.uid,
                             username = usernameEditText.text?.toString() ?: "",
                             email = firebaseUser.email ?: "",
                             password = ""
-                        )
-
-                        httpMethod.doPost("auth/sign-in", user, object : ApiCallBack<Any> {
+                        ), object : ApiCallBack<Any> {
                             override fun onSuccess(data: Any) {
                                 val gson = Gson()
                                 val jsonObject =
                                     gson.fromJson(data.toString(), JsonObject::class.java)
                                 val userObject = jsonObject.getAsJsonObject("user")
-                                user.id = userObject.get("id").asInt
+                                val user = User(
+                                    id = userObject.get("id").asInt,
+                                    firebaseUID = firebaseUser.uid,
+                                    username = userObject.get("username").asString,
+                                    email = firebaseUser.email ?: "",
+                                    password = String()
+                                )
+                                sessionManager.saveUserToSharedPreferences(user)
                                 // Update widget
                                 val context = applicationContext
                                 val intent =
@@ -169,7 +182,6 @@ class SignIn : BaseActivity() {
                                 Log.e("SignIn", "Error signing in", error)
                             }
                         })
-                        sessionManager.saveUserToSharedPreferences(user)
                     }
                 }
         }

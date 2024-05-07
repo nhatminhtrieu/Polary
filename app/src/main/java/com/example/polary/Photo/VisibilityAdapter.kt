@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -77,6 +78,10 @@ class VisibilityAdapter(
         init {
             itemView.setOnClickListener {
                 val group: Group = groups[adapterPosition - 1]
+                if (group.memberIds?.size == 0) {
+                    Toast.makeText(itemView.context, "No members in this group", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 if (selectedGroups.contains(group.id)) {
                     selectedGroups.remove(group.id)
                     notifyItemChanged(adapterPosition)
@@ -171,7 +176,7 @@ class VisibilityAdapter(
             is GroupViewHolder -> holder.visibilityStroke
             else -> return
         }
-        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, com.google.android.material.R.color.m3_ref_palette_dynamic_neutral50)) // Replace 'original_color' with your original color resource
+        stroke.setCardBackgroundColor(ContextCompat.getColor(stroke.context, androidx.appcompat.R.color.material_grey_50)) // Replace 'original_color' with your original color resource
     }
 
     private fun turnOnColor(holder: ViewHolder) {

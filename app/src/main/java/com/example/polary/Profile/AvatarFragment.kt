@@ -1,9 +1,11 @@
 package com.example.polary.Profile
 
+import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,12 +17,14 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.example.polary.R
-import com.example.polary.utils.SessionManager
 import com.example.polary.Class.HttpMethod
+import com.example.polary.R
 import com.example.polary.dataClass.User
 import com.example.polary.utils.ApiCallBack
+import com.example.polary.utils.SessionManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -60,6 +64,13 @@ class AvatarFragment() : BottomSheetDialogFragment() {
         sharedPreferences = requireActivity().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
         val sessionManager = SessionManager(sharedPreferences)
         user = sessionManager.getUserFromSharedPreferences()!!
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQUEST_CODE_PERMISSIONS)
+        }
         view.findViewById<MaterialButton>(R.id.btn_cancel).setOnClickListener {
             dismiss()
         }
