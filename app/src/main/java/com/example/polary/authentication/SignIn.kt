@@ -165,7 +165,7 @@ class SignIn : BaseActivity() {
                                     firebaseUID = firebaseUser.uid,
                                     username = userObject.get("username").asString,
                                     email = firebaseUser.email ?: "",
-                                    password = ""
+                                    password = String()
                                 )
                                 sessionManager.saveUserToSharedPreferences(user)
                                 // Update widget

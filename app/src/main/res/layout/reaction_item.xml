@@ -37,6 +37,7 @@
         android:layout_marginTop="16dp"
         android:textSize="16sp"
         android:text="@string/comment_sample"
+        android:textColor="@color/md_theme_onSurface"
         app:layout_constraintStart_toEndOf="@+id/reaction_avatar"
         app:layout_constraintTop_toTopOf="parent" />
 

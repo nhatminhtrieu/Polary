@@ -51,8 +51,7 @@ class ResetPassword : BaseActivity() {
             finish()
         }
     }
-
-    private fun resetPassword(emailText: String) {
+     private fun resetPassword(emailText: String) {
         lifecycleScope.launch {
             try {
                 val httpMethod = HttpMethod()
